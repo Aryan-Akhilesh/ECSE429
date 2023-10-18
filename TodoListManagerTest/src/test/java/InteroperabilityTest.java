@@ -1,46 +1,332 @@
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import io.restassured.response.ValidatableResponse;
-import io.restassured.specification.RequestSpecification;
-import org.apache.commons.lang3.NotImplementedException;
-import org.junit.Test;
 import org.junit.jupiter.api.*;
-import org.junit.Assert;
-
 import java.io.IOException;
 
 @TestMethodOrder(MethodOrderer.Random.class)
 public class InteroperabilityTest {
 
-    private ProcessBuilder pb = new ProcessBuilder("java", "-jar", "TodoListManagerTest/src/test/resources/runTodoManagerRestAPI-1.5.5.jar");
-    private Process p;
+    private final String json = "application/json";
+    private final String xml = "application/xml";
 
-    @BeforeEach
-    //@Test
-    void startServer() throws IOException {
-        p = pb.start();
+    @BeforeAll
+    static void startServer() {
+        ProcessBuilder pb;
+        String os = System.getProperty("os.name");
+        if (os.toLowerCase().contains("windows")) {
+            pb = new ProcessBuilder(
+                    "cmd.exe", "/c", "java -jar .\\src\\test\\resources\\runTodoManagerRestAPI-1.5.5.jar");
+        }
+        else {
+            pb = new ProcessBuilder(
+                    "sh", "-c", "java -jar .\\src\\test\\resources\\runTodoManagerRestAPI-1.5.5.jar");
+        }
+        try {
+            pb.start();
+        } catch (IOException e) {
+            System.out.println("No server");
+        }
         RestAssured.baseURI = "http://localhost:4567";
     }
 
-    @AfterEach
-    void shutServer() {
-        RestAssured.get("http://localhost:4567/shutdown");
-        p.destroy();
+    @AfterAll
+    static void shutServer() {
+        try {
+            RestAssured.get("http://localhost:4567/shutdown");
+        }
+        catch (Exception ignored) {
+        }
     }
 
     @Test
-    public void failWhenServerDown() {
-        try {
-            RestAssured.get("/shutdown");
-            Response response = RestAssured.get("http://localhost:4567/todos");
-            int status = response.getStatusCode();
-            Assert.assertNotEquals(200, status);
-        }
-        catch (Exception e) {
-            System.out.println("Server is down.");
-        }
+    public void getCategoriesByTodoValidIdJson() {
+        Response r = RestAssured.given()
+                        .header("Accept", json)
+                        .get("http://localhost:4567/todos/1/categories");
+        int statusCode = r.getStatusCode();
+        String body = "{\"categories\":[{\"id\":\"1\",\"title\":\"Office\",\"description\":\"\"}]}";
+        Assertions.assertEquals(body, r.getBody().asString());
+        Assertions.assertEquals(200, statusCode);
     }
 
+    @Test
+    public void getCategoriesByTodoValidIdXml() {
+        Response r = RestAssured.given()
+                .header("Accept", xml)
+                .get("http://localhost:4567/todos/1/categories");
+        int statusCode = r.getStatusCode();
+        String body = "<categories><category><description/><id>1</id><title>Office</title></category></categories>";
+        Assertions.assertEquals(body, r.getBody().asString());
+        Assertions.assertEquals(200, statusCode);
+    }
 
+    @Test
+    // Success with weird behavior
+    public void getCategoriesByTodoInvalidId() {
+        Response r = RestAssured.given()
+                .header("Accept", json)
+                .get("http://localhost:4567/todos/99/categories");
+        int statusCode = r.getStatusCode();
+        String body = "{\"categories\":[{\"id\":\"1\",\"title\":\"Office\",\"description\":\"\"}]}";
+        Assertions.assertEquals(body, r.getBody().asString());
+        Assertions.assertEquals(200, statusCode);
+    }
+
+    @Test
+    public void headCategoriesByTodoValidIdJson() {
+        Response r = RestAssured.given()
+                .header("Accept", json)
+                .head("http://localhost:4567/todos/1/categories");
+        int statusCode = r.getStatusCode();
+        String body = "";
+        Assertions.assertEquals(body, r.getBody().asString());
+        Assertions.assertEquals(200, statusCode);
+    }
+
+    @Test
+    public void headCategoriesByTodoValidIdXml() {
+        Response r = RestAssured.given()
+                .header("Accept", xml)
+                .head("http://localhost:4567/todos/1/categories");
+        int statusCode = r.getStatusCode();
+        String body = "";
+        Assertions.assertEquals(body, r.getBody().asString());
+        Assertions.assertEquals(200, statusCode);
+    }
+
+    @Test
+    // Success with weird behavior
+    public void headCategoriesByTodoInvalidId() {
+        Response r = RestAssured.given()
+                .header("Accept", json)
+                .head("http://localhost:4567/todos/99/categories");
+        int statusCode = r.getStatusCode();
+        String body = "";
+        Assertions.assertEquals(body, r.getBody().asString());
+        Assertions.assertEquals(200, statusCode);
+    }
+
+    @Test
+    public void postCategoriesByTodoValidIdJson() {
+        Response r = RestAssured.given()
+                .header("Content-Type", json)
+                .body("{ \"id\": \"2\"}")
+                .post("http://localhost:4567/todos/1/categories");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(201, statusCode);
+    }
+
+    @Test
+    public void postCategoriesByTodoValidIdJsonMalformed() {
+        Response r = RestAssured.given()
+                .header("Content-Type", json)
+                .body("{ \"id\":- \"2\"}")
+                .post("http://localhost:4567/todos/1/categories");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(400, statusCode);
+    }
+
+    @Test
+    // Cannot find category by id using xml
+    public void postCategoriesByTodoValidIdXml() {
+        Response r = RestAssured.given()
+                .header("Content-Type", xml)
+                .body("<category><id>1</id></category>")
+                .post("http://localhost:4567/todos/1/categories");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(404, statusCode);
+    }
+
+    @Test
+    public void postCategoriesByTodoValidIdXmlMalformed() {
+        Response r = RestAssured.given()
+                .header("Content-Type", xml)
+                .body("<category>3<id>1</id></category>")
+                .post("http://localhost:4567/todos/1/categories");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(400, statusCode);
+    }
+
+    @Test
+    public void deleteCategoriesByTodoValidIdJson() {
+        Response r = RestAssured.given()
+                .header("Accept", json)
+                .delete("http://localhost:4567/todos/1/categories/1");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(200, statusCode);
+    }
+
+    @Test
+    public void deleteCategoriesByTodoInValidIdJson() {
+        Response r = RestAssured.given()
+                .header("Accept", json)
+                .delete("http://localhost:4567/todos/1/categories/23");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(404, statusCode);
+    }
+
+    @Test
+    public void deleteCategoriesByTodoValidIdXml() {
+        Response r = RestAssured.given()
+                .header("Accept", xml)
+                .delete("http://localhost:4567/todos/1/categories/1");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(200, statusCode);
+    }
+
+    @Test
+    public void deleteCategoriesByTodoInValidIdXml() {
+        Response r = RestAssured.given()
+                .header("Accept", xml)
+                .delete("http://localhost:4567/todos/1/categories/23");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(404, statusCode);
+    }
+
+    @Test
+    public void getCategoriesByProjectValidIdJson() {
+        Response r = RestAssured.given()
+                .header("Accept", json)
+                .get("http://localhost:4567/projects/1/categories");
+        int statusCode = r.getStatusCode();
+        String body = "{\"categories\":[]}";
+        Assertions.assertEquals(body, r.getBody().asString());
+        Assertions.assertEquals(200, statusCode);
+    }
+
+    @Test
+    public void getCategoriesByProjectValidIdXml() {
+        Response r = RestAssured.given()
+                .header("Accept", xml)
+                .get("http://localhost:4567/projects/1/categories");
+        int statusCode = r.getStatusCode();
+        String body = "<categories></categories>";
+        Assertions.assertEquals(body, r.getBody().asString());
+        Assertions.assertEquals(200, statusCode);
+    }
+
+    @Test
+    // Success with weird behavior
+    public void getCategoriesByProjectInvalidId() {
+        Response r = RestAssured.given()
+                .header("Accept", json)
+                .get("http://localhost:4567/projects/99/categories");
+        int statusCode = r.getStatusCode();
+        String body = "{\"categories\":[]}";
+        Assertions.assertEquals(body, r.getBody().asString());
+        Assertions.assertEquals(200, statusCode);
+    }
+
+    @Test
+    public void headCategoriesByProjectValidIdJson() {
+        Response r = RestAssured.given()
+                .header("Accept", json)
+                .head("http://localhost:4567/projects/1/categories");
+        int statusCode = r.getStatusCode();
+        String body = "";
+        Assertions.assertEquals(body, r.getBody().asString());
+        Assertions.assertEquals(200, statusCode);
+    }
+
+    @Test
+    public void headCategoriesByProjectValidIdXml() {
+        Response r = RestAssured.given()
+                .header("Accept", xml)
+                .head("http://localhost:4567/projects/1/categories");
+        int statusCode = r.getStatusCode();
+        String body = "";
+        Assertions.assertEquals(body, r.getBody().asString());
+        Assertions.assertEquals(200, statusCode);
+    }
+
+    @Test
+    // Success with weird behavior
+    public void headCategoriesByProjectInvalidId() {
+        Response r = RestAssured.given()
+                .header("Accept", json)
+                .head("http://localhost:4567/projects/99/categories");
+        int statusCode = r.getStatusCode();
+        String body = "";
+        Assertions.assertEquals(body, r.getBody().asString());
+        Assertions.assertEquals(200, statusCode);
+    }
+
+    @Test
+    public void postCategoriesByProjectValidIdJson() {
+        Response r = RestAssured.given()
+                .header("Content-Type", json)
+                .body("{ \"id\": \"1\"}")
+                .post("http://localhost:4567/projects/1/categories");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(201, statusCode);
+    }
+
+    @Test
+    public void postCategoriesByProjectValidIdJsonMalformed() {
+        Response r = RestAssured.given()
+                .header("Content-Type", json)
+                .body("{ \"id\":- \"2\"}")
+                .post("http://localhost:4567/projects/1/categories");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(400, statusCode);
+    }
+
+    @Test
+    // Cannot find category by id using xml
+    public void postCategoriesByProjectValidIdXml() {
+        Response r = RestAssured.given()
+                .header("Content-Type", xml)
+                .body("<category><id>1</id></category>")
+                .post("http://localhost:4567/projects/1/categories");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(404, statusCode);
+    }
+
+    @Test
+    public void postCategoriesByProjectValidIdXmlMalformed() {
+        Response r = RestAssured.given()
+                .header("Content-Type", xml)
+                .body("<category>3<id>1</id></category>")
+                .post("http://localhost:4567/projects/1/categories");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(400, statusCode);
+    }
+
+    @Test
+    public void deleteCategoriesByProjectValidIdJson() {
+        RestAssured.given().header("Content-Type", json).body("{ \"id\": \"1\"}").post("http://localhost:4567/projects/1/categories");
+        Response r = RestAssured.given()
+                .header("Accept", json)
+                .delete("http://localhost:4567/projects/1/categories/1");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(200, statusCode);
+    }
+
+    @Test
+    public void deleteCategoriesByProjectInValidIdJson() {
+        Response r = RestAssured.given()
+                .header("Accept", json)
+                .delete("http://localhost:4567/projects/1/categories/23");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(404, statusCode);
+    }
+
+    @Test
+    public void deleteCategoriesByProjectValidIdXml() {
+        RestAssured.given().header("Content-Type", json).body("{ \"id\": \"1\"}").post("http://localhost:4567/projects/1/categories");
+        Response r = RestAssured.given()
+                .header("Accept", xml)
+                .delete("http://localhost:4567/projects/1/categories/1");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(200, statusCode);
+    }
+
+    @Test
+    public void deleteCategoriesByProjectInValidIdXml() {
+        Response r = RestAssured.given()
+                .header("Accept", xml)
+                .delete("http://localhost:4567/projects/1/categories/23");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(404, statusCode);
+    }
 }
