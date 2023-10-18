@@ -5,35 +5,42 @@ import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
 import org.apache.commons.lang3.NotImplementedException;
 import org.junit.Test;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.*;
 import org.junit.Assert;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.TestMethodOrder;
+
+import java.io.IOException;
 
 @TestMethodOrder(MethodOrderer.Random.class)
 public class InteroperabilityTest {
 
-    @BeforeAll
-    public void startServer() {
+    private ProcessBuilder pb = new ProcessBuilder("java", "-jar", "TodoListManagerTest/src/test/resources/runTodoManagerRestAPI-1.5.5.jar");
+    private Process p;
+
+    @BeforeEach
+    //@Test
+    void startServer() throws IOException {
+        p = pb.start();
         RestAssured.baseURI = "http://localhost:4567";
     }
 
-    @AfterAll
-    public void shutServer() {
-        throw new NotImplementedException();
+    @AfterEach
+    void shutServer() {
+        RestAssured.get("http://localhost:4567/shutdown");
+        p.destroy();
     }
 
     @Test
     public void failWhenServerDown() {
-//        RestAssured.get("/shutdown");
         try {
+            RestAssured.get("/shutdown");
             Response response = RestAssured.get("http://localhost:4567/todos");
             int status = response.getStatusCode();
-            Assert.assertEquals(200, status);
+            Assert.assertNotEquals(200, status);
         }
         catch (Exception e) {
             System.out.println("Server is down.");
         }
     }
+
+
 }
