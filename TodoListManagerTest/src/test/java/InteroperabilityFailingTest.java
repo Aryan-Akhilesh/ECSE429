@@ -4,7 +4,7 @@ import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 
-public class FailingTest {
+public class InteroperabilityFailingTest {
     /**
      * ALL TESTS HERE ARE EXPECTED TO FAIL!
      */
@@ -100,6 +100,62 @@ public class FailingTest {
                 .header("Content-Type", xml)
                 .body("<category><id>1</id></category>")
                 .post("http://localhost:4567/projects/1/categories");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(201, statusCode);
+    }
+
+    @Test
+    public void getProjectsByCategoryInvalidId() {
+        Response r = RestAssured.given()
+                .header("Accept", json)
+                .get("http://localhost:4567/categories/1/projects");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(404, statusCode);
+    }
+
+    @Test
+    public void headProjectsByCategoryInvalidId() {
+        Response r = RestAssured.given()
+                .header("Accept", json)
+                .head("http://localhost:4567/categories/1/projects");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(404, statusCode);
+    }
+
+    @Test
+    public void postProjectsByCategoryValidIdXml() {
+        Response r = RestAssured.given()
+                .header("Content-Type", xml)
+                .body("<project><id>1</id></project>")
+                .post("http://localhost:4567/categories/1/projects");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(201, statusCode);
+    }
+
+    @Test
+    public void getTodosByCategoryInvalidId() {
+        Response r = RestAssured.given()
+                .header("Accept", json)
+                .get("http://localhost:4567/categories/45/todos");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(404, statusCode);
+    }
+
+    @Test
+    public void headTodosByCategoryInvalidId() {
+        Response r = RestAssured.given()
+                .header("Accept", json)
+                .head("http://localhost:4567/categories/96/todos");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(404, statusCode);
+    }
+
+    @Test
+    public void postTodosByCategoryValidIdXml() {
+        Response r = RestAssured.given()
+                .header("Content-Type", xml)
+                .body("<todo><id>1</id></todo>")
+                .post("http://localhost:4567/categories/1/todos");
         int statusCode = r.getStatusCode();
         Assertions.assertEquals(201, statusCode);
     }
