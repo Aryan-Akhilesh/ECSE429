@@ -6,12 +6,13 @@ import java.io.IOException;
 @TestMethodOrder(MethodOrderer.Random.class)
 public class InteroperabilityTest {
 
+    private static ProcessBuilder pb;
+
     private final String json = "application/json";
     private final String xml = "application/xml";
 
     @BeforeAll
-    static void startServer() {
-        ProcessBuilder pb;
+    static void setupProcess() {
         String os = System.getProperty("os.name");
         if (os.toLowerCase().contains("windows")) {
             pb = new ProcessBuilder(
@@ -19,18 +20,23 @@ public class InteroperabilityTest {
         }
         else {
             pb = new ProcessBuilder(
-                    "sh", "-c", "java -jar .\\src\\test\\resources\\runTodoManagerRestAPI-1.5.5.jar");
+                    "sh", "-c", "java -jar ./src/test/resources/runTodoManagerRestAPI-1.5.5.jar");
         }
+    }
+
+    @BeforeEach
+    void startServer() throws InterruptedException {
         try {
             pb.start();
+            Thread.sleep(300);
         } catch (IOException e) {
             System.out.println("No server");
         }
         RestAssured.baseURI = "http://localhost:4567";
     }
 
-    @AfterAll
-    static void shutServer() {
+    @AfterEach
+    void shutServer() {
         try {
             RestAssured.get("http://localhost:4567/shutdown");
         }
