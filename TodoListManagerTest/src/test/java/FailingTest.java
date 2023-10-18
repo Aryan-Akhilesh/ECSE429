@@ -1,20 +1,21 @@
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 
 public class FailingTest {
+    /**
+     * ALL TESTS HERE ARE EXPECTED TO FAIL!
+     */
+
+    private static ProcessBuilder pb;
 
     private final String json = "application/json";
     private final String xml = "application/xml";
 
     @BeforeAll
-    static void startServer() {
-        ProcessBuilder pb;
+    static void setupProcess() {
         String os = System.getProperty("os.name");
         if (os.toLowerCase().contains("windows")) {
             pb = new ProcessBuilder(
@@ -22,18 +23,23 @@ public class FailingTest {
         }
         else {
             pb = new ProcessBuilder(
-                    "sh", "-c", "java -jar .\\src\\test\\resources\\runTodoManagerRestAPI-1.5.5.jar");
+                    "sh", "-c", "java -jar ./src/test/resources/runTodoManagerRestAPI-1.5.5.jar");
         }
+    }
+
+    @BeforeEach
+    void startServer() throws InterruptedException {
         try {
             pb.start();
+            Thread.sleep(300);
         } catch (IOException e) {
             System.out.println("No server");
         }
         RestAssured.baseURI = "http://localhost:4567";
     }
 
-    @AfterAll
-    static void shutServer() {
+    @AfterEach
+    void shutServer() {
         try {
             RestAssured.get("http://localhost:4567/shutdown");
         }
