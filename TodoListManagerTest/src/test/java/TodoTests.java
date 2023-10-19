@@ -3,11 +3,49 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
-import org.junit.Test;
-import org.junit.Assert;
+import org.junit.jupiter.api.*;
+import java.io.IOException;
 
 
-public class APITests{
+public class TodoTests{
+
+    private static ProcessBuilder pb;
+
+    private final String json = "application/json";
+    private final String xml = "application/xml";
+
+    @BeforeAll
+    static void setupProcess() {
+        String os = System.getProperty("os.name");
+        if (os.toLowerCase().contains("windows")) {
+            pb = new ProcessBuilder(
+                    "cmd.exe", "/c", "java -jar .\\src\\test\\resources\\runTodoManagerRestAPI-1.5.5.jar");
+        }
+        else {
+            pb = new ProcessBuilder(
+                    "sh", "-c", "java -jar ./src/test/resources/runTodoManagerRestAPI-1.5.5.jar");
+        }
+    }
+
+    @BeforeEach
+    void startServer() throws InterruptedException {
+        try {
+            pb.start();
+            Thread.sleep(500);
+        } catch (IOException e) {
+            System.out.println("No server");
+        }
+    }
+
+    @AfterEach
+    void shutServer() {
+        try {
+            RestAssured.get("http://localhost:4567/shutdown");
+        }
+        catch (Exception ignored) {
+        }
+    }
+
 
     @Test
     public void getTodos(){
@@ -18,7 +56,7 @@ public class APITests{
         System.out.println("Time Taken:" + res.getTime());
         System.out.println("Body:" + res.getBody().asString());
 
-        Assert.assertEquals(200,statusCode);
+        Assertions.assertEquals(200,statusCode);
 
     }
 
@@ -31,7 +69,7 @@ public class APITests{
         System.out.println("Time Taken:" + res.getTime());
         System.out.println("Body:" + res.getBody().asString());
 
-        Assert.assertEquals(200,statusCode);
+        Assertions.assertEquals(200,statusCode);
     }
 
     @Test
@@ -43,7 +81,7 @@ public class APITests{
         System.out.println("Time Taken:" + res.getTime());
         System.out.println("Body:" + res.getBody().asString());
 
-        Assert.assertEquals(404,statusCode);
+        Assertions.assertEquals(404,statusCode);
     }
 
     @Test
@@ -56,7 +94,7 @@ public class APITests{
         System.out.println("Body:" + res.getBody().asString());
 
         //Assert.assertEquals("{\"categories\":[{\"id\":\"1\",\"title\":\"Office\",\"description\":\"\"}]}" , res.getBody().asString());
-        Assert.assertEquals(200,statusCode);
+        Assertions.assertEquals(200,statusCode);
 
     }
 
@@ -69,7 +107,7 @@ public class APITests{
         System.out.println("Time Taken:" + res.getTime());
         System.out.println("Body:" + res.getBody().asString());
 
-        Assert.assertEquals(200,statusCode);
+        Assertions.assertEquals(200,statusCode);
     }
 
     @Test
@@ -139,7 +177,7 @@ public class APITests{
 
         System.out.println("Status Code:" + statusCode);
         System.out.println("Time Taken:" + res.getTime());
-        Assert.assertEquals(200,statusCode);
+        Assertions.assertEquals(200,statusCode);
 
         //restoring the 2nd entry
     }
@@ -152,7 +190,7 @@ public class APITests{
         System.out.println("Status Code:" + statusCode);
         System.out.println("Time Taken:" + res.getTime());
         System.out.println("Body:" + res.getBody().asString());
-        Assert.assertEquals(404,statusCode);
+        Assertions.assertEquals(404,statusCode);
     }
 
     @Test
@@ -162,7 +200,7 @@ public class APITests{
 
         System.out.println("Status Code:" + statusCode);
         System.out.println("Time Taken:" + res.getTime());
-        Assert.assertEquals(200,statusCode);
+        Assertions.assertEquals(200,statusCode);
     }
 
     @Test
@@ -172,6 +210,6 @@ public class APITests{
 
         System.out.println("Status Code:" + statusCode);
         System.out.println("Time Taken:" + res.getTime());
-        Assert.assertEquals(200,statusCode);
+        Assertions.assertEquals(200,statusCode);
     }
 }
