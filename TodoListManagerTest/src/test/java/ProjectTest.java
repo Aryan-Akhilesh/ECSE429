@@ -3,10 +3,7 @@ import io.restassured.response.Response;
 import org.json.JSONException;
 import org.junit.jupiter.api.*;
 import org.skyscreamer.jsonassert.JSONAssert;
-
 import java.io.IOException;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestMethodOrder(MethodOrderer.Random.class)
 public class ProjectTest{
@@ -104,7 +101,7 @@ public class ProjectTest{
         Assertions.assertEquals(200,statusCode);
         String completedValue = r1.path("projects[0].completed");
         if(completedValue != null) {
-            assertEquals("false", completedValue);
+            Assertions.assertEquals("false", completedValue);
         }
 
         RestAssured.given().header("Accept",json).body(requestBody).post(pUrl+"/1");
@@ -113,7 +110,7 @@ public class ProjectTest{
         Assertions.assertEquals(200,statusCode);
         String completedValue2 = r2.path("projects[0].completed");
         if(completedValue != null) {
-            assertEquals("true", completedValue2);
+            Assertions.assertEquals("true", completedValue2);
         }
     }
 
