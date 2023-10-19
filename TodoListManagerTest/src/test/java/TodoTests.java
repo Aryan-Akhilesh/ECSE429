@@ -48,125 +48,190 @@ public class TodoTests{
 
 
     @Test
-    public void getTodos(){
-        Response res = RestAssured.get("http://localhost:4567/todos");
+    public void getTodosJson(){
+        Response res = RestAssured.given().header("Accept",json).get("http://localhost:4567/todos");
         int statusCode = res.getStatusCode();
-
-        System.out.println("Status Code:" + statusCode);
-        System.out.println("Time Taken:" + res.getTime());
-        System.out.println("Body:" + res.getBody().asString());
-
+        String expectedBody ="{\"todos\":[{\"id\":\"2\",\"title\":\"file paperwork\",\"doneStatus\":\"false\",\"description\":\"\",\"tasksof\":[{\"id\":\"1\"}]},{\"id\":\"1\",\"title\":\"scan paperwork\",\"doneStatus\":\"false\",\"description\":\"\",\"categories\":[{\"id\":\"1\"}],\"tasksof\":[{\"id\":\"1\"}]}]}";
+        String actualBody = res.getBody().asString();
+        Assertions.assertEquals(expectedBody,actualBody);
         Assertions.assertEquals(200,statusCode);
 
     }
 
     @Test
-    public void getTodoByID(){
-        Response res = RestAssured.get("http://localhost:4567/todos/1");
+    public void getTodosXml(){
+        Response res = RestAssured.given().header("Accept",xml).get("http://localhost:4567/todos");
         int statusCode = res.getStatusCode();
+        String expectedBody = "<todos><todo><doneStatus>false</doneStatus><description/><tasksof><id>1</id></tasksof><id>1</id><categories><id>1</id></categories><title>scan paperwork</title></todo><todo><doneStatus>false</doneStatus><description/><tasksof><id>1</id></tasksof><id>2</id><title>file paperwork</title></todo></todos>";
+        String actualBody = res.getBody().asString();
+        Assertions.assertEquals(expectedBody,actualBody);
+        Assertions.assertEquals(200,statusCode);
 
-        System.out.println("Status Code:" + statusCode);
-        System.out.println("Time Taken:" + res.getTime());
-        System.out.println("Body:" + res.getBody().asString());
+    }
 
+    @Test
+    public void getTodoByIDJSON(){
+        Response res = RestAssured.given().header("Accept",json).get("http://localhost:4567/todos/1");
+        int statusCode = res.getStatusCode();
+        String body = "{\"todos\":[{\"id\":\"1\",\"title\":\"scan paperwork\",\"doneStatus\":\"false\",\"description\":\"\",\"categories\":[{\"id\":\"1\"}],\"tasksof\":[{\"id\":\"1\"}]}]}";
+        Assertions.assertEquals(body,res.getBody().asString());
         Assertions.assertEquals(200,statusCode);
     }
 
     @Test
-    public void getTodoByInvalidID(){
-        Response res = RestAssured.get("http://localhost:4567/todos/999");
+    public void getTodoByIDXml(){
+        Response res = RestAssured.given().header("Accept",xml).get("http://localhost:4567/todos/1");
         int statusCode = res.getStatusCode();
+        String body = "<todos><todo><doneStatus>false</doneStatus><description/><tasksof><id>1</id></tasksof><id>1</id><categories><id>1</id></categories><title>scan paperwork</title></todo></todos>";
+        Assertions.assertEquals(body,res.getBody().asString());
+        Assertions.assertEquals(200,statusCode);
+    }
 
-        System.out.println("Status Code:" + statusCode);
-        System.out.println("Time Taken:" + res.getTime());
-        System.out.println("Body:" + res.getBody().asString());
-
+    @Test
+    public void getTodoByInvalidIDJson(){
+        Response res = RestAssured.given().header("Accept",json).get("http://localhost:4567/todos/999");
+        int statusCode = res.getStatusCode();
+        String body = "{\"errorMessages\":[\"Could not find an instance with todos/999\"]}";
+        Assertions.assertEquals(body,res.getBody().asString());
         Assertions.assertEquals(404,statusCode);
     }
 
     @Test
-    public void getCategoryOfTodo(){
-        Response res = RestAssured.get("http://localhost:4567/todos/1/categories");
+    public void getTodoByInvalidIDXml(){
+        Response res = RestAssured.given().header("Accept",xml).get("http://localhost:4567/todos/999");
         int statusCode = res.getStatusCode();
-
-        System.out.println("Status Code:" + statusCode);
-        System.out.println("Time Taken:" + res.getTime());
-        System.out.println("Body:" + res.getBody().asString());
-
-        //Assert.assertEquals("{\"categories\":[{\"id\":\"1\",\"title\":\"Office\",\"description\":\"\"}]}" , res.getBody().asString());
-        Assertions.assertEquals(200,statusCode);
-
+        String body = "<errorMessages><errorMessage>Could not find an instance with todos/999</errorMessage></errorMessages>";
+        Assertions.assertEquals(body,res.getBody().asString());
+        Assertions.assertEquals(404,statusCode);
     }
 
     @Test
-    public void getTaskofTodo(){
-        Response res = RestAssured.get("http://localhost:4567/todos/1/tasksof");
+    public void getTaskofTodoJson(){
+        Response res = RestAssured.given().header("Accept",json).get("http://localhost:4567/todos/1/tasksof");
         int statusCode = res.getStatusCode();
-
-        System.out.println("Status Code:" + statusCode);
-        System.out.println("Time Taken:" + res.getTime());
-        System.out.println("Body:" + res.getBody().asString());
-
+        String body = "{\"projects\":[{\"id\":\"1\",\"title\":\"Office Work\",\"completed\":\"false\",\"active\":\"false\",\"description\":\"\",\"tasks\":[{\"id\":\"2\"},{\"id\":\"1\"}]}]}";
+        Assertions.assertEquals(body,res.getBody().asString());
         Assertions.assertEquals(200,statusCode);
     }
 
     @Test
-    public void postTodoWithoutID(){
+    public void getTaskofTodoXml(){
+        Response res = RestAssured.given().header("Accept",xml).get("http://localhost:4567/todos/1/tasksof");
+        int statusCode = res.getStatusCode();
+        String body = "<projects><project><active>false</active><description/><id>1</id><completed>false</completed><title>Office Work</title><tasks><id>2</id></tasks><tasks><id>1</id></tasks></project></projects>";
+        Assertions.assertEquals(body,res.getBody().asString());
+        Assertions.assertEquals(200,statusCode);
+    }
+
+    @Test
+    public void postTodoWithoutIDJson(){
         String jsonString = "{" + "\"title\": \"get more paperwork\"," + "\"doneStatus\": false," +
                 "\"description\": \"\"," + "\"tasksof\": [" + "{" + "\"id\": \"1\"" + "}" + "]," +
                 "\"categories\": [" + "{" + "\"id\": \"1\"" + "}" + "]" + "}";
 
-        RequestSpecification request = RestAssured.given();
-        request.contentType(ContentType.JSON);
-        request.baseUri("http://localhost:4567/todos");
-        request.body(jsonString);
-        Response response = request.post();
-        System.out.println(response.asString());
-        ValidatableResponse validatableResponse = response.then();
-        validatableResponse.statusCode(201);
+        Response res = RestAssured.given()
+                       .header("Content-Type",json)
+                       .body(jsonString)
+                        .post("http://localhost:4567/todos");
+
+        int statusCode = res.getStatusCode();
+        Assertions.assertEquals(201,statusCode);
     }
 
     @Test
-    public void postTodoWithID(){
+    public void postTodoWithoutIDXml(){
+        String xmlString = "<todo><title>get more paperwork</title><doneStatus>False</doneStatus></todo>";
+
+        Response res = RestAssured.given()
+                .header("Content-Type",xml)
+                .body(xmlString)
+                .post("http://localhost:4567/todos");
+
+        int statusCode = res.getStatusCode();
+        Assertions.assertEquals(201,statusCode);
+    }
+
+    @Test
+    public void postTodoWithIDJson(){
         String jsonString = "{" + "\"id\": \"4\"," + "\"title\": \"Photocopy Documents\"," + "\"doneStatus\": false," +
                 "\"description\": \"\"," + "\"tasksof\": [" + "{" + "\"id\": \"1\"" + "}" + "]," +
                 "\"categories\": [" + "{" + "\"id\": \"1\"" + "}" + "]" + "}";
-        RequestSpecification request = RestAssured.given();
-        request.contentType(ContentType.JSON);
-        request.baseUri("http://localhost:4567/todos");
-        request.body(jsonString);
-        Response response = request.post();
-        System.out.println(response.asString());
-        ValidatableResponse validatableResponse = response.then();
-        validatableResponse.statusCode(400);
+
+        Response res = RestAssured.given()
+                .header("Content-Type",json)
+                .body(jsonString)
+                .post("http://localhost:4567/todos");
+
+        int statusCode = res.getStatusCode();
+        Assertions.assertEquals(400,statusCode);
     }
 
     @Test
-    public void postTodoWithDiffTitle(){
+    public void postTodoWithIDXml(){
+        String xmlString ="<todo><title>get more paperwork</title><doneStatus>False</doneStatus><id>4</id></todo>";
+
+        Response res = RestAssured.given()
+                .header("Content-Type",xml)
+                .body(xmlString)
+                .post("http://localhost:4567/todos");
+
+        int statusCode = res.getStatusCode();
+        Assertions.assertEquals(400,statusCode);
+
+    }
+
+    @Test
+    public void postTodoWithDiffInfoJson(){
         String jsonString =  "{" + "\"id\": 1," +"\"title\": \"get more paperwork\"," + "\"doneStatus\": false," +
                 "\"description\": \"\"," + "\"tasksof\": [" + "{" + "\"id\": \"1\"" + "}" + "]," +
                 "\"categories\": [" + "{" + "\"id\": \"1\"" + "}" + "]" + "}";
-        RequestSpecification request = RestAssured.given();
-        request.contentType(ContentType.JSON);
-        request.baseUri("http://localhost:4567/todos/1");
-        request.body(jsonString);
-        Response response = request.post();
-        System.out.println(response.asString());
-        ValidatableResponse validatableResponse = response.then();
-        validatableResponse.statusCode(200);
+
+        Response res = RestAssured.given()
+                .header("Content-Type",json)
+                .body(jsonString)
+                .post("http://localhost:4567/todos/1");
+
+        int statusCode = res.getStatusCode();
+        Assertions.assertEquals(200,statusCode);
     }
 
     @Test
-    public void postWithoutBody(){
+    public void postTodoWithDiffInfoXml(){
+        String xmlString = "<todo><title>get more paperwork</title><doneStatus>true</doneStatus><id>1</id></todo>";
+
+        Response res = RestAssured.given()
+                .header("Content-Type",xml)
+                .body(xmlString)
+                .post("http://localhost:4567/todos/1");
+
+        int statusCode = res.getStatusCode();
+        Assertions.assertEquals(200,statusCode);
+    }
+
+    @Test
+    public void postWithoutBodyJson(){
         String jsonString = "{}";
-        RequestSpecification request = RestAssured.given();
-        request.contentType(ContentType.JSON);
-        request.baseUri("http://localhost:4567/todos");
-        request.body(jsonString);
-        Response response = request.post();
-        System.out.println(response.asString());
-        ValidatableResponse validatableResponse = response.then();
-        validatableResponse.statusCode(400);
+
+        Response res = RestAssured.given()
+                .header("Content-Type",json)
+                .body(jsonString)
+                .post("http://localhost:4567/todos");
+
+        int statusCode = res.getStatusCode();
+        Assertions.assertEquals(400,statusCode);
+    }
+
+    @Test
+    public void postWithoutBodyXml(){
+        String xmlString = "<>";
+
+        Response res = RestAssured.given()
+                .header("Content-Type",xml)
+                .body(xmlString)
+                .post("http://localhost:4567/todos");
+
+        int statusCode = res.getStatusCode();
+        Assertions.assertEquals(400,statusCode);
     }
 
     @Test
@@ -174,42 +239,35 @@ public class TodoTests{
 
         Response res = RestAssured.delete(" http://localhost:4567/todos/2");
         int statusCode = res.getStatusCode();
-
-        System.out.println("Status Code:" + statusCode);
-        System.out.println("Time Taken:" + res.getTime());
         Assertions.assertEquals(200,statusCode);
-
-        //restoring the 2nd entry
     }
 
     @Test
-    public void deleteNonExistingTodo(){
-        Response res = RestAssured.delete("http://localhost:4567/todos/999");
+    public void deleteNonExistingTodoJson(){
+        Response res = RestAssured.given()
+                .header("Accept",json)
+                .delete("http://localhost:4567/todos/999");
         int statusCode = res.getStatusCode();
-
-        System.out.println("Status Code:" + statusCode);
-        System.out.println("Time Taken:" + res.getTime());
-        System.out.println("Body:" + res.getBody().asString());
+        String body = "{\"errorMessages\":[\"Could not find any instances with todos/999\"]}";
+        Assertions.assertEquals(body,res.getBody().asString());
         Assertions.assertEquals(404,statusCode);
     }
 
     @Test
-    public void deleteCategoryFromTodo(){
-        Response res = RestAssured.delete("http://localhost:4567/todos/1/categories/1");
+    public void deleteNonExistingTodoXml(){
+        Response res = RestAssured.given()
+                .header("Accept",xml)
+                .delete("http://localhost:4567/todos/999");
         int statusCode = res.getStatusCode();
-
-        System.out.println("Status Code:" + statusCode);
-        System.out.println("Time Taken:" + res.getTime());
-        Assertions.assertEquals(200,statusCode);
+        String body = "<errorMessages><errorMessage>Could not find any instances with todos/999</errorMessage></errorMessages>";
+        Assertions.assertEquals(body,res.getBody().asString());
+        Assertions.assertEquals(404,statusCode);
     }
 
     @Test
     public void deleteTaskOfTodo(){
         Response res = RestAssured.delete("http://localhost:4567/todos/1/tasksof/1");
         int statusCode = res.getStatusCode();
-
-        System.out.println("Status Code:" + statusCode);
-        System.out.println("Time Taken:" + res.getTime());
         Assertions.assertEquals(200,statusCode);
     }
 }
