@@ -65,8 +65,8 @@ public class CategoriesTests{
     public void getAllCategoriesXml() {
         Response r = RestAssured.given().header("Accept", xml).get("http://localhost:4567/categories");
         int statusCode = r.getStatusCode();
-        String body ="<categories><category><description/><id>2</id><title>Home</title></category><category><description/><id>1</id><title>Office</title></category></categories>";
-        MatcherAssert.assertThat(body, isSimilarTo(r.getBody().asString()).withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byNameAndText)));
+        String body ="<categories><category><description/><id>1</id><title>Office</title></category><category><description/><id>2</id><title>Home</title></category></categories>";
+        MatcherAssert.assertThat(body, isSimilarTo(r.getBody().asString()).ignoreWhitespace().normalizeWhitespace().withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byNameAndText)));
         Assertions.assertEquals(200,statusCode);
 
     }
@@ -222,11 +222,47 @@ public class CategoriesTests{
 
     @Test
     public void deleteCategoryWithExistingIdXml() {
-        Response r = RestAssured.given().header("Accept", json).delete("http://localhost:4567/categories/2");
+        Response r = RestAssured.given().header("Accept", xml).delete("http://localhost:4567/categories/2");
         int statusCode = r.getStatusCode();
         String body = "";
         XMLAssert.assertEquals(body,r.getBody().asString());
         Assertions.assertEquals(200,statusCode);
+    }
+
+    @Test
+    public void createCategoryWithExistingIdJson() {
+        Response r = RestAssured.given().header("Accept", json).body("{\"title\":\"new category\"}").post("http://localhost:4567/categories/1");
+        int statusCode = r.getStatusCode();
+        String body = "{\"id\":\"1\",\"title\":\"new category\",\"description\":\"\"}";
+        Assertions.assertEquals(body, r.getBody().asString());
+        Assertions.assertEquals(200,statusCode);
+    }
+
+    @Test
+    public void createCategoryWithExistingIdXml() {
+        Response r = RestAssured.given().header("Content-Type", xml).header("Accept", xml).body("<category><title>new category</title></category>").post("http://localhost:4567/categories/1");
+        int statusCode = r.getStatusCode();
+        String body = "<category><description/><id>1</id><title>new category</title></category>";
+        XMLAssert.assertEquals(body, r.getBody().asString());
+        Assertions.assertEquals(200,statusCode);
+    }
+
+    @Test
+    public void createNewCategoryWithInvalidIdJson() {
+        Response r = RestAssured.given().header("Accept", json).body("{\"title\":\"new category\"}").post("http://localhost:4567/categories/10");
+        int statusCode = r.getStatusCode();
+        String body = "{\"errorMessages\":[\"No such category entity instance with GUID or ID 10 found\"]}";
+        Assertions.assertEquals(body, r.getBody().asString());
+        Assertions.assertEquals(404,statusCode);
+    }
+
+    @Test
+    public void createNewCategoryWithInvalidIdXml() {
+        Response r = RestAssured.given().header("Content-Type", xml).header("Accept", xml).body("<category><title>new category</title></category>").post("http://localhost:4567/categories/10");
+        int statusCode = r.getStatusCode();
+        String body = "<errorMessages><errorMessage>No such category entity instance with GUID or ID 10 found</errorMessage></errorMessages>";
+        XMLAssert.assertEquals(body, r.getBody().asString());
+        Assertions.assertEquals(404,statusCode);
     }
 
 }
