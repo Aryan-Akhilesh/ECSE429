@@ -1,9 +1,9 @@
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import io.restassured.response.ValidatableResponse;
-import io.restassured.specification.RequestSpecification;
+import org.custommonkey.xmlunit.XMLAssert;
+import org.json.JSONException;
 import org.junit.jupiter.api.*;
+import org.skyscreamer.jsonassert.JSONAssert;
 import java.io.IOException;
 
 
@@ -48,23 +48,23 @@ public class TodoTests{
 
 
     @Test
-    public void getTodosJson(){
+    public void getTodosJson() throws JSONException {
         Response res = RestAssured.given().header("Accept",json).get("http://localhost:4567/todos");
         int statusCode = res.getStatusCode();
         String expectedBody ="{\"todos\":[{\"id\":\"2\",\"title\":\"file paperwork\",\"doneStatus\":\"false\",\"description\":\"\",\"tasksof\":[{\"id\":\"1\"}]},{\"id\":\"1\",\"title\":\"scan paperwork\",\"doneStatus\":\"false\",\"description\":\"\",\"categories\":[{\"id\":\"1\"}],\"tasksof\":[{\"id\":\"1\"}]}]}";
         String actualBody = res.getBody().asString();
-        Assertions.assertEquals(expectedBody,actualBody);
+        JSONAssert.assertEquals(expectedBody,actualBody,false);
         Assertions.assertEquals(200,statusCode);
 
     }
 
     @Test
-    public void getTodosXml(){
+    public void getTodosXml() {
         Response res = RestAssured.given().header("Accept",xml).get("http://localhost:4567/todos");
         int statusCode = res.getStatusCode();
-        String expectedBody = "<todos><todo><doneStatus>false</doneStatus><description/><tasksof><id>1</id></tasksof><id>1</id><categories><id>1</id></categories><title>scan paperwork</title></todo><todo><doneStatus>false</doneStatus><description/><tasksof><id>1</id></tasksof><id>2</id><title>file paperwork</title></todo></todos>";
+        String expectedBody = "<todos><todo><doneStatus>false</doneStatus><description/><tasksof><id>1</id></tasksof><id>2</id><title>file paperwork</title></todo><todo><doneStatus>false</doneStatus><description/><tasksof><id>1</id></tasksof><id>1</id><categories><id>1</id></categories><title>scan paperwork</title></todo></todos>";
         String actualBody = res.getBody().asString();
-        Assertions.assertEquals(expectedBody,actualBody);
+        XMLAssert.assertEquals(expectedBody,actualBody);
         Assertions.assertEquals(200,statusCode);
 
     }
