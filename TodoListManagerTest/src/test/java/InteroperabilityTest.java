@@ -28,7 +28,7 @@ public class InteroperabilityTest {
     void startServer() throws InterruptedException {
         try {
             pb.start();
-            Thread.sleep(500);
+            Thread.sleep(1000);
         } catch (IOException e) {
             System.out.println("No server");
         }
