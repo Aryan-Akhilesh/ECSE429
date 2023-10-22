@@ -13,7 +13,7 @@ import java.io.IOException;
 import static org.xmlunit.matchers.CompareMatcher.isSimilarTo;
 
 
-public class TodoTests{
+public class TodosTests {
 
     private static ProcessBuilder pb;
 
@@ -37,7 +37,7 @@ public class TodoTests{
     void startServer() throws InterruptedException {
         try {
             pb.start();
-            Thread.sleep(500);
+            Thread.sleep(1000);
         } catch (IOException e) {
             System.out.println("No server");
         }

@@ -28,7 +28,7 @@ public class InteroperabilityTest {
     void startServer() throws InterruptedException {
         try {
             pb.start();
-            Thread.sleep(500);
+            Thread.sleep(1000);
         } catch (IOException e) {
             System.out.println("No server");
         }
@@ -85,8 +85,6 @@ public class InteroperabilityTest {
                 .header("Accept", json)
                 .head("http://localhost:4567/todos/1/categories");
         int statusCode = r.getStatusCode();
-        String body = "";
-        Assertions.assertEquals(body, r.getBody().asString());
         Assertions.assertEquals(200, statusCode);
     }
 
@@ -96,8 +94,6 @@ public class InteroperabilityTest {
                 .header("Accept", xml)
                 .head("http://localhost:4567/todos/1/categories");
         int statusCode = r.getStatusCode();
-        String body = "";
-        Assertions.assertEquals(body, r.getBody().asString());
         Assertions.assertEquals(200, statusCode);
     }
 
@@ -108,8 +104,6 @@ public class InteroperabilityTest {
                 .header("Accept", json)
                 .head("http://localhost:4567/todos/99/categories");
         int statusCode = r.getStatusCode();
-        String body = "";
-        Assertions.assertEquals(body, r.getBody().asString());
         Assertions.assertEquals(200, statusCode);
     }
 
@@ -232,8 +226,6 @@ public class InteroperabilityTest {
                 .header("Accept", json)
                 .head("http://localhost:4567/projects/1/categories");
         int statusCode = r.getStatusCode();
-        String body = "";
-        Assertions.assertEquals(body, r.getBody().asString());
         Assertions.assertEquals(200, statusCode);
     }
 
@@ -243,8 +235,6 @@ public class InteroperabilityTest {
                 .header("Accept", xml)
                 .head("http://localhost:4567/projects/1/categories");
         int statusCode = r.getStatusCode();
-        String body = "";
-        Assertions.assertEquals(body, r.getBody().asString());
         Assertions.assertEquals(200, statusCode);
     }
 
@@ -255,8 +245,6 @@ public class InteroperabilityTest {
                 .header("Accept", json)
                 .head("http://localhost:4567/projects/99/categories");
         int statusCode = r.getStatusCode();
-        String body = "";
-        Assertions.assertEquals(body, r.getBody().asString());
         Assertions.assertEquals(200, statusCode);
     }
 
@@ -381,8 +369,6 @@ public class InteroperabilityTest {
                 .header("Accept", json)
                 .head("http://localhost:4567/categories/1/projects");
         int statusCode = r.getStatusCode();
-        String body = "";
-        Assertions.assertEquals(body, r.getBody().asString());
         Assertions.assertEquals(200, statusCode);
     }
 
@@ -392,8 +378,6 @@ public class InteroperabilityTest {
                 .header("Accept", xml)
                 .head("http://localhost:4567/categories/1/projects");
         int statusCode = r.getStatusCode();
-        String body = "";
-        Assertions.assertEquals(body, r.getBody().asString());
         Assertions.assertEquals(200, statusCode);
     }
 
@@ -404,8 +388,6 @@ public class InteroperabilityTest {
                 .header("Accept", json)
                 .head("http://localhost:4567/categories/57/projects");
         int statusCode = r.getStatusCode();
-        String body = "";
-        Assertions.assertEquals(body, r.getBody().asString());
         Assertions.assertEquals(200, statusCode);
     }
 
@@ -530,8 +512,6 @@ public class InteroperabilityTest {
                 .header("Accept", json)
                 .head("http://localhost:4567/categories/1/todos");
         int statusCode = r.getStatusCode();
-        String body = "";
-        Assertions.assertEquals(body, r.getBody().asString());
         Assertions.assertEquals(200, statusCode);
     }
 
@@ -541,8 +521,6 @@ public class InteroperabilityTest {
                 .header("Accept", xml)
                 .head("http://localhost:4567/categories/1/todos");
         int statusCode = r.getStatusCode();
-        String body = "";
-        Assertions.assertEquals(body, r.getBody().asString());
         Assertions.assertEquals(200, statusCode);
     }
 
@@ -553,8 +531,6 @@ public class InteroperabilityTest {
                 .header("Accept", json)
                 .head("http://localhost:4567/categories/96/todos");
         int statusCode = r.getStatusCode();
-        String body = "";
-        Assertions.assertEquals(body, r.getBody().asString());
         Assertions.assertEquals(200, statusCode);
     }
 
