@@ -51,7 +51,6 @@ public class ProjectTestFailingTest{
     }
 
 
-
     //Post a new Project with an ID should be allowed, however it is not.
     @Test
     public void postProjectWithIDJsonFailing(){
@@ -80,29 +79,12 @@ public class ProjectTestFailingTest{
         Assertions.assertEquals(200,statusCode);
     }
 
-
-
     //Test to get the tasks of a non-existing project. It produces unexpected result and statuscode.
     @Test
     public void getProjectTaskNonExistingProjectFailing() throws JSONException {
         Response r1 = RestAssured.given().header("Accept",json).body("").get(pUrl+"/0/tasks");
         int statusCode = r1.getStatusCode();
         Assertions.assertEquals(statusCode,404);
-
-        //String body = r1.getBody().asString();
-        //JSONAssert.assertEquals("{\"todos\":[{\"id\":\"1\",\"title\":\"scan paperwork\",\"doneStatus\":\"false\",\"description\":\"\",\"categories\":[{\"id\":\"1\"}],\"tasksof\":[{\"id\":\"1\"}]},{\"id\":\"2\",\"title\":\"file paperwork\",\"doneStatus\":\"false\",\"description\":\"\",\"tasksof\":[{\"id\":\"1\"}]}]}",body,false);
-
     }
-
-
-
-
-
-
-
-
-
-
-
 
 }
