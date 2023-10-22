@@ -4,11 +4,8 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.json.JSONException;
 import org.junit.jupiter.api.*;
-import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.io.IOException;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestMethodOrder(MethodOrderer.Random.class)
 public class ProjectsFailingTest {
