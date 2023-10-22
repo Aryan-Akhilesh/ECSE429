@@ -125,6 +125,20 @@ public class CategoriesTests{
     }
 
     @Test
+    public void createNewCategoriesMalformedJson() {
+        Response r = RestAssured.given().header("Accept", json).body("{\"title\":-\"new category\"}").post("http://localhost:4567/categories");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(400,statusCode);
+    }
+
+    @Test
+    public void createNewCategoriesMalformedXml() {
+        Response r = RestAssured.given().header("Content-Type", xml).header("Accept", xml).body("<category><description/>3<id></id><title>new category</title></category>").post("http://localhost:4567/categories");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(400,statusCode);
+    }
+
+    @Test
     public void deleteCategoryWithNoIdJson() {
         Response r = RestAssured.given().header("Accept", json).delete("http://localhost:4567/categories");
         int statusCode = r.getStatusCode();
