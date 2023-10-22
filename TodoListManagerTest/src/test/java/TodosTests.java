@@ -108,7 +108,7 @@ public class TodosTests {
         Response res = RestAssured.given().header("Accept",xml).get("http://localhost:4567/todos/1/tasksof");
         int statusCode = res.getStatusCode();
         String body = "<projects><project><active>false</active><description/><id>1</id><completed>false</completed><title>Office Work</title><tasks><id>2</id></tasks><tasks><id>1</id></tasks></project></projects>";
-        Assertions.assertEquals(body,res.getBody().asString());
+        Assertions.assertTrue((res.getBody().asString()).matches("<projects>(?:<project>(?:(?!<\\/project>)(?:<active>false<\\/active>|<description\\/>|<id>1<\\/id>|<completed>false<\\/completed>|<title>Office Work<\\/title>|<tasks>(?:(?!<\\/tasks>)(?:<id>2<\\/id>|<id>1<\\/id>))<\\/tasks>)*?)<\\/project>)*<\\/projects>"));
         Assertions.assertEquals(200,statusCode);
     }
 

@@ -57,6 +57,14 @@ public class CategoriesTests{
     }
 
     @Test
+    public void getAllCategoriesXml() {
+        Response r = RestAssured.given().header("Accept", xml).get("http://localhost:4567/categories");
+        int statusCode = r.getStatusCode();
+        Assertions.assertTrue((r.getBody().asString()).matches("<categories>(<category><description\\/><id>1<\\/id><title>Office<\\/title><\\/category><category><description\\/><id>2<\\/id><title>Home<\\/title><\\/category>|<category><description\\/><id>2<\\/id><title>Home<\\/title><\\/category><category><description\\/><id>1<\\/id><title>Office<\\/title><\\/category>)<\\/categories>"));
+        Assertions.assertEquals(200,statusCode);
+    }
+
+    @Test
     public void getCategoriesInvalidIdJson() {
         Response r = RestAssured.given().header("Accept", json).get("http://localhost:4567/categories/0");
         int statusCode = r.getStatusCode();
