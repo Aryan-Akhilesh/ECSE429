@@ -59,7 +59,6 @@ public class InteroperabilityFailingTest {
     @Test
     public void headCategoriesByTodoInvalidId() {
         Response r = RestAssured.given()
-                .header("Accept", json)
                 .head("http://localhost:4567/todos/99/categories");
         int statusCode = r.getStatusCode();
         Assertions.assertEquals(404, statusCode);
@@ -88,7 +87,6 @@ public class InteroperabilityFailingTest {
     // Success with weird behavior
     public void headProjectsByTodoInvalidId() {
         Response r = RestAssured.given()
-                .header("Accept", json)
                 .head("http://localhost:4567/projects/99/categories");
         int statusCode = r.getStatusCode();
         Assertions.assertEquals(404, statusCode);
@@ -116,7 +114,6 @@ public class InteroperabilityFailingTest {
     @Test
     public void headProjectsByCategoryInvalidId() {
         Response r = RestAssured.given()
-                .header("Accept", json)
                 .head("http://localhost:4567/categories/1/projects");
         int statusCode = r.getStatusCode();
         Assertions.assertEquals(404, statusCode);
@@ -144,7 +141,6 @@ public class InteroperabilityFailingTest {
     @Test
     public void headTodosByCategoryInvalidId() {
         Response r = RestAssured.given()
-                .header("Accept", json)
                 .head("http://localhost:4567/categories/96/todos");
         int statusCode = r.getStatusCode();
         Assertions.assertEquals(404, statusCode);

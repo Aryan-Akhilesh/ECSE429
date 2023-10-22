@@ -80,18 +80,8 @@ public class InteroperabilityTest {
     }
 
     @Test
-    public void headCategoriesByTodoValidIdJson() {
+    public void headCategoriesByTodoValidId() {
         Response r = RestAssured.given()
-                .header("Accept", json)
-                .head("http://localhost:4567/todos/1/categories");
-        int statusCode = r.getStatusCode();
-        Assertions.assertEquals(200, statusCode);
-    }
-
-    @Test
-    public void headCategoriesByTodoValidIdXml() {
-        Response r = RestAssured.given()
-                .header("Accept", xml)
                 .head("http://localhost:4567/todos/1/categories");
         int statusCode = r.getStatusCode();
         Assertions.assertEquals(200, statusCode);
@@ -101,7 +91,6 @@ public class InteroperabilityTest {
     // Success with weird behavior
     public void headCategoriesByTodoInvalidId() {
         Response r = RestAssured.given()
-                .header("Accept", json)
                 .head("http://localhost:4567/todos/99/categories");
         int statusCode = r.getStatusCode();
         Assertions.assertEquals(200, statusCode);
@@ -221,18 +210,8 @@ public class InteroperabilityTest {
     }
 
     @Test
-    public void headCategoriesByProjectValidIdJson() {
+    public void headCategoriesByProjectValidId() {
         Response r = RestAssured.given()
-                .header("Accept", json)
-                .head("http://localhost:4567/projects/1/categories");
-        int statusCode = r.getStatusCode();
-        Assertions.assertEquals(200, statusCode);
-    }
-
-    @Test
-    public void headCategoriesByProjectValidIdXml() {
-        Response r = RestAssured.given()
-                .header("Accept", xml)
                 .head("http://localhost:4567/projects/1/categories");
         int statusCode = r.getStatusCode();
         Assertions.assertEquals(200, statusCode);
@@ -242,7 +221,6 @@ public class InteroperabilityTest {
     // Success with weird behavior
     public void headCategoriesByProjectInvalidId() {
         Response r = RestAssured.given()
-                .header("Accept", json)
                 .head("http://localhost:4567/projects/99/categories");
         int statusCode = r.getStatusCode();
         Assertions.assertEquals(200, statusCode);
@@ -364,18 +342,8 @@ public class InteroperabilityTest {
     }
 
     @Test
-    public void headProjectsByCategoryValidIdJson() {
+    public void headProjectsByCategoryValidId() {
         Response r = RestAssured.given()
-                .header("Accept", json)
-                .head("http://localhost:4567/categories/1/projects");
-        int statusCode = r.getStatusCode();
-        Assertions.assertEquals(200, statusCode);
-    }
-
-    @Test
-    public void headProjectsByCategoryValidIdXml() {
-        Response r = RestAssured.given()
-                .header("Accept", xml)
                 .head("http://localhost:4567/categories/1/projects");
         int statusCode = r.getStatusCode();
         Assertions.assertEquals(200, statusCode);
@@ -385,7 +353,6 @@ public class InteroperabilityTest {
     // Success with weird behavior
     public void headProjectsByCategoryInvalidId() {
         Response r = RestAssured.given()
-                .header("Accept", json)
                 .head("http://localhost:4567/categories/57/projects");
         int statusCode = r.getStatusCode();
         Assertions.assertEquals(200, statusCode);
@@ -507,18 +474,8 @@ public class InteroperabilityTest {
     }
 
     @Test
-    public void headTodosByCategoryValidIdJson() {
+    public void headTodosByCategoryValidId() {
         Response r = RestAssured.given()
-                .header("Accept", json)
-                .head("http://localhost:4567/categories/1/todos");
-        int statusCode = r.getStatusCode();
-        Assertions.assertEquals(200, statusCode);
-    }
-
-    @Test
-    public void headTodosByCategoryValidIdXml() {
-        Response r = RestAssured.given()
-                .header("Accept", xml)
                 .head("http://localhost:4567/categories/1/todos");
         int statusCode = r.getStatusCode();
         Assertions.assertEquals(200, statusCode);
