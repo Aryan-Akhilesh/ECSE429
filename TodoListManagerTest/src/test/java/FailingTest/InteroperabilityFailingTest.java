@@ -1,9 +1,12 @@
+package FailingTest;
+
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 
+@TestMethodOrder(MethodOrderer.Random.class)
 public class InteroperabilityFailingTest {
     /**
      * ALL TESTS HERE ARE EXPECTED TO FAIL!

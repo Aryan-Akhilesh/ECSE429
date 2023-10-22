@@ -1,3 +1,5 @@
+package PassingTest;
+
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.custommonkey.xmlunit.XMLAssert;

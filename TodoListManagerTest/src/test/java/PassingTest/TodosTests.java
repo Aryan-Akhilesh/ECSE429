@@ -1,3 +1,5 @@
+package PassingTest;
+
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.json.JSONException;
@@ -6,7 +8,7 @@ import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.io.IOException;
 
-
+@TestMethodOrder(MethodOrderer.Random.class)
 public class TodosTests {
 
     private static ProcessBuilder pb;
