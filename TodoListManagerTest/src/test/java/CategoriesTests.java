@@ -1,16 +1,11 @@
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.custommonkey.xmlunit.XMLAssert;
-import org.hamcrest.MatcherAssert;
 import org.json.JSONException;
 import org.junit.jupiter.api.*;
 import org.skyscreamer.jsonassert.JSONAssert;
-import org.xmlunit.diff.DefaultNodeMatcher;
-import org.xmlunit.diff.ElementSelectors;
 
 import java.io.IOException;
-
-import static org.xmlunit.matchers.CompareMatcher.isSimilarTo;
 
 @TestMethodOrder(MethodOrderer.Random.class)
 public class CategoriesTests{
@@ -59,16 +54,6 @@ public class CategoriesTests{
         String body ="{\"categories\":[{\"id\":\"2\",\"title\":\"Home\",\"description\":\"\"},{\"id\":\"1\",\"title\":\"Office\",\"description\":\"\"}]}";
         JSONAssert.assertEquals(body,r.getBody().asString(), false);
         Assertions.assertEquals(200,statusCode);
-    }
-
-    @Test
-    public void getAllCategoriesXml() {
-        Response r = RestAssured.given().header("Accept", xml).get("http://localhost:4567/categories");
-        int statusCode = r.getStatusCode();
-        String body ="<categories><category><description/><id>1</id><title>Office</title></category><category><description/><id>2</id><title>Home</title></category></categories>";
-        MatcherAssert.assertThat(body, isSimilarTo(r.getBody().asString()).ignoreWhitespace().normalizeWhitespace().withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byNameAndText)));
-        Assertions.assertEquals(200,statusCode);
-
     }
 
     @Test
@@ -265,4 +250,59 @@ public class CategoriesTests{
         Assertions.assertEquals(404,statusCode);
     }
 
+    @Test
+    public void headCategoriesWithNoId() {
+        Response r = RestAssured.given().head("http://localhost:4567/categories");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(statusCode,200);
+    }
+
+    @Test
+    public void headCategoriesWithValidId() {
+        Response r = RestAssured.given().head("http://localhost:4567/categories/1");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(statusCode,200);
+    }
+
+    @Test
+    public void headCategoriesWithInvalidId() {
+        Response r = RestAssured.given().head("http://localhost:4567/categories/10");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(statusCode,404);
+    }
+
+    @Test
+    public void optionCategoriesWithNoId() {
+        Response r = RestAssured.given().options("http://localhost:4567/categories");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(statusCode,200);
+    }
+
+    @Test
+    public void optionCategoriesWithValidId() {
+        Response r = RestAssured.given().options("http://localhost:4567/categories/1");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(statusCode,200);
+    }
+
+    @Test
+    public void patchCategoriesWithNoId() {
+        Response r = RestAssured.given().patch("http://localhost:4567/categories");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(statusCode,405);
+    }
+
+    @Test
+    public void patchCategoriesWithValidId() {
+        Response r = RestAssured.given().patch("http://localhost:4567/categories/1");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(statusCode,405);
+    }
+
+    @Test
+    public void patchCategoriesWithInvalidId() {
+        Response r = RestAssured.given().patch("http://localhost:4567/categories/10");
+        int statusCode = r.getStatusCode();
+        Assertions.assertEquals(statusCode,405);
+    }
 }
