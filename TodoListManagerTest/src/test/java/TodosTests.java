@@ -7,7 +7,7 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import java.io.IOException;
 
 
-public class TodoTests{
+public class TodosTests {
 
     private static ProcessBuilder pb;
 
