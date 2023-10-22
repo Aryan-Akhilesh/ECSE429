@@ -46,37 +46,59 @@ public class InteroperabilityTest {
     // TODOS -> CATEGORIES
 
     @Test
-    public void getCategoriesByTodoValidIdJson() {
+    public void getCategoriesByTodoValidIdJsonStatus() {
         Response r = RestAssured.given()
                         .header("Accept", json)
                         .get("http://localhost:4567/todos/1/categories");
         int statusCode = r.getStatusCode();
-        String body = "{\"categories\":[{\"id\":\"1\",\"title\":\"Office\",\"description\":\"\"}]}";
-        Assertions.assertEquals(body, r.getBody().asString());
         Assertions.assertEquals(200, statusCode);
     }
 
     @Test
-    public void getCategoriesByTodoValidIdXml() {
+    public void getCategoriesByTodoValidIdJsonBody() {
+        Response r = RestAssured.given()
+                .header("Accept", json)
+                .get("http://localhost:4567/todos/1/categories");
+        String body = "{\"categories\":[{\"id\":\"1\",\"title\":\"Office\",\"description\":\"\"}]}";
+        Assertions.assertEquals(body, r.getBody().asString());
+    }
+
+    @Test
+    public void getCategoriesByTodoValidIdXmlStatus() {
         Response r = RestAssured.given()
                 .header("Accept", xml)
                 .get("http://localhost:4567/todos/1/categories");
         int statusCode = r.getStatusCode();
+        Assertions.assertEquals(200, statusCode);
+    }
+
+    @Test
+    public void getCategoriesByTodoValidIdXmlBody() {
+        Response r = RestAssured.given()
+                .header("Accept", xml)
+                .get("http://localhost:4567/todos/1/categories");
         String body = "<categories><category><description/><id>1</id><title>Office</title></category></categories>";
         Assertions.assertEquals(body, r.getBody().asString());
+    }
+
+    @Test
+    // Success with weird behavior
+    public void getCategoriesByTodoInvalidIdStatus() {
+        Response r = RestAssured.given()
+                .header("Accept", json)
+                .get("http://localhost:4567/todos/99/categories");
+        int statusCode = r.getStatusCode();
         Assertions.assertEquals(200, statusCode);
     }
 
     @Test
     // Success with weird behavior
-    public void getCategoriesByTodoInvalidId() {
+    public void getCategoriesByTodoInvalidIdBody() {
         Response r = RestAssured.given()
                 .header("Accept", json)
                 .get("http://localhost:4567/todos/99/categories");
-        int statusCode = r.getStatusCode();
         String body = "{\"categories\":[{\"id\":\"1\",\"title\":\"Office\",\"description\":\"\"}]}";
         Assertions.assertEquals(body, r.getBody().asString());
-        Assertions.assertEquals(200, statusCode);
     }
 
     @Test
@@ -176,37 +198,59 @@ public class InteroperabilityTest {
     // PROJECTS -> CATEGORIES
 
     @Test
-    public void getCategoriesByProjectValidIdJson() {
+    public void getCategoriesByProjectValidIdJsonStatus() {
         Response r = RestAssured.given()
                 .header("Accept", json)
                 .get("http://localhost:4567/projects/1/categories");
         int statusCode = r.getStatusCode();
-        String body = "{\"categories\":[]}";
-        Assertions.assertEquals(body, r.getBody().asString());
         Assertions.assertEquals(200, statusCode);
     }
 
     @Test
-    public void getCategoriesByProjectValidIdXml() {
+    public void getCategoriesByProjectValidIdJsonBody() {
+        Response r = RestAssured.given()
+                .header("Accept", json)
+                .get("http://localhost:4567/projects/1/categories");
+        String body = "{\"categories\":[]}";
+        Assertions.assertEquals(body, r.getBody().asString());
+    }
+
+    @Test
+    public void getCategoriesByProjectValidIdXmlStatus() {
         Response r = RestAssured.given()
                 .header("Accept", xml)
                 .get("http://localhost:4567/projects/1/categories");
         int statusCode = r.getStatusCode();
+        Assertions.assertEquals(200, statusCode);
+    }
+
+    @Test
+    public void getCategoriesByProjectValidIdXmlBody() {
+        Response r = RestAssured.given()
+                .header("Accept", xml)
+                .get("http://localhost:4567/projects/1/categories");
         String body = "<categories></categories>";
         Assertions.assertEquals(body, r.getBody().asString());
+    }
+
+    @Test
+    // Success with weird behavior
+    public void getCategoriesByProjectInvalidIdStatus() {
+        Response r = RestAssured.given()
+                .header("Accept", json)
+                .get("http://localhost:4567/projects/99/categories");
+        int statusCode = r.getStatusCode();
         Assertions.assertEquals(200, statusCode);
     }
 
     @Test
     // Success with weird behavior
-    public void getCategoriesByProjectInvalidId() {
+    public void getCategoriesByProjectInvalidIdBody() {
         Response r = RestAssured.given()
                 .header("Accept", json)
                 .get("http://localhost:4567/projects/99/categories");
-        int statusCode = r.getStatusCode();
         String body = "{\"categories\":[]}";
         Assertions.assertEquals(body, r.getBody().asString());
-        Assertions.assertEquals(200, statusCode);
     }
 
     @Test
@@ -308,37 +352,59 @@ public class InteroperabilityTest {
     // CATEGORIES -> PROJECTS
 
     @Test
-    public void getProjectsByCategoryValidIdJson() {
+    public void getProjectsByCategoryValidIdJsonStatus() {
         Response r = RestAssured.given()
                 .header("Accept", json)
                 .get("http://localhost:4567/categories/1/projects");
         int statusCode = r.getStatusCode();
-        String body = "{\"projects\":[]}";
-        Assertions.assertEquals(body, r.getBody().asString());
         Assertions.assertEquals(200, statusCode);
     }
 
     @Test
-    public void getProjectsByCategoryValidIdXml() {
+    public void getProjectsByCategoryValidIdJsonBody() {
+        Response r = RestAssured.given()
+                .header("Accept", json)
+                .get("http://localhost:4567/categories/1/projects");
+        String body = "{\"projects\":[]}";
+        Assertions.assertEquals(body, r.getBody().asString());
+    }
+
+    @Test
+    public void getProjectsByCategoryValidIdXmlStatus() {
         Response r = RestAssured.given()
                 .header("Accept", xml)
                 .get("http://localhost:4567/categories/1/projects");
         int statusCode = r.getStatusCode();
+        Assertions.assertEquals(200, statusCode);
+    }
+
+    @Test
+    public void getProjectsByCategoryValidIdXmlBody() {
+        Response r = RestAssured.given()
+                .header("Accept", xml)
+                .get("http://localhost:4567/categories/1/projects");
         String body = "<projects></projects>";
         Assertions.assertEquals(body, r.getBody().asString());
+    }
+
+    @Test
+    // Success with weird behavior
+    public void getProjectsByCategoryInvalidIdStatus() {
+        Response r = RestAssured.given()
+                .header("Accept", json)
+                .get("http://localhost:4567/categories/65/projects");
+        int statusCode = r.getStatusCode();
         Assertions.assertEquals(200, statusCode);
     }
 
     @Test
     // Success with weird behavior
-    public void getProjectsByCategoryInvalidId() {
+    public void getProjectsByCategoryInvalidIdBody() {
         Response r = RestAssured.given()
                 .header("Accept", json)
                 .get("http://localhost:4567/categories/65/projects");
-        int statusCode = r.getStatusCode();
         String body = "{\"projects\":[]}";
         Assertions.assertEquals(body, r.getBody().asString());
-        Assertions.assertEquals(200, statusCode);
     }
 
     @Test
@@ -440,37 +506,59 @@ public class InteroperabilityTest {
     // CATEGORIES -> TODOS
 
     @Test
-    public void getTodosByCategoryValidIdJson() {
+    public void getTodosByCategoryValidIdJsonStatus() {
         Response r = RestAssured.given()
                 .header("Accept", json)
                 .get("http://localhost:4567/categories/1/todos");
         int statusCode = r.getStatusCode();
-        String body = "{\"todos\":[]}";
-        Assertions.assertEquals(body, r.getBody().asString());
         Assertions.assertEquals(200, statusCode);
     }
 
     @Test
-    public void getTodosByCategoryValidIdXml() {
+    public void getTodosByCategoryValidIdJsonBody() {
+        Response r = RestAssured.given()
+                .header("Accept", json)
+                .get("http://localhost:4567/categories/1/todos");
+        String body = "{\"todos\":[]}";
+        Assertions.assertEquals(body, r.getBody().asString());
+    }
+
+    @Test
+    public void getTodosByCategoryValidIdXmlStatus() {
         Response r = RestAssured.given()
                 .header("Accept", xml)
                 .get("http://localhost:4567/categories/1/todos");
         int statusCode = r.getStatusCode();
+        Assertions.assertEquals(200, statusCode);
+    }
+
+    @Test
+    public void getTodosByCategoryValidIdXmlBody() {
+        Response r = RestAssured.given()
+                .header("Accept", xml)
+                .get("http://localhost:4567/categories/1/todos");
         String body = "<todos></todos>";
         Assertions.assertEquals(body, r.getBody().asString());
+    }
+
+    @Test
+    // Success with weird behavior
+    public void getTodosByCategoryInvalidIdStatus() {
+        Response r = RestAssured.given()
+                .header("Accept", json)
+                .get("http://localhost:4567/categories/45/todos");
+        int statusCode = r.getStatusCode();
         Assertions.assertEquals(200, statusCode);
     }
 
     @Test
     // Success with weird behavior
-    public void getTodosByCategoryInvalidId() {
+    public void getTodosByCategoryInvalidIdBody() {
         Response r = RestAssured.given()
                 .header("Accept", json)
                 .get("http://localhost:4567/categories/45/todos");
-        int statusCode = r.getStatusCode();
         String body = "{\"todos\":[]}";
         Assertions.assertEquals(body, r.getBody().asString());
-        Assertions.assertEquals(200, statusCode);
     }
 
     @Test
