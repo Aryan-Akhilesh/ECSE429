@@ -1,4 +1,4 @@
-package FailingTest;
+package UnitTest.FailingTest;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;

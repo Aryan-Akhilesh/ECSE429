@@ -1,4 +1,4 @@
-package PassingTest;
+package UnitTest.PassingTest;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
