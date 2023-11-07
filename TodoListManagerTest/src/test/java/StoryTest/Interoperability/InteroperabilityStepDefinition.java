@@ -158,4 +158,63 @@ public class InteroperabilityStepDefinition {
         Assertions.assertEquals(error, response.getBody().asString());
     }
 
+    //  ---------- Feature: Get todos from a category ---------- //
+
+    @Given("I have an existing category")
+    public void i_have_an_existing_category() {
+        String body = "{\"id\": \"1\"}";
+        RestAssured.given()
+                .body(body)
+                .post("http://localhost:4567/categories/1/todos");
+    }
+
+    @When("I request all todos associated with the category in JSON")
+    public void i_request_all_todos_associated_with_the_category_in_json() {
+        response = RestAssured.given()
+                .header("Accept", json)
+                .get("http://localhost:4567/categories/1/todos");
+    }
+
+    @Then("I should see all todos associated with the category in JSON")
+    public void i_should_see_all_todos_associated_with_the_category_in_json() {
+        Assertions.assertEquals(200, response.getStatusCode());
+        String expect = "{\"todos\":[{\"id\":\"1\",\"title\":\"scan paperwork\",\"doneStatus\":\"false\"," +
+                "\"description\":\"\",\"tasksof\":[{\"id\":\"1\"}],\"categories\":[{\"id\":\"1\"}]}]}";
+        Assertions.assertEquals(expect, response.getBody().asString());
+    }
+
+    @When("I request all todos associated with the category in XML")
+    public void i_request_all_todos_associated_with_the_category_in_xml() {
+        response = RestAssured.given()
+                .header("Accept", xml)
+                .get("http://localhost:4567/categories/1/todos");
+    }
+
+    @Then("I should see all todos associated with the category in XML")
+    public void i_should_see_all_todos_associated_with_the_category_in_xml() {
+        Assertions.assertEquals(200, response.getStatusCode());
+        String expect = "<todos><todo><doneStatus>false</doneStatus><description/>" +
+                "<tasksof><id>1</id></tasksof><id>1</id>" +
+                "<categories><id>1</id></categories><title>scan paperwork</title></todo></todos>";
+        Assertions.assertEquals(expect, response.getBody().asString());
+    }
+
+    @Given("I have a non existing category")
+    public void i_have_a_non_existing_category() {
+        // Nothing to do here
+    }
+
+    @When("I request all todos associated with the non existing category in JSON")
+    public void i_request_all_todos_associated_with_the_non_existing_category_in_json() {
+        response = RestAssured.given()
+                .header("Accept", json)
+                .get("http://localhost:4567/categories/9/todos");
+    }
+
+    @Then("I should see no todos")
+    public void i_should_see_no_todos() {
+        Assertions.assertEquals(200, response.getStatusCode());
+        String expect = "{\"todos\":[]}";
+        Assertions.assertEquals(expect, response.getBody().asString());
+    }
 }

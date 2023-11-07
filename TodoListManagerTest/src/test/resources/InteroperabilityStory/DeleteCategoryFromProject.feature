@@ -1,5 +1,5 @@
 Feature: Delete a category from a project item
-  DELETE to \projects\:id\categories with specific category in the request body
+  DELETE to \projects\:id\categories\:id
 
   Scenario: Normal flow for deleting a category from a project item
     Given I have an existing project and a category listed under it
