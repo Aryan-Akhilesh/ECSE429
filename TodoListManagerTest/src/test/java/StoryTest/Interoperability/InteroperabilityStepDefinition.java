@@ -27,8 +27,8 @@ public class InteroperabilityStepDefinition {
                 .body(jsonString)
                 .post("http://localhost:4567/todos");
     }
-    @When("I create a relationship between the todo and the category in JSON format")
-    public void i_create_a_relationship_between_the_todo_and_the_category_in_json_format() {
+    @When("I create a relationship between the todo and the category in JSON")
+    public void i_create_a_relationship_between_the_todo_and_the_category_in_json() {
         response = RestAssured.given()
                 .header("Content-Type", json)
                 .body("{ \"id\": \"1\"}")
@@ -66,6 +66,63 @@ public class InteroperabilityStepDefinition {
         Assertions.assertEquals(404, response.getStatusCode());
         String error = "{\"errorMessages\":[\"Could not find parent thing for relationship todos/4/categories\"]}";
         Assertions.assertEquals(error, response.getBody().asString());
+    }
+
+    //  ---------- Feature: Get categories from a project ---------- //
+
+    @Given("I have an existing project")
+    public void i_have_an_existing_project() {
+        String body = "{\"id\": \"1\"}";
+        RestAssured.given()
+                .body(body)
+                .post("http://localhost:4567/projects/1/categories");
+    }
+
+    @When("I request all categories associated with the project in JSON")
+    public void i_request_all_categories_associated_with_the_project_in_JSON() {
+        response = RestAssured.given()
+                .header("Accept", json)
+                .get("http://localhost:4567/projects/1/categories");
+    }
+
+    @Then("I should see all categories associated with the project in JSON")
+    public void i_should_see_all_categories_associated_with_the_project_in_json() {
+        Assertions.assertEquals(200, response.getStatusCode());
+        String expect = "{\"categories\":[{\"id\":\"1\",\"title\":\"Office\",\"description\":\"\"}]}";
+        Assertions.assertEquals(expect, response.getBody().asString());
+    }
+
+    @When("I request all categories associated with the project in XML")
+    public void i_request_all_categories_associated_with_the_project_in_xml() {
+        response = RestAssured.given()
+                .header("Accept", xml)
+                .get("http://localhost:4567/projects/1/categories");
+    }
+
+    @Then("I should see all categories associated with the project in XML")
+    public void i_should_see_all_categories_associated_with_the_project_in_xml() {
+        Assertions.assertEquals(200, response.getStatusCode());
+        String expect = "<categories><category><description/><id>1</id><title>Office</title></category></categories>";
+        Assertions.assertEquals(expect, response.getBody().asString());
+    }
+
+    @Given("I have a non existing project")
+    public void i_have_a_non_existing_project() {
+        // Nothing to do here
+    }
+
+    @When("I request all categories associated with the non existing project in JSON")
+    public void i_request_all_categories_associated_with_the_non_existing_project_in_json() {
+        response = RestAssured.given()
+                .header("Accept", json)
+                .get("http://localhost:4567/projects/9/categories");
+    }
+
+    @Then("I should see no categories")
+    public void i_should_see_no_categories() {
+        Assertions.assertEquals(200, response.getStatusCode());
+        String expect = "{\"categories\":[]}";
+        Assertions.assertEquals(expect, response.getBody().asString());
     }
 
     //  ---------- Feature: delete category from project ---------- //
@@ -137,11 +194,6 @@ public class InteroperabilityStepDefinition {
                 .get("http://localhost:4567/projects/2");
         Assertions.assertEquals(200, response.getStatusCode());
         JSONAssert.assertEquals(expect, response.getBody().asString(), false);
-    }
-
-    @Given("I have a non existing project")
-    public void i_have_a_non_existing_project() {
-        // Nothing to do here
     }
 
     @When("I delete the relationship between the non existing project and the category")
