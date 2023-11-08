@@ -115,7 +115,19 @@ public class CategoryStepDefinition {
     }
 
     // User scenario 3
-    
+
+    @Given("I do not have a custom category")
+    public void i_have_an_non_existing_custom_category() {
+        // nothing to do
+    }
+
+    @When("I create a new category with title and description field")
+    public void i_create_a_category_with_title_and_description() {
+        String jsonString = "{\"title\":\"University\",\"description\":\"McGill\"}";
+        RestAssured.given().header("Content-Type", json).delete("http://localhost:4567/categories/3");
+        RestAssured.given().header("Content-Type", json).body(jsonString).post("http://localhost:4567/categories");
+    }
+
 
 
 
