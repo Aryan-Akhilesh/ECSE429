@@ -7,7 +7,6 @@ import io.cucumber.java.en.When;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Assertions;
-import org.skyscreamer.jsonassert.JSONAssert;
 
 public class InteroperabilityStepDefinition {
 
@@ -145,13 +144,12 @@ public class InteroperabilityStepDefinition {
 
     @Then("I should no longer see the deleted category listed under the project")
     public void i_should_no_longer_see_the_deleted_category_listed_under_the_project() {
-        String expect = "{\"projects\":[{\"id\":\"1\",\"title\":\"Office Work\",\"completed\":\"false\"," +
-                "\"active\":\"false\",\"description\":\"\",\"tasks\":[{\"id\":\"1\"},{\"id\":\"2\"}]}]}";
+        String expect = "{\"categories\":[]}";
         response = RestAssured.given()
                 .header("Content-Type", json)
-                .get("http://localhost:4567/projects/1");
+                .get("http://localhost:4567/projects/1/categories");
         Assertions.assertEquals(200, response.getStatusCode());
-        JSONAssert.assertEquals(expect, response.getBody().asString(), false);
+        Assertions.assertEquals(expect, response.getBody().asString());
     }
 
     @When("I delete the project")
@@ -187,13 +185,12 @@ public class InteroperabilityStepDefinition {
 
     @Then("I should no longer see the deleted category listed under the new project")
     public void i_should_no_longer_see_the_deleted_category_listed_under_the_new_project() {
-        String expect = "{\"projects\":[{\"id\":\"2\",\"title\":\"Office Work\",\"completed\":\"false\"," +
-                "\"active\":\"false\",\"description\":\"\",\"tasks\":[{\"id\":\"1\"},{\"id\":\"2\"}]}]}";
+        String expect = "{\"categories\":[]}";
         response = RestAssured.given()
                 .header("Content-Type", json)
-                .get("http://localhost:4567/projects/2");
+                .get("http://localhost:4567/projects/2/categories");
         Assertions.assertEquals(200, response.getStatusCode());
-        JSONAssert.assertEquals(expect, response.getBody().asString(), false);
+        Assertions.assertEquals(expect, response.getBody().asString());
     }
 
     @When("I delete the relationship between the non existing project and the category")
@@ -268,5 +265,71 @@ public class InteroperabilityStepDefinition {
         Assertions.assertEquals(200, response.getStatusCode());
         String expect = "{\"todos\":[]}";
         Assertions.assertEquals(expect, response.getBody().asString());
+    }
+
+    //  ---------- Feature: delete todos from category ---------- //
+
+    @Given("I have an existing category and a todo listed under it")
+    public void i_have_an_existing_category_and_a_todo_listed_under_it() {
+        // Category 1 already created when initialized
+        RestAssured.given()
+                .header("Content-Type", json)
+                .body("{\"id\":\"1\"}")
+                .post("http://localhost:4567/categories/1/todos");
+    }
+
+    @When("I delete the relationship between the category and the todo")
+    public void i_delete_the_relationship_between_the_category_and_the_todo() {
+        RestAssured.given()
+                .header("Content-Type", json)
+                .delete("http://localhost:4567/categories/1/todos/1");
+    }
+
+    @Then("I should no longer see the deleted todo listed under the category")
+    public void i_should_no_longer_see_the_deleted_todo_listed_under_the_category() {
+        String expect = "{\"todos\":[]}";
+        response = RestAssured.given()
+                .header("Content-Type", json)
+                .get("http://localhost:4567/categories/1/todos");
+        Assertions.assertEquals(200, response.getStatusCode());
+        Assertions.assertEquals(expect, response.getBody().asString());
+    }
+
+    @When("I delete the category")
+    public void i_delete_the_category() {
+        RestAssured.given().delete("http://localhost:4567/categories/1");
+    }
+
+    @And("I create a new category with the same properties except for the todo I want to delete")
+    public void i_create_a_new_category_with_the_same_properties_except_for_the_todo_i_want_to_delete() {
+        String cat = "{\"title\":\"Office\",\"description\":\"\"}";
+        RestAssured.given()
+                .header("Content-Type", json)
+                .body(cat)
+                .post("http://localhost:4567/categories");
+    }
+
+    @Then("I should no longer see the deleted todo listed under the new category")
+    public void i_should_no_longer_see_the_deleted_todo_listed_under_the_new_category() {
+        String expect = "{\"todos\":[]}";
+        response = RestAssured.given()
+                .header("Content-Type", json)
+                .get("http://localhost:4567/categories/3/todos");
+        Assertions.assertEquals(200, response.getStatusCode());
+        Assertions.assertEquals(expect, response.getBody().asString());
+    }
+
+    @When("I delete the relationship between the non existing category and the todo")
+    public void i_delete_the_relationship_between_the_non_existing_category_and_the_todo() {
+        response = RestAssured.given()
+                .header("Content-Type", json)
+                .delete("http://localhost:4567/categories/9/todos/1");
+    }
+
+    @Then("I should be warned that the requested category cannot be found")
+    public void i_should_be_warned_that_the_requested_category_cannot_be_found() {
+        Assertions.assertEquals(404, response.getStatusCode());
+        String error = "{\"errorMessages\":[\"Could not find any instances with categories/9/todos/1\"]}";
+        Assertions.assertEquals(error, response.getBody().asString());
     }
 }

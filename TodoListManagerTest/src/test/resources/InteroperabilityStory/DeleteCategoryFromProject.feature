@@ -14,5 +14,5 @@ Feature: Delete a category from a project item
 
   Scenario: Error flow for deleting a category from a project item
     Given I have a non existing project
-    And I delete the relationship between the non existing project and the category
+    When I delete the relationship between the non existing project and the category
     Then I should be warned that the requested project cannot be found
