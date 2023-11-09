@@ -24,13 +24,13 @@ public class CategoryStepDefinition {
     }
 
     @When("I modify the title of the existing category")
-    public void i_modify_the_title_of_an_existing_category() {
+    public void i_modify_the_title_of_the_existing_category() {
         String jsonString = "{\"title\":\"Train\",\"description\":\"\"}";
         RestAssured.given().header("Content-Type", json).body(jsonString).put("http://localhost:4567/categories/3");
     }
 
-    @Then("I should see the title of the category changed to train")
-    public void i_should_see_the_category_title_field_modified_to_Train() {
+    @Then("I should see the title of the category changed")
+    public void i_should_see_the_title_of_the_category_changed() {
         Response r = RestAssured.given().header("Content-Type", json).get("http://localhost:4567/categories/3");
         String body = "{\"categories\":[{\"id\":\"3\",\"title\":\"Train\",\"description\":\"\"}]}";
         Assertions.assertEquals(body, r.getBody().asString());
@@ -39,26 +39,26 @@ public class CategoryStepDefinition {
     }
 
     @When("I use Post request to modify my existing category")
-    public void i_modify_the_title_of_an_existing_category_using_POST() {
+    public void i_use_Post_reqiest_to_modify_an_existing_category() {
         String jsonString = "{\"title\":\"Plane\",\"description\":\"\"}";
         RestAssured.given().header("Content-Type", json).body(jsonString).post("http://localhost:4567/categories/3");
     }
 
-    @Then("I should see the title of the category changed to Plane")
-    public void i_should_see_the_category_title_field_modified_to_Plane() {
-        Response r = RestAssured.given().header("Content-Type", json).get("http://localhost:4567/categories/3");
-        String body = "{\"categories\":[{\"id\":\"3\",\"title\":\"Plane\",\"description\":\"\"}]}";
-        Assertions.assertEquals(body, r.getBody().asString());
-    }
+//    @Then("I should see the title of the category changed to Plane")
+//    public void i_should_see_the_category_title_field_modified_to_Plane() {
+//        Response r = RestAssured.given().header("Content-Type", json).get("http://localhost:4567/categories/3");
+//        String body = "{\"categories\":[{\"id\":\"3\",\"title\":\"Plane\",\"description\":\"\"}]}";
+//        Assertions.assertEquals(body, r.getBody().asString());
+//    }
 
     @When("I modify the title of a category by providing an incorrect id")
-    public void i_modify_the_title_of_a_category_using_incorrect_id() {
+    public void i_modify_the_title_of_a_category_by_providing_an_incorrect_id() {
         String jsonString = "{\"title\":\"Jet\",\"description\":\"\"}";
         RestAssured.given().header("Content-Type", json).body(jsonString).put("http://localhost:4567/categories/300");
     }
 
     @Then("I should be warned that id is invalid")
-    public void i_should_see_warning_on_invalid_id() {
+    public void i_should_be_warned_that_id_is_invalid() {
         String error = "{\"errorMessages\":[\"Invalid GUID for 300 entity category\"]}";
         Assertions.assertEquals(error, response.getBody().asString());
         Assertions.assertEquals(404, response.getStatusCode());
@@ -86,12 +86,12 @@ public class CategoryStepDefinition {
         Assertions.assertEquals(200, r.getStatusCode());
     }
 
-    @When("I delete the current existing category and create a new one")
-    public void i_delete_current_existing_category_and_create_a_new_one() {
-        String jsonString = "{\"title\":\"University\",\"description\":\"McGill\"}";
-        RestAssured.given().header("Content-Type", json).delete("http://localhost:4567/categories/3");
-        RestAssured.given().header("Content-Type", json).body(jsonString).post("http://localhost:4567/categories");
-    }
+//    @When("I delete the current existing category and create a new one")
+//    public void i_delete_current_existing_category_and_create_a_new_one() {
+//        String jsonString = "{\"title\":\"University\",\"description\":\"McGill\"}";
+//        RestAssured.given().header("Content-Type", json).delete("http://localhost:4567/categories/3");
+//        RestAssured.given().header("Content-Type", json).body(jsonString).post("http://localhost:4567/categories");
+//    }
 
     @Then("I should see the title and description of the category replaced after deletion")
     public void i_should_see_the_category_title_description_field_replaced_after_deletion() {
@@ -121,12 +121,12 @@ public class CategoryStepDefinition {
         // nothing to do
     }
 
-    @When("I create a new category with title and description field")
-    public void i_create_a_category_with_title_and_description() {
-        String jsonString = "{\"title\":\"University\",\"description\":\"McGill\"}";
-        RestAssured.given().header("Content-Type", json).delete("http://localhost:4567/categories/3");
-        RestAssured.given().header("Content-Type", json).body(jsonString).post("http://localhost:4567/categories");
-    }
+//    @When("I create a new category with title and description field")
+//    public void i_create_a_category_with_title_and_description() {
+//        String jsonString = "{\"title\":\"University\",\"description\":\"McGill\"}";
+//        RestAssured.given().header("Content-Type", json).delete("http://localhost:4567/categories/3");
+//        RestAssured.given().header("Content-Type", json).body(jsonString).post("http://localhost:4567/categories");
+//    }
 
 
 

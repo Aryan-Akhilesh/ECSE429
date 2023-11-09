@@ -1,0 +1,1 @@
+Feature: Get all categories
