@@ -13,6 +13,7 @@ public class InteroperabilityStepDefinition {
     private final String json = "application/json";
     private final String xml = "application/xml";
     private Response response;
+    private String newProjectId;
 
     //  ---------- Feature: add category to to-do ---------- //
 
@@ -120,36 +121,36 @@ public class InteroperabilityStepDefinition {
 
     //  ---------- Feature: delete category from project ---------- //
 
-    @Given("I have an existing project and a category listed under it")
-    public void i_have_an_existing_project_and_a_category_listed_under_it() {
+    @Given("I have an existing project {int} and a category {int} listed under it")
+    public void i_have_an_existing_project_and_a_category_listed_under_it(int projectId, int categoryId) {
         // Project 1 already created when initialized
         RestAssured.given()
                 .header("Content-Type", json)
-                .body("{\"id\":\"1\"}")
-                .post("http://localhost:4567/projects/1/categories");
+                .body("{\"id\":\"" + categoryId + "\"}")
+                .post("http://localhost:4567/projects/" + projectId + "/categories");
     }
 
-    @When("I delete the relationship between the project and the category")
-    public void i_delete_the_relationship_between_the_project_and_the_category() {
+    @When("I delete the relationship between the project {int} and the category {int}")
+    public void i_delete_the_relationship_between_the_project_and_the_category(int projectId, int categoryId) {
         RestAssured.given()
                 .header("Content-Type", json)
-                .delete("http://localhost:4567/projects/1/categories/1");
+                .delete("http://localhost:4567/projects/" + projectId + "/categories/" + categoryId);
     }
 
-    @Then("I should no longer see the deleted category listed under the project")
-    public void i_should_no_longer_see_the_deleted_category_listed_under_the_project() {
+    @Then("I should no longer see the deleted category listed under the project {int}")
+    public void i_should_no_longer_see_the_deleted_category_listed_under_the_project(int projectId) {
         String expect = "{\"categories\":[]}";
         response = RestAssured.given()
                 .header("Content-Type", json)
-                .get("http://localhost:4567/projects/1/categories");
+                .get("http://localhost:4567/projects/" + projectId + "/categories");
         Assertions.assertEquals(200, response.getStatusCode());
         Assertions.assertEquals(expect, response.getBody().asString());
     }
 
-    @When("I delete the project")
-    public void i_delete_the_project() {
+    @When("I delete the project {int}")
+    public void i_delete_the_project(int projectId) {
         RestAssured.given()
-                .delete("http://localhost:4567/projects/1");
+                .delete("http://localhost:4567/projects/" + projectId);
     }
 
     @And("I create a new project with the same properties except for the category I want to delete")
@@ -160,10 +161,12 @@ public class InteroperabilityStepDefinition {
                 "    \"active\": false,\n" +
                 "    \"description\": \"\"\n" +
                 "}";
-        RestAssured.given()
+        response = RestAssured.given()
                 .header("Content-Type", json)
                 .body(proj)
                 .post("http://localhost:4567/projects");
+
+        newProjectId = response.jsonPath().get("id");
 
         String task1 = "{\"id\":\"1\"}";
         String task2 = "{\"id\":\"2\"}";
@@ -182,22 +185,22 @@ public class InteroperabilityStepDefinition {
         String expect = "{\"categories\":[]}";
         response = RestAssured.given()
                 .header("Content-Type", json)
-                .get("http://localhost:4567/projects/2/categories");
+                .get("http://localhost:4567/projects/" + newProjectId + "/categories");
         Assertions.assertEquals(200, response.getStatusCode());
         Assertions.assertEquals(expect, response.getBody().asString());
     }
 
-    @When("I delete the relationship between the non existing project and the category")
-    public void i_delete_the_relationship_between_the_non_existing_project_and_the_category() {
+    @When("I delete the relationship between the non existing project {int} and the category {int}")
+    public void i_delete_the_relationship_between_the_non_existing_project_and_the_category(int projectId, int categoryId) {
         response = RestAssured.given()
                 .header("Content-Type", json)
-                .delete("http://localhost:4567/projects/4/categories/1");
+                .delete("http://localhost:4567/projects/" + projectId + "/categories/" + categoryId);
     }
 
-    @Then("I should be warned that the requested project cannot be found")
-    public void i_should_be_warned_that_the_requested_project_cannot_be_found() {
+    @Then("I should be warned that the requested project {int} and category {int} cannot be found")
+    public void i_should_be_warned_that_the_requested_project_and_category_cannot_be_found(int projectId, int categoryId) {
         Assertions.assertEquals(404, response.getStatusCode());
-        String error = "{\"errorMessages\":[\"Could not find any instances with projects/4/categories/1\"]}";
+        String error = "{\"errorMessages\":[\"Could not find any instances with projects/" + projectId + "/categories/" + categoryId + "\"]}";
         Assertions.assertEquals(error, response.getBody().asString());
     }
 
