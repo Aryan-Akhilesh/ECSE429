@@ -16,42 +16,36 @@ public class InteroperabilityStepDefinition {
 
     //  ---------- Feature: add category to to-do ---------- //
 
-    @Given("I have an existing todo item and an existing category")
-    public void i_have_an_existing_todo_item_and_an_existing_category() {
-        String jsonString = "{" + "\"id\": \"4\"," + "\"title\": \"Photocopy Documents\"," + "\"doneStatus\": false," +
-                "\"description\": \"\"," + "\"tasksof\": [" + "{" + "\"id\": \"1\"" + "}" + "]," + "}";
-
-        RestAssured.given()
-                .header("Content-Type",json)
-                .body(jsonString)
-                .post("http://localhost:4567/todos");
+    @Given("I have an existing todo {int} and an existing category {int}")
+    public void i_have_an_existing_todo_and_an_existing_category(int todoId, int categoryId) {
+        // Already 2 todos and 2 categories upon starting
     }
-    @When("I create a relationship between the todo and the category in JSON")
-    public void i_create_a_relationship_between_the_todo_and_the_category_in_json() {
+    @When("I create a relationship between the todo {int} and the category {int} in JSON")
+    public void i_create_a_relationship_between_the_todo_and_the_category_in_json(int todoId, int categoryId) {
         response = RestAssured.given()
                 .header("Content-Type", json)
-                .body("{ \"id\": \"1\"}")
-                .post("http://localhost:4567/todos/4/categories");
+                .body("{ \"id\": \"" + categoryId + "\"}")
+                .post("http://localhost:4567/todos/"+ todoId + "/categories");
     }
-    @Then("I should see the category listed as a property of my todo item")
-    public void i_should_see_the_category_listed_as_a_property_of_my_todo_item() {
+    @Then("I should see the category listed as a property of my todo {int}")
+    public void i_should_see_the_category_listed_as_a_property_of_my_todo(int todoId) {
         response = RestAssured.given()
                 .header("Accept", json)
-                .get("http://localhost:4567/todos/4/categories");
+                .get("http://localhost:4567/todos/" + todoId + "/categories");
         int statusCode = response.getStatusCode();
         String body = "{\"categories\":[{\"id\":\"1\",\"title\":\"Office\",\"description\":\"\"}]}";
         Assertions.assertEquals(body, response.getBody().asString());
         Assertions.assertEquals(200, statusCode);
     }
 
-    @Given("I have a non existing todo item and an existing category")
-    public void i_have_a_non_existing_todo_item_and_an_existing_category() {
+    @Given("I have a non existing todo and an existing category")
+    public void i_have_a_non_existing_todo_and_an_existing_category() {
         // Nothing to do here
     }
 
-    @When("I create the todo item")
-    public void i_create_the_todo_item() {
-        String jsonString = "{" + "\"id\": \"4\"," + "\"title\": \"Photocopy Documents\"," + "\"doneStatus\": false," +
+    @When("I create the todo {int}")
+    public void i_create_the_todo(int todoId) {
+        String jsonString = "{" + "\"id\": \"" + todoId + "\"," + "\"title\": \"Photocopy Documents\"," + "\"doneStatus\": false," +
                 "\"description\": \"\"," + "\"tasksof\": [" + "{" + "\"id\": \"1\"" + "}" + "]," + "}";
 
         RestAssured.given()
@@ -60,10 +54,10 @@ public class InteroperabilityStepDefinition {
                 .post("http://localhost:4567/todos");
     }
 
-    @Then("I should be warned that the requested todo cannot be found")
-    public void i_should_be_warned_that_the_requested_todo_cannot_be_found() {
+    @Then("I should be warned that the requested todo {int} cannot be found")
+    public void i_should_be_warned_that_the_requested_todo_cannot_be_found(int todoId) {
         Assertions.assertEquals(404, response.getStatusCode());
-        String error = "{\"errorMessages\":[\"Could not find parent thing for relationship todos/4/categories\"]}";
+        String error = "{\"errorMessages\":[\"Could not find parent thing for relationship todos/" + todoId + "/categories\"]}";
         Assertions.assertEquals(error, response.getBody().asString());
     }
 
