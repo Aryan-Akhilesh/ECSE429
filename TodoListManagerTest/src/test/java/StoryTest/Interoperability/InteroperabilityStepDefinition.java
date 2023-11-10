@@ -71,31 +71,31 @@ public class InteroperabilityStepDefinition {
                 .post("http://localhost:4567/projects/1/categories");
     }
 
-    @When("I request all categories associated with the project in JSON")
-    public void i_request_all_categories_associated_with_the_project_in_JSON() {
+    @When("I request all categories associated with the project {int} in JSON")
+    public void i_request_all_categories_associated_with_the_project_in_JSON(int projectId) {
         response = RestAssured.given()
                 .header("Accept", json)
-                .get("http://localhost:4567/projects/1/categories");
+                .get("http://localhost:4567/projects/" + projectId + "/categories");
     }
 
-    @Then("I should see all categories associated with the project in JSON")
-    public void i_should_see_all_categories_associated_with_the_project_in_json() {
+    @Then("I should see all categories associated with the project {int} in JSON")
+    public void i_should_see_all_categories_associated_with_the_project_in_json(int projectId) {
         Assertions.assertEquals(200, response.getStatusCode());
-        String expect = "{\"categories\":[{\"id\":\"1\",\"title\":\"Office\",\"description\":\"\"}]}";
+        String expect = "{\"categories\":[{\"id\":\"" + projectId + "\",\"title\":\"Office\",\"description\":\"\"}]}";
         Assertions.assertEquals(expect, response.getBody().asString());
     }
 
-    @When("I request all categories associated with the project in XML")
-    public void i_request_all_categories_associated_with_the_project_in_xml() {
+    @When("I request all categories associated with the project {int} in XML")
+    public void i_request_all_categories_associated_with_the_project_in_xml(int projectId) {
         response = RestAssured.given()
                 .header("Accept", xml)
-                .get("http://localhost:4567/projects/1/categories");
+                .get("http://localhost:4567/projects/" + projectId + "/categories");
     }
 
-    @Then("I should see all categories associated with the project in XML")
-    public void i_should_see_all_categories_associated_with_the_project_in_xml() {
+    @Then("I should see all categories associated with the project {int} in XML")
+    public void i_should_see_all_categories_associated_with_the_project_in_xml(int projectId) {
         Assertions.assertEquals(200, response.getStatusCode());
-        String expect = "<categories><category><description/><id>1</id><title>Office</title></category></categories>";
+        String expect = "<categories><category><description/><id>" + projectId + "</id><title>Office</title></category></categories>";
         Assertions.assertEquals(expect, response.getBody().asString());
     }
 
@@ -104,11 +104,11 @@ public class InteroperabilityStepDefinition {
         // Nothing to do here
     }
 
-    @When("I request all categories associated with the non existing project in JSON")
-    public void i_request_all_categories_associated_with_the_non_existing_project_in_json() {
+    @When("I request all categories associated with the non existing project {int} in JSON")
+    public void i_request_all_categories_associated_with_the_non_existing_project_in_json(int projectId) {
         response = RestAssured.given()
                 .header("Accept", json)
-                .get("http://localhost:4567/projects/9/categories");
+                .get("http://localhost:4567/projects/" + projectId + "/categories");
     }
 
     @Then("I should see no categories")
@@ -203,19 +203,19 @@ public class InteroperabilityStepDefinition {
 
     //  ---------- Feature: Get todos from a category ---------- //
 
-    @Given("I have an existing category")
-    public void i_have_an_existing_category() {
+    @Given("I have an existing category {int}")
+    public void i_have_an_existing_category(int categoryId) {
         String body = "{\"id\": \"1\"}";
         RestAssured.given()
                 .body(body)
-                .post("http://localhost:4567/categories/1/todos");
+                .post("http://localhost:4567/categories/" + categoryId + "/todos");
     }
 
-    @When("I request all todos associated with the category in JSON")
-    public void i_request_all_todos_associated_with_the_category_in_json() {
+    @When("I request all todos associated with the category {int} in JSON")
+    public void i_request_all_todos_associated_with_the_category_in_json(int categoryId) {
         response = RestAssured.given()
                 .header("Accept", json)
-                .get("http://localhost:4567/categories/1/todos");
+                .get("http://localhost:4567/categories/" + categoryId + "/todos");
     }
 
     @Then("I should see all todos associated with the category in JSON")
