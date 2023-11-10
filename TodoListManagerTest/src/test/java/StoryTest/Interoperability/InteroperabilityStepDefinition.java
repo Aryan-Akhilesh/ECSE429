@@ -226,11 +226,11 @@ public class InteroperabilityStepDefinition {
         Assertions.assertEquals(expect, response.getBody().asString());
     }
 
-    @When("I request all todos associated with the category in XML")
-    public void i_request_all_todos_associated_with_the_category_in_xml() {
+    @When("I request all todos associated with the category {int} in XML")
+    public void i_request_all_todos_associated_with_the_category_in_xml(int categoryId) {
         response = RestAssured.given()
                 .header("Accept", xml)
-                .get("http://localhost:4567/categories/1/todos");
+                .get("http://localhost:4567/categories/" + categoryId + "/todos");
     }
 
     @Then("I should see all todos associated with the category in XML")
@@ -247,11 +247,11 @@ public class InteroperabilityStepDefinition {
         // Nothing to do here
     }
 
-    @When("I request all todos associated with the non existing category in JSON")
-    public void i_request_all_todos_associated_with_the_non_existing_category_in_json() {
+    @When("I request all todos associated with the non existing category {int} in JSON")
+    public void i_request_all_todos_associated_with_the_non_existing_category_in_json(int categoryId) {
         response = RestAssured.given()
                 .header("Accept", json)
-                .get("http://localhost:4567/categories/9/todos");
+                .get("http://localhost:4567/categories/" + categoryId + "/todos");
     }
 
     @Then("I should see no todos")
