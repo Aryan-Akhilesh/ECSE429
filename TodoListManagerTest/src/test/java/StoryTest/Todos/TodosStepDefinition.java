@@ -13,6 +13,7 @@ public class TodosStepDefinition {
     private final String json = "application/json";
     private final String xml = "application/xml";
     private Response res;
+    private String jsonString;
 
     // ----------- Feature: Get specific todos -------------//
 
@@ -64,5 +65,92 @@ public class TodosStepDefinition {
         Assertions.assertEquals(body,res.getBody().asString());
         Assertions.assertEquals(404,statusCode);
     }
+
+    // --------------- Feature: Add a new todos -------------//
+
+    @Given("I have a todo that does not exist and wish to add one")
+    public void i_have_a_todo_that_does_not_exist_and_wish_to_add_one() {
+    }
+
+    @When("I create a todo with title {string}, description {string}, & doneStatus {string}")
+    public void i_create_a_todo_with_title_description_done_status(String title, String description, String doneStatus) {
+        jsonString = "{" + "\"title\": \" " + title + "\"," + "\"doneStatus\": "+ doneStatus +"," +
+                "\"description\": \""+description+"\"," + "\"tasksof\": [" + "{" + "\"id\": \"1\"" + "}" + "]," +
+                "\"categories\": [" + "{" + "\"id\": \"1\"" + "}" + "]" + "}";
+    }
+
+    @Then("I should see the todo listed in the todos")
+    public void i_should_see_the_todo_listed_in_the_todos() {
+         res = RestAssured.given()
+                .header("Content-Type",json)
+                .body(jsonString)
+                .post("http://localhost:4567/todos");
+
+        int statusCode = res.getStatusCode();
+        Assertions.assertEquals(201,statusCode);
+    }
+
+    @When("I create a todo with just the title {string}")
+    public void i_create_a_todo_with_just_the_title(String title) {
+         jsonString = "{" + "\"title\": \""+title+"\"" + "}";
+    }
+
+    @When("I create a todo with an invalid field {string}")
+    public void i_create_a_todo_with_an_invalid_field(String field) {
+        jsonString = "{" + "\""+field+"\": \"Documents\"" + "}";
+    }
+
+    @Then("I should not see the todo listed")
+    public void i_should_not_see_the_todo_listed() {
+        res = RestAssured.given()
+                .header("Content-Type",json)
+                .body(jsonString)
+                .post("http://localhost:4567/todos");
+
+        int statusCode = res.getStatusCode();
+        Assertions.assertEquals(400,statusCode);
+    }
+
+    //------------ Feature: Delete todos -----------//
+
+    @When("I delete the todo with the valid id {int}")
+    public void i_delete_the_todo_with_the_valid_id(Integer todoID) {
+        res = RestAssured.delete(" http://localhost:4567/todos/" + todoID);
+    }
+
+    @Then("I should not see the todo listed under todos anymore")
+    public void i_should_not_see_the_todo_listed_under_todos_anymore() {
+        int statusCode = res.getStatusCode();
+        Assertions.assertEquals(200,statusCode);
+    }
+
+    @When("I post todo with valid id {int} but with the doneStatus {string} as completed")
+    public void i_post_todo_with_valid_id_but_with_the_done_status_as_completed(Integer todoID, String doneStatus) {
+        jsonString =  "{" + "\"id\": "+todoID+ "," + "\"doneStatus\": "+ doneStatus + "}";
+        res = RestAssured.given()
+                .header("Content-Type",json)
+                .body(jsonString)
+                .post("http://localhost:4567/todos/" + todoID);
+    }
+
+    @Then("I should see the todo but with completed status in todos")
+    public void i_should_see_the_todo_but_with_completed_status_in_todos() {
+        int statusCode = res.getStatusCode();
+        Assertions.assertEquals(200,statusCode);
+        System.out.println(res.getBody().asString());
+    }
+
+    @When("I delete the todo with the invalid id {int}")
+    public void i_delete_the_todo_with_the_invalid_id(Integer todoID) {
+        res = RestAssured.delete(" http://localhost:4567/todos/" + todoID);
+    }
+
+    @Then("The todo is still listed under todos")
+    public void the_todo_is_still_listed_under_todos() {
+        int statusCode = res.getStatusCode();
+        Assertions.assertEquals(404,statusCode);
+    }
+
+
 
 }

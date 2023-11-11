@@ -6,7 +6,7 @@ Feature: Add a new todo
     Then I should see the todo listed in the todos
     Examples:
       |title         | description                  | doneStatus |
-      |Send documents| send the documents to the CEO|  false     |
+      |"Send documents"| "send the documents to the CEO"|  "false"     |
 
   Scenario Outline: Alternate flow for adding a todo
     Given I have a todo that does not exist and wish to add one
@@ -14,7 +14,7 @@ Feature: Add a new todo
     Then I should see the todo listed in the todos
     Examples:
       | title         |
-      |Shred documents|
+      |"Shred documents"|
 
   Scenario Outline: Error flow for adding a todo
     Given I have a todo that does not exist and wish to add one
@@ -22,4 +22,4 @@ Feature: Add a new todo
     Then I should not see the todo listed
     Examples:
       | field |
-      |class  |
+      |"class"  |

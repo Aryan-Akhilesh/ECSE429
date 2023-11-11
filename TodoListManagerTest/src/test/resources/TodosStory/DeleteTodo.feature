@@ -14,7 +14,7 @@ Feature: Delete a todo
     Then I should see the todo but with completed status in todos
     Examples:
       | id | doneStatus |
-      | 1  | completed  |
+      | 1  | "true"  |
 
   Scenario Outline: Error flow for deleting a todo
     Given I have a non-existing todo
