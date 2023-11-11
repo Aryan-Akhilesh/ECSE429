@@ -14,6 +14,7 @@ public class TodosStepDefinition {
     private final String xml = "application/xml";
     private Response res;
     private String jsonString;
+    private String xmlString;
 
     // ----------- Feature: Get specific todos -------------//
 
@@ -147,6 +148,50 @@ public class TodosStepDefinition {
 
     @Then("The todo is still listed under todos")
     public void the_todo_is_still_listed_under_todos() {
+        int statusCode = res.getStatusCode();
+        Assertions.assertEquals(404,statusCode);
+    }
+
+    //--------------Feature: Amend Description --------------//
+
+    @When("I PUT a todo with valid id {int} and different description {string}")
+    public void i_put_a_todo_with_valid_id_and_different_description(Integer todoID, String description) {
+        jsonString =  "{" + "\"id\":"+ todoID +"," +"\"title\": \"get more paperwork\"," + "\"doneStatus\": false," +
+                "\"description\": \""+ description +"\"," + "\"tasksof\": [" + "{" + "\"id\": \"1\"" + "}" + "]," +
+                "\"categories\": [" + "{" + "\"id\": \"1\"" + "}" + "]" + "}";
+
+        res = RestAssured.given()
+                .header("Content-Type",json)
+                .body(jsonString)
+                .put("http://localhost:4567/todos/" + todoID);
+    }
+
+    @Then("I should see that the description has changed for that todo")
+    public void i_should_see_that_the_description_has_changed_for_that_todo() {
+        int statusCode = res.getStatusCode();
+        Assertions.assertEquals(200,statusCode);
+    }
+
+    @When("I POST a todo with valid id {int} and different description {string}")
+    public void i_post_a_todo_with_valid_id_and_different_description(Integer todoID, String description) {
+        jsonString =  "{" + "\"id\": "+todoID+ "," + "\"description\": \""+ description + "\"}";
+        res = RestAssured.given()
+                .header("Content-Type",json)
+                .body(jsonString)
+                .post("http://localhost:4567/todos/" + todoID);
+    }
+
+    @When("I PUT a todo with invalid id {int} and different description {string}")
+    public void i_put_a_todo_with_invalid_id_and_different_description(Integer todoID, String description) {
+        jsonString =  "{" + "\"id\": "+todoID+ "," + "\"description\": \""+ description + "\"}";
+        res = RestAssured.given()
+                .header("Content-Type",json)
+                .body(jsonString)
+                .put("http://localhost:4567/todos/" + todoID);
+    }
+
+    @Then("I should see no change to the description for that todo")
+    public void i_should_see_no_change_to_the_description_for_that_todo() {
         int statusCode = res.getStatusCode();
         Assertions.assertEquals(404,statusCode);
     }
