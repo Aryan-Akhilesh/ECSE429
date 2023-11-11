@@ -23,6 +23,7 @@ public class CategoryStepDefinition {
     private final String json = "application/json";
     private final String xml = "application/xml";
     private Response response;
+    private String newCategoryId;
 
     // User scenario 1
 
