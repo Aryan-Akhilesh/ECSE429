@@ -97,7 +97,7 @@ public class CategoryStepDefinition {
 
     @When("I delete the current existing category and create a new one")
     public void i_delete_current_existing_category_and_create_a_new_one() {
-        RestAssured.given().header("Content-Type", json).delete("http://localhost:4567/categories/3");
+        RestAssured.given().header("Accept", json).delete("http://localhost:4567/categories/3");
     }
 
     @And("I create a new category with title and description")
@@ -108,7 +108,7 @@ public class CategoryStepDefinition {
 
     @Then("I should see the title and description of the category replaced after deletion")
     public void i_should_see_the_title_and_description_of_the_category_replaced_after_deletion() {
-        response = RestAssured.given().header("Content-Type", json).get("http://localhost:4567/categories/3");
+        response = RestAssured.given().header("Accept", json).get("http://localhost:4567/categories/3");
         String body = "{\"categories\":[{\"id\":\"3\",\"title\":\"University\",\"description\":\"McGill\"}]}";
         Assertions.assertEquals(body, response.getBody().asString());
         Assertions.assertEquals(200, response.getStatusCode());
@@ -134,15 +134,33 @@ public class CategoryStepDefinition {
         // nothing to do
     }
 
-//    @When("I create a new category with title and description field")
-//    public void i_create_a_category_with_title_and_description() {
-//        String jsonString = "{\"title\":\"University\",\"description\":\"McGill\"}";
-//        RestAssured.given().header("Content-Type", json).delete("http://localhost:4567/categories/3");
-//        RestAssured.given().header("Content-Type", json).body(jsonString).post("http://localhost:4567/categories");
-//    }
-    @When("I create a new category with an id")
-    public void i_create_a_new_category_with_an_id() {
-        String jsonString = "{\"id\":\"4\",\"title\":\"University\",\"description\":\"McGill\"}";
+    @When("I create a new category with title and description field")
+    public void i_create_a_new_category_with_title_and_description_field() {
+        String jsonString = "{\"title\":\"University\",\"description\":\"McGill\"}";
+        RestAssured.given().header("Content-Type", json).body(jsonString).post("http://localhost:4567/categories");
+    }
+
+    @Then("I should see a new category {int} with title and description")
+    public void i_should_see_a_new_category_with_title_and_description(int categoryId) {
+        response = RestAssured.given().header("Accept", json).get("http://localhost:4567/categories/" + categoryId);
+        int statusCode = response.getStatusCode();
+        String body = "{\"categories\":[{\"id\":\"3\",\"title\":\"University\",\"description\":\"McGill\"}]}";
+        Assertions.assertEquals(body, response.getBody().asString());
+        Assertions.assertEquals(200, response.getStatusCode());
+    }
+
+    @Then("I should see a new category {int} with title only")
+    public void i_should_see_a_new_category_with_title_only(int categoryId) {
+        response = RestAssured.given().header("Accept", json).get("http://localhost:4567/categories/" + categoryId);
+        int statusCode = response.getStatusCode();
+        String body = "{\"categories\":[{\"id\":\"3\",\"title\":\"University\",\"description\":\"\"}]}";
+        Assertions.assertEquals(body, response.getBody().asString());
+        Assertions.assertEquals(200, response.getStatusCode());
+    }
+
+    @When("I create a new category with an id field {int}")
+    public void i_create_a_new_category_with_an_id_field(int categoryId) {
+        String jsonString = "{\"id\":\"" + categoryId + "\",\"title\":\"University\",\"description\":\"McGill\"}";
         response = RestAssured.given().header("Content-Type", json).body(jsonString).post("http://localhost:4567/categories");
     }
 
@@ -151,6 +169,12 @@ public class CategoryStepDefinition {
         String error = "{\"errorMessages\":[\"Invalid Creation: Failed Validation: Not allowed to create with id\"]}";
         Assertions.assertEquals(error, response.getBody().asString());
         Assertions.assertEquals(400, response.getStatusCode());
+    }
+
+    @When("I create a new category with title only")
+    public void i_create_a_new_category_with_title_only() {
+        String jsonString = "{\"title\":\"University\"}";
+        RestAssured.given().header("Content-Type", json).body(jsonString).post("http://localhost:4567/categories");
     }
 
     // User scenario 4
