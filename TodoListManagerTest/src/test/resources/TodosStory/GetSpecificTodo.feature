@@ -20,7 +20,7 @@ Feature: Get a specific todo
   Scenario Outline: Error flow for getting a specific todo
     Given I have a non-existing todo
     When I request the todo with an invalid id <todoID> in JSON
-    Then I should see no todo
+    Then I should see no todo with the id <todoID>
     Examples:
       | todoID |
       |    86  |
