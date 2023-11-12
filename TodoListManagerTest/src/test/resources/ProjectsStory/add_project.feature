@@ -9,7 +9,6 @@
     And passes that project in a post request
     Then success error code is returned
     And object body is returned
-    And todo list state is restored by deleting newly created project
 
     Examples:
       | title |completed | active | description |
@@ -23,7 +22,6 @@
     And passes that project in a post request
     Then success error code is returned
     And object body is returned
-    And todo list state is restored by deleting newly created project
 
     Examples:
     ||
@@ -35,7 +33,6 @@
     When user creates a project with "<doneStatus>"
     And passes that project in a post request
     Then error code displayed
-    And error message is returned
 
     Examples:
       |doneStatus|

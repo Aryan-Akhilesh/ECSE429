@@ -12,7 +12,6 @@ Feature: Amend project fields
     And passes that field in a post request to the Dummy project
     Then amend success code is returned
     And title is modified
-    And I delete dummy project
 
 
   Scenario: amend project fields using PUT
@@ -21,7 +20,6 @@ Feature: Amend project fields
     And passes that field in a put request to the Dummy project
     Then amend success code is returned
     And title is modified
-    And I delete dummy project
 
   Scenario: amend invalid project fields using PUT
     Given http://localhost:4567/projects/:id
@@ -29,4 +27,3 @@ Feature: Amend project fields
     And passes that field in a post request to the Dummy project
     Then amend error code is returned
     And amend error message is displayed
-    And I delete dummy todo

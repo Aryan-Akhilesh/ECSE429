@@ -161,10 +161,6 @@ public class ProjectStepDefinition {
         softAssert.assertEquals(modifTitle, "new title");
     }
 
-    @And("I delete dummy project")
-    public void iDeleteDummyProject() {
-        RestAssured.given().delete(url);
-    }
 
     @And("passes that field in a put request to the Dummy project")
     public void passesThatFieldInAPutRequestToTheDummyProject() {
@@ -186,9 +182,6 @@ public class ProjectStepDefinition {
         Assert.assertEquals(bodyAsString.contains("\"errorMessages\":[\"Could not find field: topic\"]"), true, "Response body does not correspond to expected result");
     }
 
-    @And("I delete dummy todo")
-    public void iDeleteDummyTodo() {
-    }
 
     @When("I instantiate the topic field")
     public void iInstantiateTheTopicField() {
@@ -253,11 +246,6 @@ public class ProjectStepDefinition {
         System.out.println("Completed: " + response.jsonPath().getString("completed"));
         System.out.println("Active: " + response.jsonPath().getString("active"));
         System.out.println("Description: " + response.jsonPath().getString("description"));
-    }
-
-    @And("I delete the dummy project")
-    public void iDeleteTheDummyProject() {
-        RestAssured.given().delete(url);
     }
 
     @Given("wrong url http:\\/\\/localhost:{int}\\/projects\\/:id")

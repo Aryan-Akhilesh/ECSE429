@@ -18,11 +18,9 @@
       And passes that fields in a post request to the Dummy project
       Then the amend success code is returned
       And completed and active is modified
-      And I delete the dummy project
 
 
     Scenario: delete a project with invalid id
       Given wrong url http://localhost:4567/projects/:id
       When I delete the project with invalid id
       Then an error code is returned
-      And I delete the dummy project
