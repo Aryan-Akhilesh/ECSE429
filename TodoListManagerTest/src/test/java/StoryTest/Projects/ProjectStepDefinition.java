@@ -43,7 +43,7 @@ public class ProjectStepDefinition {
     }
 
     @When("user creates a project with {string}, {string}, {string} and {string}")
-    public void userCreatesAProjectWithAnd(String arg0, String arg1, String arg2, String arg3) {
+    public void userCreatesAProjectWithAllFields(String arg0, String arg1, String arg2, String arg3) {
         title = arg0;
         completed = Boolean.parseBoolean(arg1);
         active = Boolean.parseBoolean(arg2);
@@ -150,7 +150,7 @@ public class ProjectStepDefinition {
     }
 
     @Then("amend success code is returned")
-    public void amendeSuccessCodeIsReturned() {
+    public void amendSuccessCodeIsReturned() {
         Assert.assertEquals(POSTresponse.getStatusCode(), 200, "Status code should be 200, but it's not");
     }
 
