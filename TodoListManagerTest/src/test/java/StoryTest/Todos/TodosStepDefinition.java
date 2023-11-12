@@ -14,7 +14,6 @@ public class TodosStepDefinition {
     private final String xml = "application/xml";
     private Response res;
     private String jsonString;
-    private String xmlString;
 
     // ----------- Feature: Get specific todos -------------//
 
