@@ -1,6 +1,5 @@
-@tag
-  Feature: add new project
-    As a user, I want to add a new project to manage my work.
+Feature: add new project
+  As a user, I want to add a new project to manage my work.
 
   Scenario Outline: Add a project with all fields
     Given the URL https://localhost:4567/projects

@@ -1,4 +1,3 @@
-@tag
 Feature: Get project information
   As a user, I want to get a project to know about its condition and information.
 

@@ -384,7 +384,6 @@ public class ProjectStepDefinition {
         myActive = Boolean.parseBoolean(arg0);
         body.put("completed", myCompleted);
         body.put("active", myActive);
-        System.out.println(body);
     }
 
     @And("passes that fields in a post request to the project")

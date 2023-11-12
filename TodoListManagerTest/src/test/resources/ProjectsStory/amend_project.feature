@@ -1,4 +1,3 @@
-@tag
 Feature: Amend project fields
   As a user, I want to be able to amend the title field of a project
 

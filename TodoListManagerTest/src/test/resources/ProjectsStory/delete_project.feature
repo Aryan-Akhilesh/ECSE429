@@ -1,5 +1,4 @@
-@tag
-  Feature: Delete projects
+Feature: Delete projects
     As a user, I want to close a project since it is already finished.
 
     Background:
