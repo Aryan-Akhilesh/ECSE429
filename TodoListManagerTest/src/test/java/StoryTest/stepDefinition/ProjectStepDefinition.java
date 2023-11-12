@@ -1,4 +1,4 @@
-package StoryTest.Projects;
+package StoryTest.stepDefinition;
 
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;

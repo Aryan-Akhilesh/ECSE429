@@ -1,4 +1,4 @@
-package StoryTest.Todos;
+package StoryTest.stepDefinition;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
