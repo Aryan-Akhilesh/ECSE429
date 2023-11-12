@@ -7,6 +7,7 @@ Feature: Add a new todo
     Examples:
       |title         | description                  | doneStatus |
       |"Send documents"| "send the documents to the CEO"|  "false"     |
+      |"Shred Documents"|"send the documents to the CEO"| "false"      |
 
   Scenario Outline: Alternate flow for adding a todo
     Given I have a todo that does not exist and wish to add one
@@ -15,6 +16,7 @@ Feature: Add a new todo
     Examples:
       | title         |
       |"Shred documents"|
+      |"send documents" |
 
   Scenario Outline: Error flow for adding a todo
     Given I have a todo that does not exist and wish to add one
@@ -23,3 +25,4 @@ Feature: Add a new todo
     Examples:
       | field |
       |"class"  |
+      |"product"|

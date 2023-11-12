@@ -7,6 +7,7 @@ Feature: Delete a todo
     Examples:
       | id |
       | 1  |
+      |2   |
 
   Scenario Outline: Alternate flow for deleting a todo
     Given I have an existing todo
@@ -15,6 +16,7 @@ Feature: Delete a todo
     Examples:
       | id | doneStatus |
       | 1  | "true"  |
+      | 2  | "true"  |
 
   Scenario Outline: Error flow for deleting a todo
     Given I have a non-existing todo
@@ -23,4 +25,5 @@ Feature: Delete a todo
     Examples:
       | id |
       |55  |
+      |33  |
 

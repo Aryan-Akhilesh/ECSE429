@@ -24,7 +24,7 @@ public class TodosStepDefinition {
     }
 
     @When("I request the todo with a specific id {int} in JSON")
-    public void i_request_the_todo_with_a_specific_id_in_json(Integer todoID) {
+    public void i_request_the_todo_with_a_specific_id_in_json(int todoID) {
         res = RestAssured.given().header("Accept",json).get("http://localhost:4567/todos/" + todoID);
     }
 
@@ -37,7 +37,7 @@ public class TodosStepDefinition {
     }
 
     @When("I request the todo with a specific id {int} in XML")
-    public void i_request_the_todo_with_a_specific_id_in_xml(Integer todoID) {
+    public void i_request_the_todo_with_a_specific_id_in_xml(int todoID) {
         res = RestAssured.given().header("Accept",xml).get("http://localhost:4567/todos/" + todoID);
     }
 
@@ -55,12 +55,12 @@ public class TodosStepDefinition {
     }
 
     @When("I request the todo with an invalid id {int} in JSON")
-    public void i_request_the_todo_with_an_invalid_id_in_json(Integer todoID) {
+    public void i_request_the_todo_with_an_invalid_id_in_json(int todoID) {
         res = RestAssured.given().header("Accept",json).get("http://localhost:4567/todos/" + todoID);
     }
 
     @Then("I should see no todo with the id {int}")
-    public void i_should_see_no_todo(Integer todoID) {
+    public void i_should_see_no_todo(int todoID) {
         int statusCode = res.getStatusCode();
         String body = "{\"errorMessages\":[\"Could not find an instance with todos/" + todoID + "\"]}";
         Assertions.assertEquals(body,res.getBody().asString());
@@ -115,7 +115,7 @@ public class TodosStepDefinition {
     //------------ Feature: Delete todos -----------//
 
     @When("I delete the todo with the valid id {int}")
-    public void i_delete_the_todo_with_the_valid_id(Integer todoID) {
+    public void i_delete_the_todo_with_the_valid_id(int todoID) {
         res = RestAssured.delete(" http://localhost:4567/todos/" + todoID);
     }
 
@@ -126,7 +126,7 @@ public class TodosStepDefinition {
     }
 
     @When("I post todo with valid id {int} but with the doneStatus {string} as completed")
-    public void i_post_todo_with_valid_id_but_with_the_done_status_as_completed(Integer todoID, String doneStatus) {
+    public void i_post_todo_with_valid_id_but_with_the_done_status_as_completed(int todoID, String doneStatus) {
         jsonString =  "{" + "\"id\": "+todoID+ "," + "\"doneStatus\": "+ doneStatus + "}";
         res = RestAssured.given()
                 .header("Content-Type",json)
@@ -142,7 +142,7 @@ public class TodosStepDefinition {
     }
 
     @When("I delete the todo with the invalid id {int}")
-    public void i_delete_the_todo_with_the_invalid_id(Integer todoID) {
+    public void i_delete_the_todo_with_the_invalid_id(int todoID) {
         res = RestAssured.delete(" http://localhost:4567/todos/" + todoID);
     }
 
@@ -155,7 +155,7 @@ public class TodosStepDefinition {
     //--------------Feature: Amend Description --------------//
 
     @When("I PUT a todo with valid id {int} and different description {string}")
-    public void i_put_a_todo_with_valid_id_and_different_description(Integer todoID, String description) {
+    public void i_put_a_todo_with_valid_id_and_different_description(int todoID, String description) {
         jsonString =  "{" + "\"id\":"+ todoID +"," +"\"title\": \"get more paperwork\"," + "\"doneStatus\": false," +
                 "\"description\": \""+ description +"\"," + "\"tasksof\": [" + "{" + "\"id\": \"1\"" + "}" + "]," +
                 "\"categories\": [" + "{" + "\"id\": \"1\"" + "}" + "]" + "}";
@@ -173,7 +173,7 @@ public class TodosStepDefinition {
     }
 
     @When("I POST a todo with valid id {int} and different description {string}")
-    public void i_post_a_todo_with_valid_id_and_different_description(Integer todoID, String description) {
+    public void i_post_a_todo_with_valid_id_and_different_description(int todoID, String description) {
         jsonString =  "{" + "\"id\": "+todoID+ "," + "\"description\": \""+ description + "\"}";
         res = RestAssured.given()
                 .header("Content-Type",json)
@@ -182,7 +182,7 @@ public class TodosStepDefinition {
     }
 
     @When("I PUT a todo with invalid id {int} and different description {string}")
-    public void i_put_a_todo_with_invalid_id_and_different_description(Integer todoID, String description) {
+    public void i_put_a_todo_with_invalid_id_and_different_description(int todoID, String description) {
         jsonString =  "{" + "\"id\": "+todoID+ "," + "\"description\": \""+ description + "\"}";
         res = RestAssured.given()
                 .header("Content-Type",json)
@@ -203,7 +203,7 @@ public class TodosStepDefinition {
     }
 
     @When("I get the taskOf the todo with the valid id {int} in JSON")
-    public void i_get_the_task_of_the_todo_with_the_valid_id_in_json(Integer todoID) {
+    public void i_get_the_task_of_the_todo_with_the_valid_id_in_json(int todoID) {
         res = RestAssured.given().header("Accept",json).get("http://localhost:4567/todos/"+ todoID+"/tasksof");
     }
 
@@ -220,7 +220,7 @@ public class TodosStepDefinition {
     }
 
     @When("I get the taskOf the todo with the valid id {int} in XML")
-    public void i_get_the_task_of_the_todo_with_the_valid_id_in_xml(Integer todoID) {
+    public void i_get_the_task_of_the_todo_with_the_valid_id_in_xml(int todoID) {
         res = RestAssured.given().header("Accept",xml).get("http://localhost:4567/todos/"+todoID+"/tasksof");
     }
 
@@ -232,7 +232,7 @@ public class TodosStepDefinition {
     }
 
     @When("I get the taskOf the todo with an invalid id {int}")
-    public void i_get_the_task_of_the_todo_with_an_invalid_id(Integer todoID) {
+    public void i_get_the_task_of_the_todo_with_an_invalid_id(int todoID) {
         res = RestAssured.given().header("Accept",json).get("http://localhost:4567/todos/"+todoID+"/tasksof");
         System.out.println(res.getBody().asString());
     }

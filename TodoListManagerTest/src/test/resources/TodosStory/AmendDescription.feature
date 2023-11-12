@@ -7,6 +7,7 @@ Feature: Amend the description of a todo
     Examples:
       | id | description       |
       |1   | "Add more documents"|
+      |2   | "Shred documents"   |
 
   Scenario Outline: Alternate flow for amending the description of a todo
     Given I have an existing todo
@@ -15,6 +16,7 @@ Feature: Amend the description of a todo
     Examples:
       | id | description       |
       | 1  | "Add more documents"|
+      |2   | "Shred documents"   |
 
   Scenario Outline: Error flow for amending the description of a todo
     Given I have a non-existing todo
@@ -23,4 +25,5 @@ Feature: Amend the description of a todo
     Examples:
       | id | description       |
       | 56 | "Add more documents"|
+      |99  |"Shred documents"    |
 

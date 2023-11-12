@@ -24,3 +24,4 @@ Feature: Get a specific todo
     Examples:
       | todoID |
       |    86  |
+      |999     |
