@@ -8,6 +8,7 @@ Feature: Get a specific category
    Examples:
      | categoryId |
      |      1     |
+     |      2     |
 
   Scenario Outline: Alternate flow for get a specific category
     Given I have an existing category database
@@ -16,6 +17,7 @@ Feature: Get a specific category
     Examples:
       | categoryId |
       |      1     |
+      |      2     |
 
   Scenario Outline: Error flow for get a specific category
     Given I have an existing category database

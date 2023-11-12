@@ -17,6 +17,8 @@ public class CategoryStepDefinition {
     private final String xml = "application/xml";
     private Response response;
     private String newCategoryId;
+    private String tempTitle;
+    private String tempDescription;
 
     // User scenario 1
 
@@ -202,11 +204,13 @@ public class CategoryStepDefinition {
     @When("I request a category with id {int} in JSON")
     public void i_request_a_category_with_id_in_json(int categoryId) {
         response = RestAssured.given().header("Accept", json).get("http://localhost:4567/categories/" + categoryId);
+        tempTitle = response.jsonPath().getString("categories.title[0]");
+        tempDescription = response.jsonPath().getString("categories.description[0]");
     }
 
     @Then("I should see an existing category with id {int} in JSON")
     public void i_should_see_an_existing_category_in_json(int categoryId) {
-        String body ="{\"categories\":[{\"id\":\"" + categoryId + "\",\"title\":\"Office\",\"description\":\"\"}]}";
+        String body ="{\"categories\":[{\"id\":\"" + categoryId + "\",\"title\":\"" + tempTitle + "\",\"description\":\"" + tempDescription + "\"}]}";
         Assertions.assertEquals(body,response.getBody().asString());
         Assertions.assertEquals(200,response.getStatusCode());
     }
@@ -214,11 +218,12 @@ public class CategoryStepDefinition {
     @When("I request a category with id {int} in XML")
     public void i_request_a_category_with_id_in_xml(int categoryId) {
         response = RestAssured.given().header("Accept", xml).get("http://localhost:4567/categories/" + categoryId);
+        tempTitle = response.xmlPath().getString("categories.category.title[0]");
     }
 
     @Then("I should see an existing category with id {int} in XML")
     public void i_should_see_an_existing_category_in_xml(int categoryId) {
-        String body = "<categories><category><description/><id>" + categoryId + "</id><title>Office</title></category></categories>";
+        String body = "<categories><category><description/><id>" + categoryId + "</id><title>" + tempTitle + "</title></category></categories>";
         XMLAssert.assertEquals(body,response.getBody().asString());
         Assertions.assertEquals(200,response.getStatusCode());
     }
