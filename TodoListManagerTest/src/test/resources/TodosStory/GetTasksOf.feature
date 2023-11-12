@@ -22,9 +22,9 @@ Feature: Get tasksOf todos
 
   Scenario Outline: Error flow for getting all todos
     Given I have existing todos
-    When I get the taskOf the todo with the invalid id <id>
-    Then I should not see any taskOf
+    When I get the taskOf the todo with an invalid id <id>
+    Then I should see the taskOf of the first todo
     Examples:
       | id |
+      | 200 |
       | 999 |
-      |555  |

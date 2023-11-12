@@ -231,15 +231,15 @@ public class TodosStepDefinition {
         Assertions.assertEquals(200,statusCode);
     }
 
-    @When("I get the taskOf the todo with the invalid id {int}")
-    public void i_get_the_task_of_the_todo_with_the_invalid_id(Integer todoID) {
+    @When("I get the taskOf the todo with an invalid id {int}")
+    public void i_get_the_task_of_the_todo_with_an_invalid_id(Integer todoID) {
         res = RestAssured.given().header("Accept",json).get("http://localhost:4567/todos/"+todoID+"/tasksof");
+        System.out.println(res.getBody().asString());
     }
 
-    @Then("I should not see any taskOf")
-    public void i_should_not_see_any_taskOf() {
+    @Then("I should see the taskOf of the first todo")
+    public void i_should_see_the_taskOf_of_the_first_todo() {
         int statusCode = res.getStatusCode();
-        System.out.println(res.getBody().asString());
         Assertions.assertEquals(200,statusCode);
     }
 
