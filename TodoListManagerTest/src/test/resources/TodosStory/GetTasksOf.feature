@@ -9,7 +9,6 @@ Feature: Get tasksOf todos
       |1   |
       |2   |
 
-
   Scenario Outline: Alternate flow for getting tasksOf a todo
     Given I have existing todos
     When I get the taskOf the todo with the valid id <id> in XML
@@ -18,7 +17,6 @@ Feature: Get tasksOf todos
       | id |
       |1   |
       |2   |
-
 
   Scenario Outline: Error flow for getting all todos
     Given I have existing todos

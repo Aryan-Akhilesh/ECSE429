@@ -85,7 +85,6 @@ public class TodosStepDefinition {
                 .header("Content-Type",json)
                 .body(jsonString)
                 .post("http://localhost:4567/todos");
-
         int statusCode = res.getStatusCode();
         Assertions.assertEquals(201,statusCode);
     }
@@ -106,7 +105,6 @@ public class TodosStepDefinition {
                 .header("Content-Type",json)
                 .body(jsonString)
                 .post("http://localhost:4567/todos");
-
         int statusCode = res.getStatusCode();
         Assertions.assertEquals(400,statusCode);
     }
@@ -158,7 +156,6 @@ public class TodosStepDefinition {
         jsonString =  "{" + "\"id\":"+ todoID +"," +"\"title\": \"get more paperwork\"," + "\"doneStatus\": false," +
                 "\"description\": \""+ description +"\"," + "\"tasksof\": [" + "{" + "\"id\": \"1\"" + "}" + "]," +
                 "\"categories\": [" + "{" + "\"id\": \"1\"" + "}" + "]" + "}";
-
         res = RestAssured.given()
                 .header("Content-Type",json)
                 .body(jsonString)

@@ -26,4 +26,3 @@ Feature: Delete a todo
       | id |
       |55  |
       |33  |
-
