@@ -9,14 +9,7 @@ import io.restassured.response.Response;
 import org.json.JSONException;
 import org.junit.jupiter.api.Assertions;
 import org.skyscreamer.jsonassert.JSONAssert;
-import io.restassured.RestAssured;
-import io.restassured.response.Response;
 import org.custommonkey.xmlunit.XMLAssert;
-import org.json.JSONException;
-import org.junit.jupiter.api.*;
-import org.skyscreamer.jsonassert.JSONAssert;
-
-import java.util.jar.JarException;
 
 public class CategoryStepDefinition {
 
@@ -27,105 +20,94 @@ public class CategoryStepDefinition {
 
     // User scenario 1
 
-    @Given("I have an existing category with field title")
-    public void i_have_an_existing_category_with_field_title() {
-        String jsonString = "{\"title\":\"Car\",\"description\":\"\"}";
-        RestAssured.given().header("Content-Type", json).body(jsonString).post("http://localhost:4567/categories");
+    @Given("I have an existing category with field title {string}")
+    public void i_have_an_existing_category_with_field_title(String prevTitle) {
+        String jsonString = "{\"title\":\"" + prevTitle + "\",\"description\":\"\"}";
+        response = RestAssured.given().header("Content-Type", json).body(jsonString).post("http://localhost:4567/categories");
+        newCategoryId = response.jsonPath().get("id");
     }
 
-    @When("I modify the title of the existing category")
-    public void i_modify_the_title_of_the_existing_category() {
-        String jsonString = "{\"title\":\"Train\",\"description\":\"\"}";
-        RestAssured.given().header("Content-Type", json).body(jsonString).put("http://localhost:4567/categories/3");
+    @When("I update the existing title to a new title {string}")
+    public void i_update_the_existing_title_to_a_new_title(String newTitle) {
+        String jsonString = "{\"title\":\"" + newTitle + "\",\"description\":\"\"}";
+        RestAssured.given().header("Content-Type", json).body(jsonString).put("http://localhost:4567/categories/" + newCategoryId);
     }
 
-    @Then("I should see the title of the category changed")
-    public void i_should_see_the_title_of_the_category_changed() {
-        response = RestAssured.given().header("Content-Type", json).get("http://localhost:4567/categories/3");
-        String body = "{\"categories\":[{\"id\":\"3\",\"title\":\"Train\",\"description\":\"\"}]}";
+    @Then("I should see the title of the category changed to a new title {string}")
+    public void i_should_see_the_title_of_the_category_changed_to_a_new_title(String newTitle) {
+        response = RestAssured.given().header("Content-Type", json).get("http://localhost:4567/categories/" + newCategoryId);
+        String body = "{\"categories\":[{\"id\":\"3\",\"title\":\"" + newTitle + "\",\"description\":\"\"}]}";
         Assertions.assertEquals(body, response.getBody().asString());
         Assertions.assertEquals(200, response.getStatusCode());
     }
 
-    @When("I use Post request to modify my existing category")
-    public void i_use_Post_request_to_modify_an_existing_category() {
-        String jsonString = "{\"title\":\"Train\",\"description\":\"\"}";
-        RestAssured.given().header("Content-Type", json).body(jsonString).post("http://localhost:4567/categories/3");
+    @When("I use Post request to update my existing category title to a new title {string}")
+    public void i_use_post_request_to_update_my_existing_category_title_to_a_new_title(String newTitle) {
+        String jsonString = "{\"title\":\"" + newTitle + "\",\"description\":\"\"}";
+        RestAssured.given().header("Content-Type", json).body(jsonString).post("http://localhost:4567/categories/" + newCategoryId);
     }
 
-//    @Then("I should see the title of the category changed to Plane")
-//    public void i_should_see_the_category_title_field_modified_to_Plane() {
-//        Response r = RestAssured.given().header("Content-Type", json).get("http://localhost:4567/categories/3");
-//        String body = "{\"categories\":[{\"id\":\"3\",\"title\":\"Plane\",\"description\":\"\"}]}";
-//        Assertions.assertEquals(body, r.getBody().asString());
-//    }
-
-    @When("I modify the title of a category by providing an incorrect id")
-    public void i_modify_the_title_of_a_category_by_providing_an_incorrect_id() {
-        String jsonString = "{\"title\":\"Train\",\"description\":\"\"}";
-        response = RestAssured.given().header("Content-Type", json).body(jsonString).put("http://localhost:4567/categories/300");
-    }
-
-    @Then("I should be warned that id is invalid")
-    public void i_should_be_warned_that_id_is_invalid() {
-        String error = "{\"errorMessages\":[\"Invalid GUID for 300 entity category\"]}";
-        Assertions.assertEquals(error, response.getBody().asString());
-        Assertions.assertEquals(404, response.getStatusCode());
+    @When("I update the existing title to a new title {string} with incorrect Id {int}")
+    public void i_update_the_existing_title_to_a_new_title_with_incorrect_Id(String newTitle, int invalidCategoryId) {
+        String jsonString = "{\"title\":\"" + newTitle + "\",\"description\":\"\"}";
+        response = RestAssured.given().header("Content-Type", json).body(jsonString).put("http://localhost:4567/categories/" + invalidCategoryId);
     }
 
     // User scenario 2
 
-    @Given("I have an existing category with valid field")
-    public void i_have_an_existing_category_with_valid_field() {
-        String jsonString = "{\"title\":\"School\",\"description\":\"university\"}";
-        RestAssured.given().header("Content-Type", json).body(jsonString).post("http://localhost:4567/categories");
+    @Given("I have an existing category with title {string} and description {string}")
+    public void i_have_an_existing_category_with_title_and_description(String prevTitle, String prevDescription) {
+        String jsonString = "{\"title\":\"" + prevTitle + "\",\"description\":\"" + prevDescription + "\"}";
+        response = RestAssured.given().header("Content-Type", json).body(jsonString).post("http://localhost:4567/categories");
+        newCategoryId = response.jsonPath().get("id");
     }
 
-    @When("I replace the title and description field of the existing category")
-    public void i_replace_the_title_and_description_field_of_an_existing_category() {
-        String jsonString = "{\"title\":\"University\",\"description\":\"McGill\"}";
-        RestAssured.given().header("Content-Type", json).body(jsonString).put("http://localhost:4567/categories/3");
+    @When("I replace the title and description field of an existing category to a new title {string} and description {string}")
+    public void i_replace_the_title_and_description_field_of_an_existing_category_to_a_new_title_and_description(String newTitle, String newDescription) {
+        String jsonString = "{\"title\":\"" + newTitle + "\",\"description\":\"" + newDescription + "\"}";
+        RestAssured.given().header("Content-Type", json).body(jsonString).put("http://localhost:4567/categories/" + newCategoryId);
     }
 
-    @Then("I should see the title and description of the category replaced")
-    public void i_should_see_the_title_and_description_of_the_category_replaced() {
-        response = RestAssured.given().header("Content-Type", json).get("http://localhost:4567/categories/3");
-        String body = "{\"categories\":[{\"id\":\"3\",\"title\":\"University\",\"description\":\"McGill\"}]}";
+    @Then("I should see the category field replaced to new title {string} and new description {string}")
+    public void i_should_see_the_category_field_replaced_to_new_title_and_new_description(String newTitle, String newDescription) {
+        response = RestAssured.given().header("Accept", json).get("http://localhost:4567/categories/" + newCategoryId);
+        String body = "{\"categories\":[{\"id\":\"" + newCategoryId + "\",\"title\":\"" + newTitle + "\",\"description\":\"" + newDescription + "\"}]}";
         Assertions.assertEquals(body, response.getBody().asString());
         Assertions.assertEquals(200, response.getStatusCode());
     }
 
-    @When("I delete the current existing category and create a new one")
-    public void i_delete_current_existing_category_and_create_a_new_one() {
-        RestAssured.given().header("Accept", json).delete("http://localhost:4567/categories/3");
+    @When("I delete the current existing category")
+    public void i_delete_current_existing_category() {
+        RestAssured.given().header("Accept", json).delete("http://localhost:4567/categories/" + newCategoryId);
     }
 
-    @And("I create a new category with title and description")
-    public void i_create_a_new_category_with_title_and_description() {
-        String jsonString = "{\"title\":\"University\",\"description\":\"McGill\"}";
-        RestAssured.given().header("Content-Type", json).body(jsonString).post("http://localhost:4567/categories");
+    @And("I create a new category with title {string} and description {string}")
+    public void i_create_a_new_category_with_title_and_description(String newTitle, String newDescription) {
+        String jsonString = "{\"title\":\"" + newTitle + "\",\"description\":\"" + newDescription + "\"}";
+        response = RestAssured.given().header("Content-Type", json).body(jsonString).post("http://localhost:4567/categories");
+        newCategoryId = response.jsonPath().get("id");
     }
 
-    @Then("I should see the title and description of the category replaced after deletion")
-    public void i_should_see_the_title_and_description_of_the_category_replaced_after_deletion() {
-        response = RestAssured.given().header("Accept", json).get("http://localhost:4567/categories/3");
-        String body = "{\"categories\":[{\"id\":\"3\",\"title\":\"University\",\"description\":\"McGill\"}]}";
+    @Then("I should see the title and description of the category replaced to a new title {string} and description {string} after deletion")
+    public void i_should_see_the_title_and_description_of_the_category_replaced_to_a_new_title_and_description_after_deletion(String newTitle, String newDescription) {
+        response = RestAssured.given().header("Accept", json).get("http://localhost:4567/categories/" + newCategoryId);
+        String body = "{\"categories\":[{\"id\":\"" + newCategoryId + "\",\"title\":\"" + newTitle + "\",\"description\":\"" + newDescription + "\"}]}";
         Assertions.assertEquals(body, response.getBody().asString());
         Assertions.assertEquals(200, response.getStatusCode());
     }
 
-    @When("I replace the category with an invalid id")
-    public void i_replace_the_category_with_an_invalid_id() {
-        String jsonString = "{\"title\":\"University\",\"description\":\"McGill\"}";
-        response = RestAssured.given().header("Content-Type", json).body(jsonString).put("http://localhost:4567/categories/300");
+    @When("I replace the category with a new title {string} and new description {string} with an invalid id {int}")
+    public void i_replace_the_category_with_a_new_title_and_new_description_with_an_invalid_id(String newTitle, String newDescription, int invalidCategoryId) {
+        String jsonString = "{\"title\":\"" + newTitle + "\",\"description\":\"" + newDescription + "\"}";
+        response = RestAssured.given().header("Content-Type", json).body(jsonString).put("http://localhost:4567/categories/" + invalidCategoryId);
     }
 
-//    @Then("I should be warned that id is invalid")
-//    public void i_should_be_warned_that_id_is_invalid() {
-//        String error = "{\"errorMessages\":[\"Invalid GUID for 300 entity category\"]}";
-//        Assertions.assertEquals(error, response.getBody().asString());
-//        Assertions.assertEquals(404, response.getStatusCode());
-//    }
+    @Then("I should be warned that id {int} is invalid")
+    public void i_should_be_warned_that_id_is_invalid(int invalidCategoryId) {
+        String error = "{\"errorMessages\":[\"Invalid GUID for " + invalidCategoryId + " entity category\"]}";
+        Assertions.assertEquals(error, response.getBody().asString());
+        Assertions.assertEquals(404, response.getStatusCode());
+    }
 
     // User scenario 3
 
@@ -134,26 +116,32 @@ public class CategoryStepDefinition {
         // nothing to do
     }
 
-    @When("I create a new category with title and description field")
-    public void i_create_a_new_category_with_title_and_description_field() {
-        String jsonString = "{\"title\":\"University\",\"description\":\"McGill\"}";
-        RestAssured.given().header("Content-Type", json).body(jsonString).post("http://localhost:4567/categories");
+    @When("I create a new category with title {string} and description field {string}")
+    public void i_create_a_new_category_with_title_and_description_field(String newTitle, String newDescription) {
+        String jsonString = "{\"title\":\"" + newTitle + "\",\"description\":\"" + newDescription + "\"}";
+        response = RestAssured.given().header("Content-Type", json).body(jsonString).post("http://localhost:4567/categories");
+        newCategoryId = response.jsonPath().get("id");
     }
 
-    @Then("I should see a new category {int} with title and description")
-    public void i_should_see_a_new_category_with_title_and_description(int categoryId) {
-        response = RestAssured.given().header("Accept", json).get("http://localhost:4567/categories/" + categoryId);
-        int statusCode = response.getStatusCode();
-        String body = "{\"categories\":[{\"id\":\"3\",\"title\":\"University\",\"description\":\"McGill\"}]}";
+    @Then("I should see a new category with new title {string} and description {string}")
+    public void i_should_see_a_new_category_with_new_title_and_description(String newTitle, String newDescription) {
+        response = RestAssured.given().header("Accept", json).get("http://localhost:4567/categories/" + newCategoryId);
+        String body = "{\"categories\":[{\"id\":\"" + newCategoryId + "\",\"title\":\"" + newTitle + "\",\"description\":\"" + newDescription + "\"}]}";
         Assertions.assertEquals(body, response.getBody().asString());
         Assertions.assertEquals(200, response.getStatusCode());
     }
 
-    @Then("I should see a new category {int} with title only")
-    public void i_should_see_a_new_category_with_title_only(int categoryId) {
-        response = RestAssured.given().header("Accept", json).get("http://localhost:4567/categories/" + categoryId);
-        int statusCode = response.getStatusCode();
-        String body = "{\"categories\":[{\"id\":\"3\",\"title\":\"University\",\"description\":\"\"}]}";
+    @When("I create a new category with title {string} only")
+    public void i_create_a_new_category_with_title_only(String newTitle) {
+        String jsonString = "{\"title\":\"" + newTitle + "\"}";
+        response = RestAssured.given().header("Content-Type", json).body(jsonString).post("http://localhost:4567/categories");
+        newCategoryId = response.jsonPath().get("id");
+    }
+
+    @Then("I should see a new category with title {string} only")
+    public void i_should_see_a_new_category_with_title_only(String newTitle) {
+        response = RestAssured.given().header("Accept", json).get("http://localhost:4567/categories/" + newCategoryId);
+        String body = "{\"categories\":[{\"id\":\"" + newCategoryId + "\",\"title\":\"" + newTitle + "\",\"description\":\"\"}]}";
         Assertions.assertEquals(body, response.getBody().asString());
         Assertions.assertEquals(200, response.getStatusCode());
     }
@@ -171,16 +159,10 @@ public class CategoryStepDefinition {
         Assertions.assertEquals(400, response.getStatusCode());
     }
 
-    @When("I create a new category with title only")
-    public void i_create_a_new_category_with_title_only() {
-        String jsonString = "{\"title\":\"University\"}";
-        RestAssured.given().header("Content-Type", json).body(jsonString).post("http://localhost:4567/categories");
-    }
-
     // User scenario 4
-    @When("I request all category in JSON")
-    public void i_request_all_category_in_json() {
-        response = RestAssured.given().header("Accept", json).get("http://localhost:4567/categories");
+    @When("I request all category in JSON using valid URL {string}")
+    public void i_request_all_category_in_json(String URL) {
+        response = RestAssured.given().header("Accept", json).get(URL);
     }
 
     @Then("I should see all existing categories in JSON")
@@ -190,9 +172,9 @@ public class CategoryStepDefinition {
         Assertions.assertEquals(200,response.getStatusCode());
     }
 
-    @When("I request all category in xml")
-    public void i_request_all_category_in_xml() {
-        response = RestAssured.given().header("Accept", xml).get("http://localhost:4567/categories");
+    @When("I request all category in xml using valid URL {string}")
+    public void i_request_all_category_in_xml(String URL) {
+        response = RestAssured.given().header("Accept", xml).get(URL);
     }
 
     @Then("I should see all existing categories in XML")
@@ -201,29 +183,56 @@ public class CategoryStepDefinition {
         Assertions.assertEquals(200,response.getStatusCode());
     }
 
-    // User scenario 5
-    @When("I request a category with id in JSON")
-    public void i_request_a_category_with_id_in_json() {
-        response = RestAssured.given().header("Accept", json).get("http://localhost:4567/categories/1");
+    @When("I request all categories using invalid url {string}")
+    public void i_request_all_categories_using_invalid_url(String invalidURL) {
+        response = RestAssured.given().header("Accept", json).get(invalidURL);
     }
 
-    @Then("I should see an existing category in JSON")
-    public void i_should_see_an_existing_category_in_json() {
-        String body ="{\"categories\":[{\"id\":\"1\",\"title\":\"Office\",\"description\":\"\"}]}";
+    @Then("I should be warned that the url is not found")
+    public void i_should_be_warned_that_the_url_is_not_found() {
+        Assertions.assertEquals(404, response.getStatusCode());
+    }
+
+    // User scenario 5
+    @Given("I have an existing category database")
+    public void i_have_an_existing_category_database() {
+        // do nothing
+    }
+
+    @When("I request a category with id {int} in JSON")
+    public void i_request_a_category_with_id_in_json(int categoryId) {
+        response = RestAssured.given().header("Accept", json).get("http://localhost:4567/categories/" + categoryId);
+    }
+
+    @Then("I should see an existing category with id {int} in JSON")
+    public void i_should_see_an_existing_category_in_json(int categoryId) {
+        String body ="{\"categories\":[{\"id\":\"" + categoryId + "\",\"title\":\"Office\",\"description\":\"\"}]}";
         Assertions.assertEquals(body,response.getBody().asString());
         Assertions.assertEquals(200,response.getStatusCode());
     }
 
-    @When("I request a category with id in XML")
-    public void i_request_a_category_with_id_in_xml() {
-        response = RestAssured.given().header("Accept", xml).get("http://localhost:4567/categories/1");
+    @When("I request a category with id {int} in XML")
+    public void i_request_a_category_with_id_in_xml(int categoryId) {
+        response = RestAssured.given().header("Accept", xml).get("http://localhost:4567/categories/" + categoryId);
     }
 
-    @Then("I should see an existing category in XML")
-    public void i_should_see_an_existing_category_in_xml() {
-        String body = "<categories><category><description/><id>1</id><title>Office</title></category></categories>";
+    @Then("I should see an existing category with id {int} in XML")
+    public void i_should_see_an_existing_category_in_xml(int categoryId) {
+        String body = "<categories><category><description/><id>" + categoryId + "</id><title>Office</title></category></categories>";
         XMLAssert.assertEquals(body,response.getBody().asString());
         Assertions.assertEquals(200,response.getStatusCode());
+    }
+
+    @When("I request a category with an invalid id {int} in JSON")
+    public void i_request_a_category_with_an_invalid_id_in_json(int invalidCategoryId) {
+        response = RestAssured.given().header("Accept", json).get("http://localhost:4567/categories/" + invalidCategoryId);
+    }
+
+    @Then("I should be warned that instance does not exist in category with id {int}")
+    public void i_should_be_warned_that_instance_does_not_exist_in_category_with_id(int invalidCategoryId) {
+        String error = "{\"errorMessages\":[\"Could not find an instance with categories/" + invalidCategoryId + "\"]}";
+        Assertions.assertEquals(404, response.getStatusCode());
+        Assertions.assertEquals(response.getBody().asString(), error);
     }
 
 }

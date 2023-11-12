@@ -3,19 +3,21 @@ Feature: Create a new category
 
   Scenario Outline: Normal flow for creating a new category
     Given I do not have a custom category
-    When I create a new category with title and description field
-    Then I should see a new category <categoryId> with title and description
+    When I create a new category with title "<newTitle>" and description field "<newDescription>"
+    Then I should see a new category with new title "<newTitle>" and description "<newDescription>"
     Examples:
-      | categoryId |
-      |   3        |
+      | newTitle | newDescription |
+      |  Train   |   Bullet       |
+      |  Plane   |   Jet          |
 
   Scenario Outline: Alternate flow for creating a new category
     Given I do not have a custom category
-    When I create a new category with title only
-    Then I should see a new category <categoryId> with title only
+    When I create a new category with title "<newTitle>" only
+    Then I should see a new category with title "<newTitle>" only
     Examples:
-      | categoryId |
-      |   3        |
+      |   newTitle  |
+      | University  |
+      | High School |
 
   Scenario Outline: Error flow for creating a new category
     Given I do not have a custom category
