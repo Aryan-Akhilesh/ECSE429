@@ -27,10 +27,13 @@ public class ProjectStepDefinition {
     private JSONObject titleBody;
     private Response POSTresponse;
 
-
+    private String myTitle;
     private String wrongUrl;
 
     private final String xml = "application/xml";
+
+    private Boolean myCompleted;
+    private Boolean myActive;
 
 
 
@@ -79,19 +82,7 @@ public class ProjectStepDefinition {
         softAssert.assertEquals(newActive, active);
         String newDescription = response.jsonPath().getString("description");
         softAssert.assertEquals(newDescription, description);
-
-        System.out.println("=======> Printing Added Project: ");
-        System.out.println("Title: " + title);
-        System.out.println("Completed: " + completed);
-        System.out.println("Active: " + active);
-        System.out.println("Description: " + description);
         
-    }
-
-    @And("todo list state is restored by deleting newly created project")
-    public void todoListStateIsRestoredByDeletingNewlyCreatedProject() {
-        String newId = response.jsonPath().getString("id");
-        RestAssured.given().delete("http://localhost:4567/delete/" + newId);
     }
 
     @When("user creates a project")
@@ -137,11 +128,6 @@ public class ProjectStepDefinition {
         url = "http://localhost:4567/projects/" + DummyID;
     }
 
-    @When("I instantiate the title field")
-    public void iInstantiateTheTitleField() {
-        titleBody = new JSONObject();
-        titleBody.put("title", "new title");
-    }
 
     @And("passes that field in a post request to the Dummy project")
     public void passesThatFieldInAPostRequestToTheDummyProject() {
@@ -158,7 +144,7 @@ public class ProjectStepDefinition {
     public void titleIsModified() {
         SoftAssert softAssert = new SoftAssert();
         String modifTitle = POSTresponse.jsonPath().getString("title");
-        softAssert.assertEquals(modifTitle, "new title");
+        softAssert.assertEquals(modifTitle, myTitle);
     }
 
 
@@ -183,11 +169,6 @@ public class ProjectStepDefinition {
     }
 
 
-    @When("I instantiate the topic field")
-    public void iInstantiateTheTopicField() {
-        titleBody = new JSONObject();
-        titleBody.put("topic", "new topic");
-    }
 
     @Given("a dummy Project to be amended")
     public void aDummyProjectToBeAmended() {
@@ -211,13 +192,6 @@ public class ProjectStepDefinition {
         Assert.assertEquals(response.getStatusCode(), 200, "Status code should be 200, but it's not");
     }
 
-    @When("I instantiate the completed to true and active field to false")
-    public void iInstantiateTheCompletedToTrueAndActiveFieldToFalse() {
-        body = new JSONObject();
-        body.put("completed", true);
-        body.put("active", false);
-        System.out.println(body);
-    }
 
     @And("passes that fields in a post request to the Dummy project")
     public void passesThatFieldsInAPostRequestToTheDummyProject() {
@@ -236,44 +210,21 @@ public class ProjectStepDefinition {
 
 
         String newCompleted = response.jsonPath().getString("completed");
-        softAssert.assertEquals(newCompleted, "true");
+        softAssert.assertEquals(newCompleted, String.valueOf(myCompleted));
         String newActive = response.jsonPath().getString("active");
-        softAssert.assertEquals(newActive, "false");
+        softAssert.assertEquals(newActive, String.valueOf(myActive));
 
-
-        System.out.println("=======> Printing closed Project: ");
-        System.out.println("Title: " + response.jsonPath().getString("title"));
-        System.out.println("Completed: " + response.jsonPath().getString("completed"));
-        System.out.println("Active: " + response.jsonPath().getString("active"));
-        System.out.println("Description: " + response.jsonPath().getString("description"));
     }
 
-    @Given("wrong url http:\\/\\/localhost:{int}\\/projects\\/:id")
-    public void wrongUrlHttpLocalhostProjectsId(int arg0) {
-        url = "http://localhost:4567/projects/" + DummyID;
-        wrongUrl = "http://localhost:4567/projects/" + "0";
-    }
 
     @When("I delete the project with invalid id")
     public void iDeleteTheProjectWithInvalidId() {
-        response = RestAssured.given().delete(wrongUrl);
+        response = RestAssured.given().delete(url);
     }
 
     @Then("an error code is returned")
     public void anErrorCodeIsReturned() {
         Assert.assertEquals(response.getStatusCode(), 404, "Status code should be 404, but it's not");
-    }
-
-    @Given("a url http:\\/\\/localhost:{int}\\/projects\\/:id")
-    public void aUrlHttpLocalhostProjectsId(int arg0) {
-        url = "http://localhost:4567/projects/" + DummyID;
-    }
-
-
-    @Given("user performs GET request on the url: http:\\/\\/localhost:{int}\\/projects\\/")
-    public void userPerformsGETRequestOnTheUrlHttpLocalhostProjects(int arg0) {
-        url = "http://localhost:4567/projects";
-        response = RestAssured.get(url);
     }
 
     @Then("all projects are returned")
@@ -298,22 +249,6 @@ public class ProjectStepDefinition {
     @And("the expected success code is returned")
     public void theExpectedSuccessCodeIsReturned() {
         Assert.assertEquals(response.getStatusCode(), 200, "Status code should be 200, but it's not");
-    }
-
-    @Given("user performs GET request on the url: http:\\/\\/localhost:{int}\\/projects\\/ with xml header")
-    public void userPerformsGETRequestOnTheUrlHttpLocalhostProjectsWithXmlHeader(int arg0) {
-        url = "http://localhost:4567/projects";
-        response = RestAssured.given().header("Accept",xml).get(url);
-    }
-
-    @Given("invalid url")
-    public void invalidUrl() {
-        url = "http://localhost:4567/project";
-    }
-
-    @And("user performs GET request on the url")
-    public void userPerformsGETRequestOnTheUrl() {
-        response = RestAssured.get(url);
     }
 
     @Then("the expected error code is returned")
@@ -353,11 +288,6 @@ public class ProjectStepDefinition {
         DummyID = putRes.jsonPath().getString("id");
     }
 
-    @Given("target url http:\\/\\/localhost:{int}\\/projects\\/:id")
-    public void targetUrlHttpLocalhostProjectsId(int arg0) {
-        url = "http://localhost:4567/projects/" + DummyID;
-    }
-
     @When("get a project using get request")
     public void getAProjectUsingGetRequest() {
         response = RestAssured.get(url);
@@ -390,11 +320,6 @@ public class ProjectStepDefinition {
         Assert.assertEquals(response.getStatusCode(), 200, "Status code should be 200, but it's not");
     }
 
-    @And("I delete the target dummy project")
-    public void iDeleteTheTargetDummyProject() {
-        RestAssured.given().delete(url);
-    }
-
     @When("get a project using get request specific in xml")
     public void getAProjectUsingGetRequestSpecificInXml() {
         response = RestAssured.given().header("Accept",xml).get(url);
@@ -421,11 +346,6 @@ public class ProjectStepDefinition {
         softAssert.assertEquals(description, "A project about to be got", "Description in response is not expected");
     }
 
-    @Given("wrong target url http:\\/\\/localhost:{int}\\/projects\\/:id")
-    public void wrongTargetUrlHttpLocalhostProjectsId(int arg0) {
-        url = "http://localhost:4567/projects/" + DummyID;
-        wrongUrl = "http://localhost:4567/projects/" + "0";
-    }
 
     @Then("the error code is returned")
     public void theErrorCodeIsReturned() {
@@ -444,4 +364,60 @@ public class ProjectStepDefinition {
         response = RestAssured.get(wrongUrl);
     }
 
+    @When("I instantiate the title field with {string}")
+    public void iInstantiateTheTitleFieldWith(String arg0) {
+        myTitle = arg0;
+        titleBody = new JSONObject();
+        titleBody.put("title", myTitle);
+
+    }
+
+    @Given("a url http:\\/\\/localhost:{int}\\/projects\\/:id where id = {string}")
+    public void aUrlHttpLocalhostProjectsIdWhereId(int arg0, String arg1) {
+        url = "http://localhost:4567/projects/" + arg1;
+    }
+
+    @When("I instantiate the completed to {string} and active field to {string}")
+    public void iInstantiateTheCompletedToAndActiveFieldTo(String arg0, String arg1) {
+        body = new JSONObject();
+        myCompleted = Boolean.parseBoolean(arg0);
+        myActive = Boolean.parseBoolean(arg0);
+        body.put("completed", myCompleted);
+        body.put("active", myActive);
+        System.out.println(body);
+    }
+
+    @And("passes that fields in a post request to the project")
+    public void passesThatFieldsInAPostRequestToTheProject() {
+        response = RestAssured.given().contentType(ContentType.JSON)
+                .body(body.toString()).post(url);
+    }
+
+    @When("I instantiate the topic field with {string}")
+    public void iInstantiateTheTopicFieldWith(String arg0) {
+        titleBody = new JSONObject();
+        titleBody.put("topic", arg0);
+    }
+
+    @Given("user performs GET request on the url {string}")
+    public void userPerformsGETRequestOnTheUrl(String arg0) {
+        url = arg0;
+        response = RestAssured.given().get(url);
+    }
+
+    @Given("user performs GET request on the url {string} with xml header")
+    public void userPerformsGETRequestOnTheUrlWithXmlHeader(String arg0) {
+        url = arg0;
+        response = RestAssured.given().header("Accept",xml).get(url);
+    }
+
+    @Given("target url http:\\/\\/localhost:{int}\\/projects\\/:id with id = {string}")
+    public void targetUrlHttpLocalhostProjectsIdWithId(int arg0, String arg1) {
+        url = "http://localhost:4567/projects/" + arg1;
+    }
+
+    @Given("wrong target url http:\\/\\/localhost:{int}\\/projects\\/:id with id = {string}")
+    public void wrongTargetUrlHttpLocalhostProjectsIdWithId(int arg0, String arg1) {
+        wrongUrl = "http://localhost:4567/projects/" + arg1;
+    }
 }
