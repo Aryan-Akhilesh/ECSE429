@@ -37,7 +37,7 @@ public class ProjectStepDefinition {
 
 
 
-    @Given("the URL https:\\/\\/localhost:4567\\/projects")
+    @Given("the URL https://localhost:4567/projects")
     public void theURLHttpsLocalhostProjects() {
         url = "http://localhost:4567/projects";
     }
@@ -132,7 +132,7 @@ public class ProjectStepDefinition {
         DummyID = putRes.jsonPath().getString("id");
     }
 
-    @Given("http:\\/\\/localhost:{int}\\/projects\\/:id")
+    @Given("http://localhost:{int}/projects/:id")
     public void http_localhost_projects_id(Integer int1) {
         url = "http://localhost:4567/projects/" + DummyID;
     }
@@ -248,7 +248,7 @@ public class ProjectStepDefinition {
         System.out.println("Description: " + response.jsonPath().getString("description"));
     }
 
-    @Given("wrong url http:\\/\\/localhost:{int}\\/projects\\/:id")
+    @Given("wrong url http://localhost:{int}/projects/:id")
     public void wrongUrlHttpLocalhostProjectsId(int arg0) {
         url = "http://localhost:4567/projects/" + DummyID;
         wrongUrl = "http://localhost:4567/projects/" + "0";
@@ -264,7 +264,7 @@ public class ProjectStepDefinition {
         Assert.assertEquals(response.getStatusCode(), 404, "Status code should be 404, but it's not");
     }
 
-    @Given("a url http:\\/\\/localhost:{int}\\/projects\\/:id")
+    @Given("a url http://localhost:{int}/projects/:id")
     public void aUrlHttpLocalhostProjectsId(int arg0) {
         url = "http://localhost:4567/projects/" + DummyID;
     }
@@ -353,7 +353,7 @@ public class ProjectStepDefinition {
         DummyID = putRes.jsonPath().getString("id");
     }
 
-    @Given("target url http:\\/\\/localhost:{int}\\/projects\\/:id")
+    @Given("target url http://localhost:{int}/projects/:id")
     public void targetUrlHttpLocalhostProjectsId(int arg0) {
         url = "http://localhost:4567/projects/" + DummyID;
     }
@@ -421,7 +421,7 @@ public class ProjectStepDefinition {
         softAssert.assertEquals(description, "A project about to be got", "Description in response is not expected");
     }
 
-    @Given("wrong target url http:\\/\\/localhost:{int}\\/projects\\/:id")
+    @Given("wrong target url http://localhost:{int}/projects/:id")
     public void wrongTargetUrlHttpLocalhostProjectsId(int arg0) {
         url = "http://localhost:4567/projects/" + DummyID;
         wrongUrl = "http://localhost:4567/projects/" + "0";
