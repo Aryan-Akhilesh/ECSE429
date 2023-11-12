@@ -36,10 +36,6 @@ public class ProjectStepDefinition {
     private Boolean myActive;
 
 
-
-
-
-
     @Given("the URL https:\\/\\/localhost:4567\\/projects")
     public void theURLHttpsLocalhostProjects() {
         url = "http://localhost:4567/projects";
@@ -100,7 +96,6 @@ public class ProjectStepDefinition {
     public void errorMessageIsReturned() {
         ResponseBody body1 = response.getBody();
         String bodyAsString = body1.asString();
-        System.out.println(bodyAsString);
         Assert.assertEquals(bodyAsString.contains("\"errorMessages\":[\"Could not find field: doneStatus\"]"), true, "Response body contains correct error code");
     }
 
@@ -109,7 +104,6 @@ public class ProjectStepDefinition {
         body = new JSONObject();
         body.put("doneStatus", Boolean.parseBoolean(arg0));
     }
-
 
     @Given("dummy Project to be amended")
     public void dummyProjectToBeAmended() {
@@ -147,14 +141,11 @@ public class ProjectStepDefinition {
         softAssert.assertEquals(modifTitle, myTitle);
     }
 
-
     @And("passes that field in a put request to the Dummy project")
     public void passesThatFieldInAPutRequestToTheDummyProject() {
         POSTresponse = RestAssured.given().contentType(ContentType.JSON)
                 .body(titleBody.toString()).put(url);
     }
-
-
 
     @Then("amend error code is returned")
     public void amendErrorCodeIsReturned() {
@@ -167,8 +158,6 @@ public class ProjectStepDefinition {
         String bodyAsString = body1.asString();
         Assert.assertEquals(bodyAsString.contains("\"errorMessages\":[\"Could not find field: topic\"]"), true, "Response body does not correspond to expected result");
     }
-
-
 
     @Given("a dummy Project to be amended")
     public void aDummyProjectToBeAmended() {
@@ -192,7 +181,6 @@ public class ProjectStepDefinition {
         Assert.assertEquals(response.getStatusCode(), 200, "Status code should be 200, but it's not");
     }
 
-
     @And("passes that fields in a post request to the Dummy project")
     public void passesThatFieldsInAPostRequestToTheDummyProject() {
         response = RestAssured.given().contentType(ContentType.JSON)
@@ -207,15 +195,11 @@ public class ProjectStepDefinition {
     @And("completed and active is modified")
     public void completedAndActiveIsModified() {
         SoftAssert softAssert = new SoftAssert();
-
-
         String newCompleted = response.jsonPath().getString("completed");
         softAssert.assertEquals(newCompleted, String.valueOf(myCompleted));
         String newActive = response.jsonPath().getString("active");
         softAssert.assertEquals(newActive, String.valueOf(myActive));
-
     }
-
 
     @When("I delete the project with invalid id")
     public void iDeleteTheProjectWithInvalidId() {
@@ -275,7 +259,6 @@ public class ProjectStepDefinition {
         softAssert.assertEquals(active, "", "Description in response is not expected");
     }
 
-
     @Given("dummy Project to be got")
     public void dummyProjectToBeGot() {
         JSONObject dumb = new JSONObject();
@@ -297,7 +280,6 @@ public class ProjectStepDefinition {
     public void theRequestProjectIsReturned() {
         SoftAssert softAssert = new SoftAssert();
 
-
         String title = response.jsonPath().getString("title");
         softAssert.assertEquals(title, "project to be got", "Title in response is not expected");
 
@@ -312,7 +294,6 @@ public class ProjectStepDefinition {
 
         String description = response.jsonPath().getString("description");
         softAssert.assertEquals(description, "A project about to be got", "Description in response is not expected");
-
     }
 
     @And("success code is returned")
@@ -329,7 +310,6 @@ public class ProjectStepDefinition {
     public void theRequestProjectOfXmlFormIsReturned() {
         SoftAssert softAssert = new SoftAssert();
 
-
         String title = response.xmlPath().getString("title");
         softAssert.assertEquals(title, "project to be got", "Title in response is not expected");
 
@@ -345,7 +325,6 @@ public class ProjectStepDefinition {
         String description = response.xmlPath().getString("description");
         softAssert.assertEquals(description, "A project about to be got", "Description in response is not expected");
     }
-
 
     @Then("the error code is returned")
     public void theErrorCodeIsReturned() {
@@ -369,7 +348,6 @@ public class ProjectStepDefinition {
         myTitle = arg0;
         titleBody = new JSONObject();
         titleBody.put("title", myTitle);
-
     }
 
     @Given("a url http:\\/\\/localhost:{int}\\/projects\\/:id where id = {string}")
@@ -384,7 +362,6 @@ public class ProjectStepDefinition {
         myActive = Boolean.parseBoolean(arg0);
         body.put("completed", myCompleted);
         body.put("active", myActive);
-        System.out.println(body);
     }
 
     @And("passes that fields in a post request to the project")

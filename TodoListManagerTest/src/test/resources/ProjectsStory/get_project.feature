@@ -1,10 +1,8 @@
-@tag
 Feature: Get project information
   As a user, I want to get a project to know about its condition and information.
 
   Background:
     Given dummy Project to be got
-
 
   Scenario Outline: get the project using Json
     Given target url http://localhost:4567/projects/:id with id = "<dummyid>"
@@ -14,7 +12,6 @@ Feature: Get project information
     Examples:
       | dummyid |
       |2        |
-
 
   Scenario Outline: get the project using Xml
     Given target url http://localhost:4567/projects/:id with id = "<dummyid>"

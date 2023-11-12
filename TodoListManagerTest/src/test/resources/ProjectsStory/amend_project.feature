@@ -1,10 +1,8 @@
-@tag
 Feature: Amend project fields
   As a user, I want to be able to amend the title field of a project
 
   Background:
     Given dummy Project to be amended
-
 
   Scenario Outline: amend project fields using POST
     Given http://localhost:4567/projects/:id
