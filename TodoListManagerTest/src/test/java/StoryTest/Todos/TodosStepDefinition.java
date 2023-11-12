@@ -242,7 +242,4 @@ public class TodosStepDefinition {
         Assertions.assertEquals(200,statusCode);
     }
 
-
-
-
 }
