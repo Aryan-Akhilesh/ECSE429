@@ -27,10 +27,10 @@ public class TodosStepDefinition {
         res = RestAssured.given().header("Accept",json).get("http://localhost:4567/todos/" + todoID);
     }
 
-    @Then("I should see the todo in JSON")
-    public void i_should_see_the_todo_in_json() {
+    @Then("I should see the todo {int} in JSON")
+    public void i_should_see_the_todo_in_json(int todoID) {
         int statusCode = res.getStatusCode();
-        String body = "{\"todos\":[{\"id\":\"1\",\"title\":\"scan paperwork\",\"doneStatus\":\"false\",\"description\":\"\",\"categories\":[{\"id\":\"1\"}],\"tasksof\":[{\"id\":\"1\"}]}]}";
+        String body = "{\"todos\":[{\"id\":\"" + todoID + "\",\"title\":\"scan paperwork\",\"doneStatus\":\"false\",\"description\":\"\",\"categories\":[{\"id\":\"1\"}],\"tasksof\":[{\"id\":\"1\"}]}]}";
         JSONAssert.assertEquals(body,res.getBody().asString(), false);
         Assertions.assertEquals(200,statusCode);
     }
