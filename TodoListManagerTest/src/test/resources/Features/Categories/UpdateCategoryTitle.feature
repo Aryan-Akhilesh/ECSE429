@@ -22,6 +22,7 @@ Feature: Update a category title
   Scenario Outline: Error flow for updating a category title
     Given I have an existing category with field title "<prevTitle>"
     When I update the existing title to a new title "<newTitle>" with incorrect Id <invalidCategoryId>
+    Then I should be warned that id <invalidCategoryId> is invalid
     Examples:
       | prevTitle | newTitle | invalidCategoryId |
       |  Train    |   Plane  |         300       |
