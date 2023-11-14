@@ -135,7 +135,6 @@ public class TodosStepDefinition {
     public void i_should_see_the_todo_but_with_completed_status_in_todos() {
         int statusCode = res.getStatusCode();
         Assertions.assertEquals(200,statusCode);
-        System.out.println(res.getBody().asString());
     }
 
     @When("I delete the todo with the invalid id {int}")
@@ -230,7 +229,6 @@ public class TodosStepDefinition {
     @When("I get the taskOf the todo with an invalid id {int}")
     public void i_get_the_task_of_the_todo_with_an_invalid_id(int todoID) {
         res = RestAssured.given().header("Accept",json).get("http://localhost:4567/todos/"+todoID+"/tasksof");
-        System.out.println(res.getBody().asString());
     }
 
     @Then("I should see the taskOf of the first todo")
