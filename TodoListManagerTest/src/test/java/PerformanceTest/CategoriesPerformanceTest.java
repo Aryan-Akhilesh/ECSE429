@@ -2,6 +2,8 @@ package PerformanceTest;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
+import java.lang.management.ManagementFactory;
+import com.sun.management.OperatingSystemMXBean;
 
 import java.io.IOException;
 
@@ -52,6 +54,7 @@ public class CategoriesPerformanceTest {
 
     @Test
     public void addCategoryPerformance() {
+        OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         for (int i = 0; i < 10000; i++) {
             if (i == 1 || i == 1000 || i == 2500 || i == 5000 || i == 9999) {
                 long start = System.nanoTime();
@@ -59,6 +62,8 @@ public class CategoriesPerformanceTest {
                 long finish = System.nanoTime();
                 long timeElapsed = finish - start;
                 double elapsedTimeInSecond = (double) timeElapsed / 1_000_000_000;
+                double cpuUsage = osBean.getCpuLoad() * 100;
+                System.out.println("CPU Usage during add at " + i + " categories: " + cpuUsage + "%");
                 System.out.println("At " + i + " categories, the time taken to add is: " + elapsedTimeInSecond + " seconds");
             } else {
                 RestAssured.given().header("Content-Type", json).body("{\"title\":\"" + i + "\",\"description\":\"\"}").post("http://localhost:4567/categories");
@@ -69,6 +74,7 @@ public class CategoriesPerformanceTest {
     // delete --> delete
     @Test
     public void deleteCategoryPerformance() {
+        OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         for (int i = 0; i < 10000; i++) {
             if (i == 1 || i == 1000 || i == 2500 || i == 5000 | i == 9999) {
                 long start = System.nanoTime();
@@ -76,6 +82,8 @@ public class CategoriesPerformanceTest {
                 long finish = System.nanoTime();
                 long timeElapsed = finish - start;
                 double elapsedTimeInSecond = (double) timeElapsed / 1_000_000_000;
+                double cpuUsage = osBean.getCpuLoad() * 100;
+                System.out.println("CPU Usage during delete at " + i + " categories: " + cpuUsage + "%");
                 System.out.println("At " + i + " categories, the time taken to delete is: " + elapsedTimeInSecond + " seconds");
             }
             response = RestAssured.given().header("Content-Type", json).body("{\"title\":\"" + i + "\",\"description\":\"\"}").post("http://localhost:4567/categories");
@@ -85,6 +93,7 @@ public class CategoriesPerformanceTest {
 
     @Test
     public void changeCategoryPerformance() {
+        OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         for (int i = 0; i < 10000; i++) {
             if (i == 1 || i == 1000 || i == 2500 || i == 5000 | i == 9999) {
                 long start = System.nanoTime();
@@ -92,6 +101,8 @@ public class CategoriesPerformanceTest {
                 long finish = System.nanoTime();
                 long timeElapsed = finish - start;
                 double elapsedTimeInSecond = (double) timeElapsed / 1_000_000_000;
+                double cpuUsage = osBean.getCpuLoad() * 100;
+                System.out.println("CPU Usage during change at " + i + " categories: " + cpuUsage + "%");
                 System.out.println("At " + i + " categories, the time taken to change is: " + elapsedTimeInSecond + " seconds");
             }
             response = RestAssured.given().header("Content-Type", json).body("{\"title\":\"" + i + "\",\"description\":\"\"}").post("http://localhost:4567/categories");
