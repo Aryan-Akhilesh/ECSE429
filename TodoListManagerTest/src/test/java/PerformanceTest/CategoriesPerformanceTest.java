@@ -53,7 +53,9 @@ public class CategoriesPerformanceTest {
 
     @Test
     public void addCategoryPerformance() {
-        System.out.println("---Add Category---");
+        double[] timeStore = new double[targetSize.length];
+        double[] cpuUsageStore = new double[targetSize.length];
+        long[] freeMemoryStore = new long[targetSize.length];
         int targetIndex = 0;
         for (int i = 1; i <= targetSize[targetSize.length - 1]; i++) {
             if (targetSize[targetIndex] == i) {
@@ -64,20 +66,28 @@ public class CategoriesPerformanceTest {
                 double elapsedTimeInSecond = (double) timeElapsed / 1_000_000_000;
                 double cpuUsage = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize()/ (1024L * 1024L);
-                System.out.println("------SIZE " + i + "------");
-                System.out.println("Free memory size for size " + i + " categories: " + memory + " MB");
-                System.out.println("CPU usage for size " + i + " categories: " + cpuUsage + "%");
-                System.out.println("Time taken for size " + i + " categories: " + elapsedTimeInSecond + " seconds");
+                timeStore[targetIndex] = elapsedTimeInSecond;
+                cpuUsageStore[targetIndex] = cpuUsage;
+                freeMemoryStore[targetIndex] = memory;
                 targetIndex++;
             } else {
                 RestAssured.given().header("Content-Type", json).body("{\"title\":\"" + i + "\",\"description\":\"\"}").post("http://localhost:4567/categories");
             }
         }
+        System.out.println("---Add Category---");
+        for (int i = 0; i < targetSize.length; i++) {
+            System.out.println("------SIZE " + targetSize[i] + "------");
+            System.out.println("Free memory size for size " + targetSize[i] + " categories: " + freeMemoryStore[i] + " MB");
+            System.out.println("CPU usage for size " + targetSize[i] + " categories: " + cpuUsageStore[i] + "%");
+            System.out.println("Time taken for size " + targetSize[i] + " categories: " + timeStore[i] + " seconds");
+        }
     }
 
     @Test
     public void deleteCategoryPerformance() {
-        System.out.println("---Delete Category---");
+        double[] timeStore = new double[targetSize.length];
+        double[] cpuUsageStore = new double[targetSize.length];
+        long[] freeMemoryStore = new long[targetSize.length];
         int targetIndex = 0;
         for (int i = 1; i <= targetSize[targetSize.length - 1]; i++) {
             if (targetSize[targetIndex] == i) {
@@ -88,20 +98,28 @@ public class CategoriesPerformanceTest {
                 double elapsedTimeInSecond = (double) timeElapsed / 1_000_000_000;
                 double cpuUsage = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize()/ (1024L * 1024L);
-                System.out.println("------SIZE " + i + "------");
-                System.out.println("Free memory size for size " + i + " categories: " + memory + " MB");
-                System.out.println("CPU usage for size " + i + " categories: " + cpuUsage + "%");
-                System.out.println("Time taken for size " + i + " categories: " + elapsedTimeInSecond + " seconds");
+                timeStore[targetIndex] = elapsedTimeInSecond;
+                cpuUsageStore[targetIndex] = cpuUsage;
+                freeMemoryStore[targetIndex] = memory;
                 targetIndex++;
             }
             response = RestAssured.given().header("Content-Type", json).body("{\"title\":\"" + i + "\",\"description\":\"\"}").post("http://localhost:4567/categories");
             newCategoryId = response.jsonPath().get("id");
         }
+        System.out.println("---Delete Category---");
+        for (int i = 0; i < targetSize.length; i++) {
+            System.out.println("------SIZE " + targetSize[i] + "------");
+            System.out.println("Free memory size for size " + targetSize[i] + " categories: " + freeMemoryStore[i] + " MB");
+            System.out.println("CPU usage for size " + targetSize[i] + " categories: " + cpuUsageStore[i] + "%");
+            System.out.println("Time taken for size " + targetSize[i] + " categories: " + timeStore[i] + " seconds");
+        }
     }
 
     @Test
     public void changeCategoryPerformance() {
-        System.out.println("---Change Category---");
+        double[] timeStore = new double[targetSize.length];
+        double[] cpuUsageStore = new double[targetSize.length];
+        long[] freeMemoryStore = new long[targetSize.length];
         int targetIndex = 0;
         for (int i = 1; i <= targetSize[targetSize.length - 1]; i++) {
             if (targetSize[targetIndex] == i) {
@@ -112,14 +130,20 @@ public class CategoriesPerformanceTest {
                 double elapsedTimeInSecond = (double) timeElapsed / 1_000_000_000;
                 double cpuUsage = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize()/ (1024L * 1024L);
-                System.out.println("------SIZE " + i + "------");
-                System.out.println("Free memory size for size " + i + " categories: " + memory + " MB");
-                System.out.println("CPU usage for size " + i + " categories: " + cpuUsage + "%");
-                System.out.println("Time taken for size " + i + " categories: " + elapsedTimeInSecond + " seconds");
+                timeStore[targetIndex] = elapsedTimeInSecond;
+                cpuUsageStore[targetIndex] = cpuUsage;
+                freeMemoryStore[targetIndex] = memory;
                 targetIndex++;
             }
             response = RestAssured.given().header("Content-Type", json).body("{\"title\":\"" + i + "\",\"description\":\"\"}").post("http://localhost:4567/categories");
             newCategoryId = response.jsonPath().get("id");
+        }
+        System.out.println("---Change Category---");
+        for (int i = 0; i < targetSize.length; i++) {
+            System.out.println("------SIZE " + targetSize[i] + "------");
+            System.out.println("Free memory size for size " + targetSize[i] + " categories: " + freeMemoryStore[i] + " MB");
+            System.out.println("CPU usage for size " + targetSize[i] + " categories: " + cpuUsageStore[i] + "%");
+            System.out.println("Time taken for size " + targetSize[i] + " categories: " + timeStore[i] + " seconds");
         }
     }
 }
