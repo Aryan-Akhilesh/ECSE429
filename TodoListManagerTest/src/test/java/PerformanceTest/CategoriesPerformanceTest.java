@@ -75,7 +75,6 @@ public class CategoriesPerformanceTest {
         }
     }
 
-    // delete --> delete
     @Test
     public void deleteCategoryPerformance() {
         System.out.println("---Delete Category---");
