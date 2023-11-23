@@ -15,7 +15,6 @@ public class InteroperabilityPerformanceTest {
     private static ProcessBuilder pb;
 
     private final String json = "application/json";
-    private final String xml = "application/xml";
 
     private final int[] targetSize = {1,10,20,50,100,200,500,1000};
 
@@ -105,4 +104,64 @@ public class InteroperabilityPerformanceTest {
             System.out.println("Available free memory for size" + targetSize[k] + ": " + freeMemory[k] + "bytes");
         }
     }
+
+    @Test
+    public void DeleteCategoriesFromTodo() {
+        int max = targetSize[targetSize.length-1];
+        String todoId;
+        String[] categoryId = new String[max];
+        long[] time = new long[targetSize.length];
+        double[] cpuUsage = new double[targetSize.length];
+        long[] freeMemory = new long[targetSize.length];
+
+        // Get a new todoitem
+        Response response = RestAssured.given().body("{\"title\":\"todo\"}").post("http://localhost:4567/todos");
+        todoId = response.jsonPath().get("id");
+
+        // Generate categories, store the id
+        for(int i = 0; i < max; i++) {
+            String body = "{\"title\":\"Test\",\"description\":\"\"}";
+            response = RestAssured.given()
+                    .header("Accept", json)
+                    .body(body)
+                    .post("http://localhost:4567/categories");
+            categoryId[i] = response.jsonPath().get("id");
+        }
+
+        // Add categories to todoitem
+        String url = "http://localhost:4567/todos/" + todoId + "/categories";
+        for (int j = 1; j <= max; j++) {
+            String body = "{\"id\":\"" + categoryId[j-1] + "\"}";
+            RestAssured.given()
+                    .header("Accept", json)
+                    .body(body)
+                    .post(url);
+        }
+
+        // Delete categories from todoitem
+        int targetIndex = targetSize.length-1;
+        for (int j = max; j > 0; j--) {
+            long startTime = System.nanoTime();
+            RestAssured.given().delete(url + "/" + categoryId[j-1]);
+            long endTime = System.nanoTime();
+            if (j == targetSize[targetIndex]) {
+                double cpuLoad = osBean.getCpuLoad() * 100;
+                long memory = osBean.getFreeMemorySize();
+                time[targetIndex] = (endTime-startTime);
+                cpuUsage[targetIndex] = cpuLoad;
+                freeMemory[targetIndex] = memory;
+                targetIndex--;
+            }
+        }
+
+        // Printing results
+        System.out.println("---Delete categories from a todo---");
+        for (int k = 0; k < targetSize.length; k++) {
+            System.out.println("Time for size " + targetSize[k] + ": " + time[k] + "ns");
+            System.out.println("CPU usage for size " + targetSize[k] + ": " + cpuUsage[k] + "%");
+            System.out.println("Available free memory for size" + targetSize[k] + ": " + freeMemory[k] + "bytes");
+        }
+    }
+
+    
 }
