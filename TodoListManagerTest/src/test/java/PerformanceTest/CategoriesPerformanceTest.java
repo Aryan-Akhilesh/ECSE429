@@ -12,9 +12,12 @@ public class CategoriesPerformanceTest {
     private static ProcessBuilder pb;
 
     private final String json = "application/json";
-    private final String xml = "application/xml";
     private Response response;
     private String newCategoryId;
+
+    OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+
+    private final int[] targetSize = {1, 10, 50, 100, 250, 500, 1000};
 
     @BeforeAll
     static void setupProcess() {
@@ -48,23 +51,24 @@ public class CategoriesPerformanceTest {
         }
     }
 
-    // add --> post
-    // add when there is not a lot of items
-    // add when there is ton of items
-
     @Test
     public void addCategoryPerformance() {
-        OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
-        for (int i = 0; i < 10000; i++) {
-            if (i == 1 || i == 1000 || i == 2500 || i == 5000 || i == 9999) {
+        System.out.println("---Add Category---");
+        int targetIndex = 0;
+        for (int i = 1; i <= targetSize[targetSize.length - 1]; i++) {
+            if (targetSize[targetIndex] == i) {
                 long start = System.nanoTime();
-                Response r = RestAssured.given().header("Content-Type", json).body("{\"title\": \"new category\"}").post("http://localhost:4567/categories");
+                RestAssured.given().header("Content-Type", json).body("{\"title\":\"" + i + "\",\"description\":\"\"}").post("http://localhost:4567/categories");
                 long finish = System.nanoTime();
                 long timeElapsed = finish - start;
                 double elapsedTimeInSecond = (double) timeElapsed / 1_000_000_000;
                 double cpuUsage = osBean.getCpuLoad() * 100;
-                System.out.println("CPU Usage during add at " + i + " categories: " + cpuUsage + "%");
-                System.out.println("At " + i + " categories, the time taken to add is: " + elapsedTimeInSecond + " seconds");
+                long memory = osBean.getFreeMemorySize()/ (1024L * 1024L);
+                System.out.println("------SIZE " + i + "------");
+                System.out.println("Free memory size for size " + i + " categories: " + memory + " MB");
+                System.out.println("CPU usage for size " + i + " categories: " + cpuUsage + "%");
+                System.out.println("Time taken for size " + i + " categories: " + elapsedTimeInSecond + " seconds");
+                targetIndex++;
             } else {
                 RestAssured.given().header("Content-Type", json).body("{\"title\":\"" + i + "\",\"description\":\"\"}").post("http://localhost:4567/categories");
             }
@@ -74,17 +78,22 @@ public class CategoriesPerformanceTest {
     // delete --> delete
     @Test
     public void deleteCategoryPerformance() {
-        OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
-        for (int i = 0; i < 10000; i++) {
-            if (i == 1 || i == 1000 || i == 2500 || i == 5000 | i == 9999) {
+        System.out.println("---Delete Category---");
+        int targetIndex = 0;
+        for (int i = 1; i <= targetSize[targetSize.length - 1]; i++) {
+            if (targetSize[targetIndex] == i) {
                 long start = System.nanoTime();
                 RestAssured.given().delete("http://localhost:4567/categories/" + newCategoryId);
                 long finish = System.nanoTime();
                 long timeElapsed = finish - start;
                 double elapsedTimeInSecond = (double) timeElapsed / 1_000_000_000;
                 double cpuUsage = osBean.getCpuLoad() * 100;
-                System.out.println("CPU Usage during delete at " + i + " categories: " + cpuUsage + "%");
-                System.out.println("At " + i + " categories, the time taken to delete is: " + elapsedTimeInSecond + " seconds");
+                long memory = osBean.getFreeMemorySize()/ (1024L * 1024L);
+                System.out.println("------SIZE " + i + "------");
+                System.out.println("Free memory size for size " + i + " categories: " + memory + " MB");
+                System.out.println("CPU usage for size " + i + " categories: " + cpuUsage + "%");
+                System.out.println("Time taken for size " + i + " categories: " + elapsedTimeInSecond + " seconds");
+                targetIndex++;
             }
             response = RestAssured.given().header("Content-Type", json).body("{\"title\":\"" + i + "\",\"description\":\"\"}").post("http://localhost:4567/categories");
             newCategoryId = response.jsonPath().get("id");
@@ -93,21 +102,25 @@ public class CategoriesPerformanceTest {
 
     @Test
     public void changeCategoryPerformance() {
-        OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
-        for (int i = 0; i < 10000; i++) {
-            if (i == 1 || i == 1000 || i == 2500 || i == 5000 | i == 9999) {
+        System.out.println("---Change Category---");
+        int targetIndex = 0;
+        for (int i = 1; i <= targetSize[targetSize.length - 1]; i++) {
+            if (targetSize[targetIndex] == i) {
                 long start = System.nanoTime();
                 RestAssured.given().header("Content-Type", json).body("{\"title\": \"new category\"}").put("http://localhost:4567/categories/" + newCategoryId);
                 long finish = System.nanoTime();
                 long timeElapsed = finish - start;
                 double elapsedTimeInSecond = (double) timeElapsed / 1_000_000_000;
                 double cpuUsage = osBean.getCpuLoad() * 100;
-                System.out.println("CPU Usage during change at " + i + " categories: " + cpuUsage + "%");
-                System.out.println("At " + i + " categories, the time taken to change is: " + elapsedTimeInSecond + " seconds");
+                long memory = osBean.getFreeMemorySize()/ (1024L * 1024L);
+                System.out.println("------SIZE " + i + "------");
+                System.out.println("Free memory size for size " + i + " categories: " + memory + " MB");
+                System.out.println("CPU usage for size " + i + " categories: " + cpuUsage + "%");
+                System.out.println("Time taken for size " + i + " categories: " + elapsedTimeInSecond + " seconds");
+                targetIndex++;
             }
             response = RestAssured.given().header("Content-Type", json).body("{\"title\":\"" + i + "\",\"description\":\"\"}").post("http://localhost:4567/categories");
             newCategoryId = response.jsonPath().get("id");
         }
-
     }
 }
