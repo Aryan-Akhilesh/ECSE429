@@ -55,8 +55,9 @@ public class InteroperabilityPerformanceTest {
 
     @Test
     public void AddCategoriesToTodoJson() {
+        int max = targetSize[targetSize.length-1];
         String todoId;
-        String[] categoryId = new String[targetSize[targetSize.length-1]];
+        String[] categoryId = new String[max];
         long[] time = new long[targetSize.length];
         double[] cpuUsage = new double[targetSize.length];
         long[] freeMemory = new long[targetSize.length];
@@ -65,8 +66,8 @@ public class InteroperabilityPerformanceTest {
         Response response = RestAssured.given().body("{\"title\":\"todo\"}").post("http://localhost:4567/todos");
         todoId = response.jsonPath().get("id");
 
-        // Generate 1000 categories, store the id
-        for(int i = 0; i < 1000; i++) {
+        // Generate categories, store the id
+        for(int i = 0; i < max; i++) {
             String body = "{\"title\":\"Test\",\"description\":\"\"}";
             response = RestAssured.given()
                     .header("Accept", json)
@@ -78,7 +79,7 @@ public class InteroperabilityPerformanceTest {
         // Add categories to todoitem
         String url = "http://localhost:4567/todos/" + todoId + "/categories";
         int targetIndex = 0;
-        for (int j = 1; j <= 1000; j++) {
+        for (int j = 1; j <= max; j++) {
             long startTime = System.nanoTime();
             String body = "{\"id\":\"" + categoryId[j-1] + "\"}";
             RestAssured.given()
