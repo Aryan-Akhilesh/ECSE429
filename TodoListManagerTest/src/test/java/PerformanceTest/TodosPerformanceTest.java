@@ -12,12 +12,9 @@ import com.sun.management.OperatingSystemMXBean;
 public class TodosPerformanceTest {
     private static final String pUrl = "http://localhost:4567/todos";
     private static ProcessBuilder pb;
-
-    private final String json = "application/json";
-    private final String xml = "application/xml";
-
     private final int[] populationSize = {1,10,50,100,200,500,1000};
     private OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+    private String newTodoId;
 
     @BeforeAll
     static void setupProcess() {
@@ -68,11 +65,11 @@ public class TodosPerformanceTest {
             body.put("doneStatus",newDoneStatus);
             body.put("description",newDescription);
             long startTime = System.nanoTime();
-            Response response = RestAssured.given().contentType(ContentType.JSON).body(body.toString()).post(pUrl);
+            RestAssured.given().contentType(ContentType.JSON).body(body.toString()).post(pUrl);
             long endTime = System.nanoTime();
             if(i == populationSize[targetIndex]){
                 double cpuLoad = osBean.getCpuLoad() * 100;
-                long memory = osBean.getFreeMemorySize();
+                long memory = osBean.getFreeMemorySize()/(1024L * 1024L);
                 time[targetIndex] = (endTime-startTime);
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
@@ -96,6 +93,24 @@ public class TodosPerformanceTest {
         int targetIndex = 0;
 
         for(int i=1; i<=max;i++){
+            if(i == populationSize[targetIndex]){
+                JSONObject body = new JSONObject();
+                String newTitle = "New Todo " + i;
+                String newDescription = "New Description";
+                boolean newDoneStatus = true;
+                body.put("title",newTitle);
+                body.put("doneStatus",newDoneStatus);
+                body.put("description",newDescription);
+                long startTime = System.nanoTime();
+                RestAssured.given().contentType(ContentType.JSON).body(body.toString()).put(pUrl+"/"+newTodoId);
+                long endTime = System.nanoTime();
+                double cpuLoad = osBean.getCpuLoad() * 100;
+                long memory = osBean.getFreeMemorySize()/(1024L * 1024L);
+                time[targetIndex] = (endTime-startTime);
+                cpuUsage[targetIndex] = cpuLoad;
+                freeMemory[targetIndex] = memory;
+                targetIndex++;
+            }
             JSONObject body = new JSONObject();
             String newTitle = "New Todo " + i;
             String newDescription = "New Description";
@@ -104,27 +119,7 @@ public class TodosPerformanceTest {
             body.put("doneStatus",newDoneStatus);
             body.put("description",newDescription);
             Response response = RestAssured.given().contentType(ContentType.JSON).body(body.toString()).post(pUrl);
-        }
-
-        for(int i=1; i<=max;i++){
-            JSONObject body = new JSONObject();
-            String newTitle = "New Todo " + i;
-            String newDescription = "New Description";
-            boolean newDoneStatus = true;
-            body.put("title",newTitle);
-            body.put("doneStatus",newDoneStatus);
-            body.put("description",newDescription);
-            long startTime = System.nanoTime();
-            Response response = RestAssured.given().contentType(ContentType.JSON).body(body.toString()).put(pUrl+"/"+i);
-            long endTime = System.nanoTime();
-            if(i == populationSize[targetIndex]){
-                double cpuLoad = osBean.getCpuLoad() * 100;
-                long memory = osBean.getFreeMemorySize();
-                time[targetIndex] = (endTime-startTime);
-                cpuUsage[targetIndex] = cpuLoad;
-                freeMemory[targetIndex] = memory;
-                targetIndex++;
-            }
+            newTodoId = response.jsonPath().get("id");
         }
         System.out.println("---Update TODOS---");
         for (int k = 0; k < populationSize.length; k++) {
@@ -143,6 +138,17 @@ public class TodosPerformanceTest {
         int targetIndex = 0;
 
         for(int i=1; i<=max;i++){
+            if(i == populationSize[targetIndex]){
+                long startTime = System.nanoTime();
+                RestAssured.given().delete(pUrl+"/"+newTodoId);
+                long endTime = System.nanoTime();
+                double cpuLoad = osBean.getCpuLoad() * 100;
+                long memory = osBean.getFreeMemorySize()/(1024L * 1024L);
+                time[targetIndex] = (endTime-startTime);
+                cpuUsage[targetIndex] = cpuLoad;
+                freeMemory[targetIndex] = memory;
+                targetIndex++;
+            }
             JSONObject body = new JSONObject();
             String newTitle = "New Todo " + i;
             String newDescription = "New Description";
@@ -151,20 +157,7 @@ public class TodosPerformanceTest {
             body.put("doneStatus",newDoneStatus);
             body.put("description",newDescription);
             Response response = RestAssured.given().contentType(ContentType.JSON).body(body.toString()).post(pUrl);
-        }
-
-        for(int i=1; i<=max;i++){
-            long startTime = System.nanoTime();
-            Response response = RestAssured.given().delete(pUrl+"/"+i);
-            long endTime = System.nanoTime();
-            if(i == populationSize[targetIndex]){
-                double cpuLoad = osBean.getCpuLoad() * 100;
-                long memory = osBean.getFreeMemorySize();
-                time[targetIndex] = (endTime-startTime);
-                cpuUsage[targetIndex] = cpuLoad;
-                freeMemory[targetIndex] = memory;
-                targetIndex++;
-            }
+            newTodoId = response.jsonPath().get("id");
         }
         System.out.println("---Delete TODOS---");
         for (int k = 0; k < populationSize.length; k++) {
