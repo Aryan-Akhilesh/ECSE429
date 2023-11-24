@@ -13,7 +13,7 @@ public class CategoriesPerformanceTest {
 
     private final String json = "application/json";
     private Response response;
-    private String newCategoryId = "1";
+    private String newCategoryId;
 
     OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 
@@ -90,6 +90,8 @@ public class CategoriesPerformanceTest {
         long[] freeMemoryStore = new long[targetSize.length];
         int targetIndex = 0;
         for (int i = 1; i <= targetSize[targetSize.length - 1]; i++) {
+            response = RestAssured.given().header("Content-Type", json).body("{\"title\":\"" + i + "\",\"description\":\"\"}").post("http://localhost:4567/categories");
+            newCategoryId = response.jsonPath().get("id");
             if (targetSize[targetIndex] == i) {
                 long start = System.nanoTime();
                 RestAssured.given().delete("http://localhost:4567/categories/" + newCategoryId);
@@ -103,8 +105,6 @@ public class CategoriesPerformanceTest {
                 freeMemoryStore[targetIndex] = memory;
                 targetIndex++;
             }
-            response = RestAssured.given().header("Content-Type", json).body("{\"title\":\"" + i + "\",\"description\":\"\"}").post("http://localhost:4567/categories");
-            newCategoryId = response.jsonPath().get("id");
         }
         System.out.println("---Delete Category---");
         for (int i = 0; i < targetSize.length; i++) {
@@ -122,6 +122,8 @@ public class CategoriesPerformanceTest {
         long[] freeMemoryStore = new long[targetSize.length];
         int targetIndex = 0;
         for (int i = 1; i <= targetSize[targetSize.length - 1]; i++) {
+            response = RestAssured.given().header("Content-Type", json).body("{\"title\":\"" + i + "\",\"description\":\"\"}").post("http://localhost:4567/categories");
+            newCategoryId = response.jsonPath().get("id");
             if (targetSize[targetIndex] == i) {
                 long start = System.nanoTime();
                 RestAssured.given().header("Content-Type", json).body("{\"title\": \"new category\"}").put("http://localhost:4567/categories/" + newCategoryId);
@@ -135,8 +137,6 @@ public class CategoriesPerformanceTest {
                 freeMemoryStore[targetIndex] = memory;
                 targetIndex++;
             }
-            response = RestAssured.given().header("Content-Type", json).body("{\"title\":\"" + i + "\",\"description\":\"\"}").post("http://localhost:4567/categories");
-            newCategoryId = response.jsonPath().get("id");
         }
         System.out.println("---Change Category---");
         for (int i = 0; i < targetSize.length; i++) {
