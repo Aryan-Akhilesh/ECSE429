@@ -4,15 +4,10 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.json.JSONObject;
-import org.json.XML;
 import org.junit.jupiter.api.*;
-
-import javax.xml.crypto.dsig.XMLObject;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import com.sun.management.OperatingSystemMXBean;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TodosPerformanceTest {
     private static final String pUrl = "http://localhost:4567/todos";
