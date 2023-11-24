@@ -9,6 +9,8 @@ import org.junit.jupiter.api.*;
 
 import javax.xml.crypto.dsig.XMLObject;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import com.sun.management.OperatingSystemMXBean;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,7 @@ public class TodosPerformanceTest {
     private final String xml = "application/xml";
 
     private final int[] populationSize = {1,10,50,100,200,500,1000};
+    private OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 
     @BeforeAll
     static void setupProcess() {
@@ -55,136 +58,125 @@ public class TodosPerformanceTest {
 
     @Test
     public void CreateTodosJSONPost(){
-        List<Long> timeTable = new ArrayList<Long>();
-        for(int amount : populationSize){
-            long start = System.nanoTime();
-            for(int i=0;i<amount;i++){
-                JSONObject body = new JSONObject();
-                String newTitle = "New Todo " + i;
-                String newDescription = "New Description";
-                boolean newDoneStatus = false;
-                body.put("title",newTitle);
-                body.put("doneStatus",newDoneStatus);
-                body.put("description",newDescription);
-                Response response = RestAssured.given().contentType(ContentType.JSON).body(body.toString()).post(pUrl);
-            }
-            long end = System.nanoTime();
-            long time = end-start;
-            timeTable.add(time);
-        }
-        System.out.println(timeTable);
-    }
+        int max = populationSize[populationSize.length - 1];
+        long[] time = new long[populationSize.length];
+        double[] cpuUsage = new double[populationSize.length];
+        long[] freeMemory = new long[populationSize.length];
+        int targetIndex = 0;
 
-    @Test
-    public void CreateTodosXMLPost(){
-        List<Long> timeTable = new ArrayList<Long>();
-        for(int amount : populationSize){
-            long start = System.nanoTime();
-            for(int i=0;i<amount;i++){
-                JSONObject body = new JSONObject();
-                String newTitle = "New Todo " + i;
-                String newDescription = "New Description";
-                String newDoneStatus = "false";
-                body.put("title",newTitle);
-                body.put("doneStatus",newDoneStatus);
-                body.put("description",newDescription);
-                String xmlBody = XML.toString(body,"todo");
-                Response response = RestAssured.given().contentType(ContentType.XML).body(xmlBody).post(pUrl);
+        for(int i=1; i<=max;i++){
+            JSONObject body = new JSONObject();
+            String newTitle = "New Todo " + i;
+            String newDescription = "New Description";
+            boolean newDoneStatus = false;
+            body.put("title",newTitle);
+            body.put("doneStatus",newDoneStatus);
+            body.put("description",newDescription);
+            long startTime = System.nanoTime();
+            Response response = RestAssured.given().contentType(ContentType.JSON).body(body.toString()).post(pUrl);
+            long endTime = System.nanoTime();
+            if(i == populationSize[targetIndex]){
+                double cpuLoad = osBean.getCpuLoad() * 100;
+                long memory = osBean.getFreeMemorySize();
+                time[targetIndex] = (endTime-startTime);
+                cpuUsage[targetIndex] = cpuLoad;
+                freeMemory[targetIndex] = memory;
+                targetIndex++;
             }
-            long end = System.nanoTime();
-            long time = end-start;
-            timeTable.add(time);
         }
-        System.out.println(timeTable);
-    }
-
-    @Test
-    public void UpdateTodosJSONPost(){
-        List<Long> timeTable = new ArrayList<Long>();
-        for(int amount : populationSize){
-            for(int i=0;i<amount;i++){
-                JSONObject body = new JSONObject();
-                String newTitle = "New Todo " + i;
-                String newDescription = "New Description";
-                boolean newDoneStatus = false;
-                body.put("title",newTitle);
-                body.put("doneStatus",newDoneStatus);
-                body.put("description",newDescription);
-                Response response = RestAssured.given().contentType(ContentType.JSON).body(body.toString()).post(pUrl);
-            }
-            long start = System.nanoTime();
-            for(int i=1;i<amount;i++){
-                JSONObject body = new JSONObject();
-                String newTitle = "New Todo " + i;
-                String newDescription = "New Description";
-                boolean newDoneStatus = true;
-                body.put("title",newTitle);
-                body.put("doneStatus",newDoneStatus);
-                body.put("description",newDescription);
-                Response response = RestAssured.given().contentType(ContentType.JSON).body(body.toString()).post(pUrl+"/"+i);
-            }
-            long end = System.nanoTime();
-            long time = end-start;
-            timeTable.add(time);
+        System.out.println("---Add TODOS---");
+        for (int k = 0; k < populationSize.length; k++) {
+            System.out.println("Time for size " + populationSize[k] + ": " + time[k] + "ns");
+            System.out.println("CPU usage for size " + populationSize[k] + ": " + cpuUsage[k] + "%");
+            System.out.println("Available free memory for size " + populationSize[k] + ": " + freeMemory[k] + "bytes");
         }
-        System.out.println(timeTable);
     }
 
     @Test
     public void UpdateTodosJSONPut(){
-        List<Long> timeTable = new ArrayList<Long>();
-        for(int amount : populationSize){
-            for(int i=0;i<amount;i++){
-                JSONObject body = new JSONObject();
-                String newTitle = "New Todo " + i;
-                String newDescription = "New Description";
-                boolean newDoneStatus = false;
-                body.put("title",newTitle);
-                body.put("doneStatus",newDoneStatus);
-                body.put("description",newDescription);
-                Response response = RestAssured.given().contentType(ContentType.JSON).body(body.toString()).post(pUrl);
-            }
-            long start = System.nanoTime();
-            for(int i=1;i<amount;i++){
-                JSONObject body = new JSONObject();
-                String newTitle = "New Todo " + i;
-                String newDescription = "New Description";
-                boolean newDoneStatus = true;
-                body.put("title",newTitle);
-                body.put("doneStatus",newDoneStatus);
-                body.put("description",newDescription);
-                Response response = RestAssured.given().contentType(ContentType.JSON).body(body.toString()).put(pUrl+"/"+i);
-            }
-            long end = System.nanoTime();
-            long time = end-start;
-            timeTable.add(time);
+        int max = populationSize[populationSize.length - 1];
+        long[] time = new long[populationSize.length];
+        double[] cpuUsage = new double[populationSize.length];
+        long[] freeMemory = new long[populationSize.length];
+        int targetIndex = 0;
+
+        for(int i=1; i<=max;i++){
+            JSONObject body = new JSONObject();
+            String newTitle = "New Todo " + i;
+            String newDescription = "New Description";
+            boolean newDoneStatus = false;
+            body.put("title",newTitle);
+            body.put("doneStatus",newDoneStatus);
+            body.put("description",newDescription);
+            Response response = RestAssured.given().contentType(ContentType.JSON).body(body.toString()).post(pUrl);
         }
-        System.out.println(timeTable);
+
+        for(int i=1; i<=max;i++){
+            JSONObject body = new JSONObject();
+            String newTitle = "New Todo " + i;
+            String newDescription = "New Description";
+            boolean newDoneStatus = true;
+            body.put("title",newTitle);
+            body.put("doneStatus",newDoneStatus);
+            body.put("description",newDescription);
+            long startTime = System.nanoTime();
+            Response response = RestAssured.given().contentType(ContentType.JSON).body(body.toString()).put(pUrl+"/"+i);
+            long endTime = System.nanoTime();
+            if(i == populationSize[targetIndex]){
+                double cpuLoad = osBean.getCpuLoad() * 100;
+                long memory = osBean.getFreeMemorySize();
+                time[targetIndex] = (endTime-startTime);
+                cpuUsage[targetIndex] = cpuLoad;
+                freeMemory[targetIndex] = memory;
+                targetIndex++;
+            }
+        }
+        System.out.println("---Update TODOS---");
+        for (int k = 0; k < populationSize.length; k++) {
+            System.out.println("Time for size " + populationSize[k] + ": " + time[k] + "ns");
+            System.out.println("CPU usage for size " + populationSize[k] + ": " + cpuUsage[k] + "%");
+            System.out.println("Available free memory for size " + populationSize[k] + ": " + freeMemory[k] + "bytes");
+        }
     }
 
     @Test
     public void DeleteTodos(){
-        List<Long> timeTable = new ArrayList<Long>();
-        for(int amount : populationSize){
-            for(int i=0;i<amount;i++){
-                JSONObject body = new JSONObject();
-                String newTitle = "New Todo " + i;
-                String newDescription = "New Description";
-                boolean newDoneStatus = false;
-                body.put("title",newTitle);
-                body.put("doneStatus",newDoneStatus);
-                body.put("description",newDescription);
-                Response response = RestAssured.given().contentType(ContentType.JSON).body(body.toString()).post(pUrl);
-            }
-            long start = System.nanoTime();
-            for(int i=1;i<amount;i++){
-                Response response = RestAssured.given().delete(pUrl+"/"+i);
-            }
-            long end = System.nanoTime();
-            long time = end-start;
-            timeTable.add(time);
+        int max = populationSize[populationSize.length - 1];
+        long[] time = new long[populationSize.length];
+        double[] cpuUsage = new double[populationSize.length];
+        long[] freeMemory = new long[populationSize.length];
+        int targetIndex = 0;
+
+        for(int i=1; i<=max;i++){
+            JSONObject body = new JSONObject();
+            String newTitle = "New Todo " + i;
+            String newDescription = "New Description";
+            boolean newDoneStatus = false;
+            body.put("title",newTitle);
+            body.put("doneStatus",newDoneStatus);
+            body.put("description",newDescription);
+            Response response = RestAssured.given().contentType(ContentType.JSON).body(body.toString()).post(pUrl);
         }
-        System.out.println(timeTable);
+
+        for(int i=1; i<=max;i++){
+            long startTime = System.nanoTime();
+            Response response = RestAssured.given().delete(pUrl+"/"+i);
+            long endTime = System.nanoTime();
+            if(i == populationSize[targetIndex]){
+                double cpuLoad = osBean.getCpuLoad() * 100;
+                long memory = osBean.getFreeMemorySize();
+                time[targetIndex] = (endTime-startTime);
+                cpuUsage[targetIndex] = cpuLoad;
+                freeMemory[targetIndex] = memory;
+                targetIndex++;
+            }
+        }
+        System.out.println("---Delete TODOS---");
+        for (int k = 0; k < populationSize.length; k++) {
+            System.out.println("Time for size " + populationSize[k] + ": " + time[k] + "ns");
+            System.out.println("CPU usage for size " + populationSize[k] + ": " + cpuUsage[k] + "%");
+            System.out.println("Available free memory for size " + populationSize[k] + ": " + freeMemory[k] + "bytes");
+        }
     }
 
 }
