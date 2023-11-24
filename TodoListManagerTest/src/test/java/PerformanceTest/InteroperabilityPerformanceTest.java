@@ -88,8 +88,8 @@ public class InteroperabilityPerformanceTest {
             long endTime = System.nanoTime();
             if (j == targetSize[targetIndex]) {
                 double cpuLoad = osBean.getCpuLoad() * 100;
-                long memory = osBean.getFreeMemorySize();
-                time[targetIndex] = (endTime-startTime);
+                long memory = osBean.getFreeMemorySize() / (1024^2);
+                time[targetIndex] = (endTime-startTime) / (10^9);
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
                 targetIndex++;
@@ -99,9 +99,10 @@ public class InteroperabilityPerformanceTest {
         // Printing results
         System.out.println("---Add categories to a todo---");
         for (int k = 0; k < targetSize.length; k++) {
-            System.out.println("Time for size " + targetSize[k] + ": " + time[k] + "ns");
+            System.out.println("------SIZE " + targetSize[k] + "------");
+            System.out.println("Time for size " + targetSize[k] + ": " + time[k] + " seconds");
             System.out.println("CPU usage for size " + targetSize[k] + ": " + cpuUsage[k] + "%");
-            System.out.println("Available free memory for size " + targetSize[k] + ": " + freeMemory[k] + "bytes");
+            System.out.println("Available free memory for size " + targetSize[k] + ": " + freeMemory[k] + " MB");
         }
     }
 
@@ -146,8 +147,8 @@ public class InteroperabilityPerformanceTest {
             long endTime = System.nanoTime();
             if (j == targetSize[targetIndex]) {
                 double cpuLoad = osBean.getCpuLoad() * 100;
-                long memory = osBean.getFreeMemorySize();
-                time[targetIndex] = (endTime-startTime);
+                long memory = osBean.getFreeMemorySize() / (1024^2);
+                time[targetIndex] = (endTime-startTime) / (10^9);
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
                 targetIndex--;
@@ -157,9 +158,10 @@ public class InteroperabilityPerformanceTest {
         // Printing results
         System.out.println("---Delete categories from a todo---");
         for (int k = 0; k < targetSize.length; k++) {
-            System.out.println("Time for size " + targetSize[k] + ": " + time[k] + "ns");
+            System.out.println("------SIZE " + targetSize[k] + "------");
+            System.out.println("Time for size " + targetSize[k] + ": " + time[k] + " seconds");
             System.out.println("CPU usage for size " + targetSize[k] + ": " + cpuUsage[k] + "%");
-            System.out.println("Available free memory for size " + targetSize[k] + ": " + freeMemory[k] + "bytes");
+            System.out.println("Available free memory for size " + targetSize[k] + ": " + freeMemory[k] + " MB");
         }
     }
 
@@ -199,8 +201,8 @@ public class InteroperabilityPerformanceTest {
             long endTime = System.nanoTime();
             if (j == targetSize[targetIndex]) {
                 double cpuLoad = osBean.getCpuLoad() * 100;
-                long memory = osBean.getFreeMemorySize();
-                time[targetIndex] = (endTime-startTime);
+                long memory = osBean.getFreeMemorySize() / (1024^2);
+                time[targetIndex] = (endTime-startTime) / (10^9);
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
                 targetIndex++;
@@ -210,9 +212,10 @@ public class InteroperabilityPerformanceTest {
         // Printing results
         System.out.println("---Add categories to a project---");
         for (int k = 0; k < targetSize.length; k++) {
-            System.out.println("Time for size " + targetSize[k] + ": " + time[k] + "ns");
+            System.out.println("------SIZE " + targetSize[k] + "------");
+            System.out.println("Time for size " + targetSize[k] + ": " + time[k] + " seconds");
             System.out.println("CPU usage for size " + targetSize[k] + ": " + cpuUsage[k] + "%");
-            System.out.println("Available free memory for size " + targetSize[k] + ": " + freeMemory[k] + "bytes");
+            System.out.println("Available free memory for size " + targetSize[k] + ": " + freeMemory[k] + " MB");
         }
     }
 
@@ -257,8 +260,8 @@ public class InteroperabilityPerformanceTest {
             long endTime = System.nanoTime();
             if (j == targetSize[targetIndex]) {
                 double cpuLoad = osBean.getCpuLoad() * 100;
-                long memory = osBean.getFreeMemorySize();
-                time[targetIndex] = (endTime-startTime);
+                long memory = osBean.getFreeMemorySize() / (1024^2);
+                time[targetIndex] = (endTime-startTime) / (10^9);
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
                 targetIndex--;
@@ -268,9 +271,10 @@ public class InteroperabilityPerformanceTest {
         // Printing results
         System.out.println("---Delete categories from a project---");
         for (int k = 0; k < targetSize.length; k++) {
-            System.out.println("Time for size " + targetSize[k] + ": " + time[k] + "ns");
+            System.out.println("------SIZE " + targetSize[k] + "------");
+            System.out.println("Time for size " + targetSize[k] + ": " + time[k] + " seconds");
             System.out.println("CPU usage for size " + targetSize[k] + ": " + cpuUsage[k] + "%");
-            System.out.println("Available free memory for size " + targetSize[k] + ": " + freeMemory[k] + "bytes");
+            System.out.println("Available free memory for size " + targetSize[k] + ": " + freeMemory[k] + " MB");
         }
     }
 
@@ -310,8 +314,8 @@ public class InteroperabilityPerformanceTest {
             long endTime = System.nanoTime();
             if (j == targetSize[targetIndex]) {
                 double cpuLoad = osBean.getCpuLoad() * 100;
-                long memory = osBean.getFreeMemorySize();
-                time[targetIndex] = (endTime-startTime);
+                long memory = osBean.getFreeMemorySize() / (1024^2);
+                time[targetIndex] = (endTime-startTime) / (10^9);
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
                 targetIndex++;
@@ -321,9 +325,10 @@ public class InteroperabilityPerformanceTest {
         // Printing results
         System.out.println("---Add todos to a category---");
         for (int k = 0; k < targetSize.length; k++) {
-            System.out.println("Time for size " + targetSize[k] + ": " + time[k] + "ns");
+            System.out.println("------SIZE " + targetSize[k] + "------");
+            System.out.println("Time for size " + targetSize[k] + ": " + time[k] + " seconds");
             System.out.println("CPU usage for size " + targetSize[k] + ": " + cpuUsage[k] + "%");
-            System.out.println("Available free memory for size " + targetSize[k] + ": " + freeMemory[k] + "bytes");
+            System.out.println("Available free memory for size " + targetSize[k] + ": " + freeMemory[k] + " MB");
         }
     }
 
@@ -368,8 +373,8 @@ public class InteroperabilityPerformanceTest {
             long endTime = System.nanoTime();
             if (j == targetSize[targetIndex]) {
                 double cpuLoad = osBean.getCpuLoad() * 100;
-                long memory = osBean.getFreeMemorySize();
-                time[targetIndex] = (endTime-startTime);
+                long memory = osBean.getFreeMemorySize() / (1024^2);
+                time[targetIndex] = (endTime-startTime) / (10^9);
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
                 targetIndex--;
@@ -379,9 +384,10 @@ public class InteroperabilityPerformanceTest {
         // Printing results
         System.out.println("---Delete todos from a category---");
         for (int k = 0; k < targetSize.length; k++) {
-            System.out.println("Time for size " + targetSize[k] + ": " + time[k] + "ns");
+            System.out.println("------SIZE " + targetSize[k] + "------");
+            System.out.println("Time for size " + targetSize[k] + ": " + time[k] + " seconds");
             System.out.println("CPU usage for size " + targetSize[k] + ": " + cpuUsage[k] + "%");
-            System.out.println("Available free memory for size " + targetSize[k] + ": " + freeMemory[k] + "bytes");
+            System.out.println("Available free memory for size " + targetSize[k] + ": " + freeMemory[k] + " MB");
         }
     }
 
@@ -421,8 +427,8 @@ public class InteroperabilityPerformanceTest {
             long endTime = System.nanoTime();
             if (j == targetSize[targetIndex]) {
                 double cpuLoad = osBean.getCpuLoad() * 100;
-                long memory = osBean.getFreeMemorySize();
-                time[targetIndex] = (endTime-startTime);
+                long memory = osBean.getFreeMemorySize() / (1024^2);
+                time[targetIndex] = (endTime-startTime) / (10^9);
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
                 targetIndex++;
@@ -432,9 +438,10 @@ public class InteroperabilityPerformanceTest {
         // Printing results
         System.out.println("---Add projects to a category---");
         for (int k = 0; k < targetSize.length; k++) {
-            System.out.println("Time for size " + targetSize[k] + ": " + time[k] + "ns");
+            System.out.println("------SIZE " + targetSize[k] + "------");
+            System.out.println("Time for size " + targetSize[k] + ": " + time[k] + " seconds");
             System.out.println("CPU usage for size " + targetSize[k] + ": " + cpuUsage[k] + "%");
-            System.out.println("Available free memory for size " + targetSize[k] + ": " + freeMemory[k] + "bytes");
+            System.out.println("Available free memory for size " + targetSize[k] + ": " + freeMemory[k] + " MB");
         }
     }
 
@@ -479,8 +486,8 @@ public class InteroperabilityPerformanceTest {
             long endTime = System.nanoTime();
             if (j == targetSize[targetIndex]) {
                 double cpuLoad = osBean.getCpuLoad() * 100;
-                long memory = osBean.getFreeMemorySize();
-                time[targetIndex] = (endTime-startTime);
+                long memory = osBean.getFreeMemorySize() / (1024^2);
+                time[targetIndex] = (endTime-startTime) / (10^9);
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
                 targetIndex--;
@@ -490,9 +497,10 @@ public class InteroperabilityPerformanceTest {
         // Printing results
         System.out.println("---Delete projects from a category---");
         for (int k = 0; k < targetSize.length; k++) {
-            System.out.println("Time for size " + targetSize[k] + ": " + time[k] + "ns");
+            System.out.println("------SIZE " + targetSize[k] + "------");
+            System.out.println("Time for size " + targetSize[k] + ": " + time[k] + " seconds");
             System.out.println("CPU usage for size " + targetSize[k] + ": " + cpuUsage[k] + "%");
-            System.out.println("Available free memory for size " + targetSize[k] + ": " + freeMemory[k] + "bytes");
+            System.out.println("Available free memory for size " + targetSize[k] + ": " + freeMemory[k] + " MB");
         }
     }
 }
