@@ -13,7 +13,7 @@ public class CategoriesPerformanceTest {
 
     private final String json = "application/json";
     private Response response;
-    private String newCategoryId;
+    private String newCategoryId = "1";
 
     OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 
