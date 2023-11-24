@@ -14,7 +14,7 @@ public class TodosPerformanceTest {
     private static ProcessBuilder pb;
     private final int[] populationSize = {1,10,50,100,200,500,1000};
     private OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
-    private String newTodoId;
+    private String newTodoId = "1";
 
     @BeforeAll
     static void setupProcess() {
@@ -51,7 +51,7 @@ public class TodosPerformanceTest {
     @Test
     public void CreateTodosJSONPost(){
         int max = populationSize[populationSize.length - 1];
-        long[] time = new long[populationSize.length];
+        double[] time = new double[populationSize.length];
         double[] cpuUsage = new double[populationSize.length];
         long[] freeMemory = new long[populationSize.length];
         int targetIndex = 0;
@@ -70,7 +70,7 @@ public class TodosPerformanceTest {
             if(i == populationSize[targetIndex]){
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize()/(1024L * 1024L);
-                time[targetIndex] = (endTime-startTime);
+                time[targetIndex] = (double) (endTime-startTime)/1_000_000_000;
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
                 targetIndex++;
@@ -78,16 +78,16 @@ public class TodosPerformanceTest {
         }
         System.out.println("---Add TODOS---");
         for (int k = 0; k < populationSize.length; k++) {
-            System.out.println("Time for size " + populationSize[k] + ": " + time[k] + "ns");
+            System.out.println("Time for size " + populationSize[k] + ": " + time[k] + " Seconds");
             System.out.println("CPU usage for size " + populationSize[k] + ": " + cpuUsage[k] + "%");
-            System.out.println("Available free memory for size " + populationSize[k] + ": " + freeMemory[k] + "bytes");
+            System.out.println("Available free memory for size " + populationSize[k] + ": " + freeMemory[k] + " MB");
         }
     }
 
     @Test
     public void UpdateTodosJSONPut(){
         int max = populationSize[populationSize.length - 1];
-        long[] time = new long[populationSize.length];
+        double[] time = new double[populationSize.length];
         double[] cpuUsage = new double[populationSize.length];
         long[] freeMemory = new long[populationSize.length];
         int targetIndex = 0;
@@ -106,7 +106,7 @@ public class TodosPerformanceTest {
                 long endTime = System.nanoTime();
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize()/(1024L * 1024L);
-                time[targetIndex] = (endTime-startTime);
+                time[targetIndex] = (double) (endTime-startTime)/1_000_000_000;
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
                 targetIndex++;
@@ -123,16 +123,16 @@ public class TodosPerformanceTest {
         }
         System.out.println("---Update TODOS---");
         for (int k = 0; k < populationSize.length; k++) {
-            System.out.println("Time for size " + populationSize[k] + ": " + time[k] + "ns");
+            System.out.println("Time for size " + populationSize[k] + ": " + time[k] + " Seconds");
             System.out.println("CPU usage for size " + populationSize[k] + ": " + cpuUsage[k] + "%");
-            System.out.println("Available free memory for size " + populationSize[k] + ": " + freeMemory[k] + "bytes");
+            System.out.println("Available free memory for size " + populationSize[k] + ": " + freeMemory[k] + " MB");
         }
     }
 
     @Test
     public void DeleteTodos(){
         int max = populationSize[populationSize.length - 1];
-        long[] time = new long[populationSize.length];
+        double[] time = new double[populationSize.length];
         double[] cpuUsage = new double[populationSize.length];
         long[] freeMemory = new long[populationSize.length];
         int targetIndex = 0;
@@ -144,7 +144,7 @@ public class TodosPerformanceTest {
                 long endTime = System.nanoTime();
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize()/(1024L * 1024L);
-                time[targetIndex] = (endTime-startTime);
+                time[targetIndex] = (double) (endTime-startTime)/1_000_000_000;
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
                 targetIndex++;
@@ -161,9 +161,9 @@ public class TodosPerformanceTest {
         }
         System.out.println("---Delete TODOS---");
         for (int k = 0; k < populationSize.length; k++) {
-            System.out.println("Time for size " + populationSize[k] + ": " + time[k] + "ns");
+            System.out.println("Time for size " + populationSize[k] + ": " + time[k] + " Seconds");
             System.out.println("CPU usage for size " + populationSize[k] + ": " + cpuUsage[k] + "%");
-            System.out.println("Available free memory for size " + populationSize[k] + ": " + freeMemory[k] + "bytes");
+            System.out.println("Available free memory for size " + populationSize[k] + ": " + freeMemory[k] + " MB");
         }
     }
 
