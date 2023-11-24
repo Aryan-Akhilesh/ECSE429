@@ -13,7 +13,7 @@ public class TodosPerformanceTest {
     private static final String pUrl = "http://localhost:4567/todos";
     private static ProcessBuilder pb;
     private final int[] populationSize = {1,10,50,100,200,500,1000};
-    private OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+    private final OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
     private String newTodoId;
 
     @BeforeAll
@@ -68,7 +68,6 @@ public class TodosPerformanceTest {
             long endTime = System.nanoTime();
             newTodoId = response.jsonPath().get("id");
             if(i == populationSize[targetIndex]){
-                System.out.println(newTodoId);
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize()/(1024L * 1024L);
                 time[targetIndex] = (double) (endTime-startTime)/1_000_000_000;
@@ -103,7 +102,6 @@ public class TodosPerformanceTest {
             Response response = RestAssured.given().contentType(ContentType.JSON).body(body.toString()).post(pUrl);
             newTodoId = response.jsonPath().get("id");
             if(i == populationSize[targetIndex]){
-                System.out.println(newTodoId);
                 body.put("title",newTitle);
                 body.put("doneStatus",true);
                 body.put("description",newDescription);
@@ -144,7 +142,6 @@ public class TodosPerformanceTest {
             Response response = RestAssured.given().contentType(ContentType.JSON).body(body.toString()).post(pUrl);
             newTodoId = response.jsonPath().get("id");
             if(i == populationSize[targetIndex]){
-                System.out.println(newTodoId);
                 long startTime = System.nanoTime();
                 RestAssured.given().delete(pUrl+"/"+newTodoId);
                 long endTime = System.nanoTime();
