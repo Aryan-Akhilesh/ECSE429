@@ -12,9 +12,6 @@ public class ProjectsPerformanceTest {
     private static final String pUrl = "http://localhost:4567/projects";
     private static ProcessBuilder pb;
 
-    private final String json = "application/json";
-    private final String xml = "application/xml";
-
     private final int[] target = {1,5,10,50,100,200,500,1000};
     private final int tot = target[target.length-1];
 
@@ -52,9 +49,11 @@ public class ProjectsPerformanceTest {
         }
     }
 
-
+    /*
+    Performance test for creating project with 'Post' and 'JSON'
+     */
     @Test
-    public void createProjectsJsonPut() {
+    public void createProjectsPost() {
         double[] timeStore = new double[target.length];
         double[] cpuUsageStore = new double[target.length];
         long[] freeMemoryStore = new long[target.length];
@@ -70,7 +69,7 @@ public class ProjectsPerformanceTest {
             body.put("active", newActive);
             body.put("description", newDescription);
             long start = System.nanoTime();
-            Response response = RestAssured.given().contentType(ContentType.JSON).body(body.toString()).put(pUrl);
+            Response response = RestAssured.given().contentType(ContentType.JSON).body(body.toString()).post(pUrl);
             long end = System.nanoTime();
             long time = end - start;
             double time_in_second = (double) time / 1_000_000_000;
@@ -86,7 +85,7 @@ public class ProjectsPerformanceTest {
         System.out.println("---------Add Project Statistics---------");
         System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
         for (int i = 0; i < target.length; i++) {
-            System.out.printf("%-10d %-20.8f %-20.4f %-20d%n",
+            System.out.printf("%-10d %-20f %-20f %-20d%n",
                     target[i],
                     timeStore[i],
                     cpuUsageStore[i],
@@ -95,39 +94,44 @@ public class ProjectsPerformanceTest {
         System.out.println("----------------------------------------");
     }
 
+
+    /*
+    Performance test for amending project with 'Put' and 'JSON'
+     */
     @Test
-    public void amendProjectsJsonPost(){
+    public void amendProjectsPut(){
         double[] timeStore = new double[target.length];
         double[] cpuUsageStore = new double[target.length];
         long[] freeMemoryStore = new long[target.length];
 
+        int index = 0;
+
         for(int i=0;i<tot;i++){
-            JSONObject body = new JSONObject();
+            JSONObject postBody = new JSONObject();
             String newTitle = "New project " + i;
             Boolean newCompleted = false;
             Boolean newActive = false;
             String newDescription = "New Description";
-            body.put("title",newTitle);
-            body.put("completed",newCompleted);
-            body.put("active",newActive);
-            body.put("description",newDescription);
-            Response response = RestAssured.given().contentType(ContentType.JSON).body(body.toString()).post(pUrl);
-        }
+            postBody.put("title",newTitle);
+            postBody.put("completed",newCompleted);
+            postBody.put("active",newActive);
+            postBody.put("description",newDescription);
+            Response r1 = RestAssured.given().contentType(ContentType.JSON).body(postBody.toString()).post(pUrl);
 
-        int index = 0;
+            String id = r1.jsonPath().get("id");
+            JSONObject amendBody = new JSONObject();
+            String modifiedTitle = "modified project ";
+            Boolean modifiedCompleted = true;
+            Boolean modifiedActive = true;
+            String modifiedDescription = "Modified Description";
+            amendBody.put("title",modifiedTitle);
+            amendBody.put("completed",modifiedCompleted);
+            amendBody.put("active",modifiedActive);
+            amendBody.put("description",modifiedDescription);
 
-        for(int i=0;i<tot;i++){
-            JSONObject body = new JSONObject();
-            String newTitle = "modified project ";
-            Boolean newCompleted = true;
-            Boolean newActive = true;
-            String newDescription = "Modified Description";
-            body.put("title",newTitle);
-            body.put("completed",newCompleted);
-            body.put("active",newActive);
-            body.put("description",newDescription);
+
             long start = System.nanoTime();
-            Response response = RestAssured.given().contentType(ContentType.JSON).body(body.toString()).post(pUrl+"/"+i);
+            Response r2 = RestAssured.given().contentType(ContentType.JSON).body(amendBody.toString()).put(pUrl+"/"+id);
             long end = System.nanoTime();
             long time = end-start;
             double time_in_second = (double) time / 1_000_000_000;
@@ -143,7 +147,7 @@ public class ProjectsPerformanceTest {
         System.out.println("---------Amend Project Statistics---------");
         System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
         for (int i = 0; i < target.length; i++) {
-            System.out.printf("%-10d %-20.8f %-20.4f %-20d%n",
+            System.out.printf("%-10d %-20f %-20f %-20d%n",
                     target[i],
                     timeStore[i],
                     cpuUsageStore[i],
@@ -153,11 +157,17 @@ public class ProjectsPerformanceTest {
     }
 
 
+    /*
+    Performance test for deleting project
+     */
     @Test
     public void deleteProjects(){
         double[] timeStore = new double[target.length];
         double[] cpuUsageStore = new double[target.length];
         long[] freeMemoryStore = new long[target.length];
+
+
+        int index = 0;
 
         for(int i=0;i<tot;i++){
             JSONObject body = new JSONObject();
@@ -169,14 +179,12 @@ public class ProjectsPerformanceTest {
             body.put("completed",newCompleted);
             body.put("active",newActive);
             body.put("description",newDescription);
-            Response response = RestAssured.given().contentType(ContentType.JSON).body(body.toString()).post(pUrl);
-        }
+            Response r1 = RestAssured.given().contentType(ContentType.JSON).body(body.toString()).post(pUrl);
+            String id = r1.jsonPath().get("id");
 
-        int index = 0;
 
-        for(int i=0;i<tot;i++){
             long start = System.nanoTime();
-            Response response = RestAssured.given().delete(pUrl+"/"+i);
+            Response r2 = RestAssured.given().delete(pUrl+"/"+id);
             long end = System.nanoTime();
             long time = end-start;
             double time_in_second = (double) time / 1_000_000_000;
@@ -192,7 +200,7 @@ public class ProjectsPerformanceTest {
         System.out.println("---------Delete Project Statistics---------");
         System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
         for (int i = 0; i < target.length; i++) {
-            System.out.printf("%-10d %-20.8f %-20.4f %-20d%n",
+            System.out.printf("%-10d %-20f %-20f %-20d%n",
                     target[i],
                     timeStore[i],
                     cpuUsageStore[i],
