@@ -7,7 +7,6 @@ import com.sun.management.OperatingSystemMXBean;
 
 import java.io.IOException;
 
-@TestMethodOrder(MethodOrderer.Random.class)
 public class CategoriesPerformanceTest {
     private static ProcessBuilder pb;
 
@@ -74,13 +73,16 @@ public class CategoriesPerformanceTest {
                 RestAssured.given().header("Content-Type", json).body("{\"title\":\"" + i + "\",\"description\":\"\"}").post("http://localhost:4567/categories");
             }
         }
-        System.out.println("---Add Category---");
+        System.out.println("---------Add Categories Statistics---------");
+        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
         for (int i = 0; i < targetSize.length; i++) {
-            System.out.println("------SIZE " + targetSize[i] + "------");
-            System.out.println("Free memory size for size " + targetSize[i] + " categories: " + freeMemoryStore[i] + " MB");
-            System.out.println("CPU usage for size " + targetSize[i] + " categories: " + cpuUsageStore[i] + "%");
-            System.out.println("Time taken for size " + targetSize[i] + " categories: " + timeStore[i] + " seconds");
+            System.out.printf("%-10d %-20f %-20f %-20d%n",
+                    targetSize[i],
+                    timeStore[i],
+                    cpuUsageStore[i],
+                    freeMemoryStore[i]);
         }
+        System.out.println("----------------------------------------");
     }
 
     @Test
@@ -106,13 +108,16 @@ public class CategoriesPerformanceTest {
                 targetIndex++;
             }
         }
-        System.out.println("---Delete Category---");
+        System.out.println("---------Delete Categories Statistics---------");
+        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
         for (int i = 0; i < targetSize.length; i++) {
-            System.out.println("------SIZE " + targetSize[i] + "------");
-            System.out.println("Free memory size for size " + targetSize[i] + " categories: " + freeMemoryStore[i] + " MB");
-            System.out.println("CPU usage for size " + targetSize[i] + " categories: " + cpuUsageStore[i] + "%");
-            System.out.println("Time taken for size " + targetSize[i] + " categories: " + timeStore[i] + " seconds");
+            System.out.printf("%-10d %-20f %-20f %-20d%n",
+                    targetSize[i],
+                    timeStore[i],
+                    cpuUsageStore[i],
+                    freeMemoryStore[i]);
         }
+        System.out.println("----------------------------------------");
     }
 
     @Test
@@ -138,12 +143,15 @@ public class CategoriesPerformanceTest {
                 targetIndex++;
             }
         }
-        System.out.println("---Change Category---");
+        System.out.println("---------Change Categories Statistics---------");
+        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
         for (int i = 0; i < targetSize.length; i++) {
-            System.out.println("------SIZE " + targetSize[i] + "------");
-            System.out.println("Free memory size for size " + targetSize[i] + " categories: " + freeMemoryStore[i] + " MB");
-            System.out.println("CPU usage for size " + targetSize[i] + " categories: " + cpuUsageStore[i] + "%");
-            System.out.println("Time taken for size " + targetSize[i] + " categories: " + timeStore[i] + " seconds");
+            System.out.printf("%-10d %-20f %-20f %-20d%n",
+                    targetSize[i],
+                    timeStore[i],
+                    cpuUsageStore[i],
+                    freeMemoryStore[i]);
         }
+        System.out.println("----------------------------------------");
     }
 }
