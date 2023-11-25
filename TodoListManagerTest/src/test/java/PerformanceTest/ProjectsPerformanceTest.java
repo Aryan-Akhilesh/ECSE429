@@ -7,7 +7,6 @@ import org.junit.jupiter.api.*;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import com.sun.management.OperatingSystemMXBean;
-@TestMethodOrder(MethodOrderer.Random.class)
 public class ProjectsPerformanceTest {
     private static final String pUrl = "http://localhost:4567/projects";
     private static ProcessBuilder pb;
@@ -69,7 +68,7 @@ public class ProjectsPerformanceTest {
             body.put("active", newActive);
             body.put("description", newDescription);
             long start = System.nanoTime();
-            Response response = RestAssured.given().contentType(ContentType.JSON).body(body.toString()).post(pUrl);
+            RestAssured.given().contentType(ContentType.JSON).body(body.toString()).post(pUrl);
             long end = System.nanoTime();
             long time = end - start;
             double time_in_second = (double) time / 1_000_000_000;
@@ -131,7 +130,7 @@ public class ProjectsPerformanceTest {
 
 
             long start = System.nanoTime();
-            Response r2 = RestAssured.given().contentType(ContentType.JSON).body(amendBody.toString()).put(pUrl+"/"+id);
+            RestAssured.given().contentType(ContentType.JSON).body(amendBody.toString()).put(pUrl+"/"+id);
             long end = System.nanoTime();
             long time = end-start;
             double time_in_second = (double) time / 1_000_000_000;
@@ -165,26 +164,27 @@ public class ProjectsPerformanceTest {
         double[] timeStore = new double[target.length];
         double[] cpuUsageStore = new double[target.length];
         long[] freeMemoryStore = new long[target.length];
-
+        String[] idList = new String[tot];
 
         int index = 0;
 
-        for(int i=0;i<tot;i++){
+        for(int i=0;i<tot;i++) {
             JSONObject body = new JSONObject();
             String newTitle = "New project " + i;
             Boolean newCompleted = false;
             Boolean newActive = false;
             String newDescription = "New Description";
-            body.put("title",newTitle);
-            body.put("completed",newCompleted);
-            body.put("active",newActive);
-            body.put("description",newDescription);
+            body.put("title", newTitle);
+            body.put("completed", newCompleted);
+            body.put("active", newActive);
+            body.put("description", newDescription);
             Response r1 = RestAssured.given().contentType(ContentType.JSON).body(body.toString()).post(pUrl);
             String id = r1.jsonPath().get("id");
-
-
+            idList[i] = id;
+        }
+        for(int i=0;i<tot;i++){
             long start = System.nanoTime();
-            Response r2 = RestAssured.given().delete(pUrl+"/"+id);
+            RestAssured.given().delete(pUrl+"/"+ idList[tot-1-i]);
             long end = System.nanoTime();
             long time = end-start;
             double time_in_second = (double) time / 1_000_000_000;
