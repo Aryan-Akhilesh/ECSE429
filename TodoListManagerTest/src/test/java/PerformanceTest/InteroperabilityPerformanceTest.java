@@ -16,7 +16,7 @@ public class InteroperabilityPerformanceTest {
 
     private final String json = "application/json";
 
-    private final int[] targetSize = {1,10,20,50,100,200,500,1000};
+    private final int[] targetSize = {1,10,50,100,200,500,1000};
 
     private final OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();;
 
@@ -57,7 +57,7 @@ public class InteroperabilityPerformanceTest {
         int max = targetSize[targetSize.length-1];
         String todoId;
         String[] categoryId = new String[max];
-        long[] time = new long[targetSize.length];
+        double[] time = new double[targetSize.length];
         double[] cpuUsage = new double[targetSize.length];
         long[] freeMemory = new long[targetSize.length];
 
@@ -89,7 +89,7 @@ public class InteroperabilityPerformanceTest {
             if (j == targetSize[targetIndex]) {
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize() / (1024^2);
-                time[targetIndex] = (endTime-startTime) / (10^9);
+                time[targetIndex] = (double) (double) (endTime-startTime) / (10^9);
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
                 targetIndex++;
@@ -98,12 +98,15 @@ public class InteroperabilityPerformanceTest {
 
         // Printing results
         System.out.println("---Add categories to a todo---");
-        for (int k = 0; k < targetSize.length; k++) {
-            System.out.println("------SIZE " + targetSize[k] + "------");
-            System.out.println("Time for size " + targetSize[k] + ": " + time[k] + " seconds");
-            System.out.println("CPU usage for size " + targetSize[k] + ": " + cpuUsage[k] + "%");
-            System.out.println("Available free memory for size " + targetSize[k] + ": " + freeMemory[k] + " MB");
+        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        for (int i = 0; i < targetSize.length; i++) {
+            System.out.printf("%-10d %-20f %-20f %-20d%n",
+                    targetSize[i],
+                    time[i],
+                    cpuUsage[i],
+                    freeMemory[i]);
         }
+        System.out.println("------------------------------");
     }
 
     @Test
@@ -111,7 +114,7 @@ public class InteroperabilityPerformanceTest {
         int max = targetSize[targetSize.length-1];
         String todoId;
         String[] categoryId = new String[max];
-        long[] time = new long[targetSize.length];
+        double[] time = new double[targetSize.length];
         double[] cpuUsage = new double[targetSize.length];
         long[] freeMemory = new long[targetSize.length];
 
@@ -148,7 +151,7 @@ public class InteroperabilityPerformanceTest {
             if (j == targetSize[targetIndex]) {
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize() / (1024^2);
-                time[targetIndex] = (endTime-startTime) / (10^9);
+                time[targetIndex] = (double) (endTime-startTime) / (10^9);
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
                 targetIndex--;
@@ -157,12 +160,15 @@ public class InteroperabilityPerformanceTest {
 
         // Printing results
         System.out.println("---Delete categories from a todo---");
-        for (int k = 0; k < targetSize.length; k++) {
-            System.out.println("------SIZE " + targetSize[k] + "------");
-            System.out.println("Time for size " + targetSize[k] + ": " + time[k] + " seconds");
-            System.out.println("CPU usage for size " + targetSize[k] + ": " + cpuUsage[k] + "%");
-            System.out.println("Available free memory for size " + targetSize[k] + ": " + freeMemory[k] + " MB");
+        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        for (int i = 0; i < targetSize.length; i++) {
+            System.out.printf("%-10d %-20f %-20f %-20d%n",
+                    targetSize[i],
+                    time[i],
+                    cpuUsage[i],
+                    freeMemory[i]);
         }
+        System.out.println("-----------------------------------");
     }
 
     @Test
@@ -170,7 +176,7 @@ public class InteroperabilityPerformanceTest {
         int max = targetSize[targetSize.length-1];
         String projectId;
         String[] categoryId = new String[max];
-        long[] time = new long[targetSize.length];
+        double[] time = new double[targetSize.length];
         double[] cpuUsage = new double[targetSize.length];
         long[] freeMemory = new long[targetSize.length];
 
@@ -202,7 +208,7 @@ public class InteroperabilityPerformanceTest {
             if (j == targetSize[targetIndex]) {
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize() / (1024^2);
-                time[targetIndex] = (endTime-startTime) / (10^9);
+                time[targetIndex] = (double) (endTime-startTime) / (10^9);
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
                 targetIndex++;
@@ -211,12 +217,15 @@ public class InteroperabilityPerformanceTest {
 
         // Printing results
         System.out.println("---Add categories to a project---");
-        for (int k = 0; k < targetSize.length; k++) {
-            System.out.println("------SIZE " + targetSize[k] + "------");
-            System.out.println("Time for size " + targetSize[k] + ": " + time[k] + " seconds");
-            System.out.println("CPU usage for size " + targetSize[k] + ": " + cpuUsage[k] + "%");
-            System.out.println("Available free memory for size " + targetSize[k] + ": " + freeMemory[k] + " MB");
+        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        for (int i = 0; i < targetSize.length; i++) {
+            System.out.printf("%-10d %-20f %-20f %-20d%n",
+                    targetSize[i],
+                    time[i],
+                    cpuUsage[i],
+                    freeMemory[i]);
         }
+        System.out.println("---------------------------------");
     }
 
     @Test
@@ -224,7 +233,7 @@ public class InteroperabilityPerformanceTest {
         int max = targetSize[targetSize.length-1];
         String projectId;
         String[] categoryId = new String[max];
-        long[] time = new long[targetSize.length];
+        double[] time = new double[targetSize.length];
         double[] cpuUsage = new double[targetSize.length];
         long[] freeMemory = new long[targetSize.length];
 
@@ -261,7 +270,7 @@ public class InteroperabilityPerformanceTest {
             if (j == targetSize[targetIndex]) {
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize() / (1024^2);
-                time[targetIndex] = (endTime-startTime) / (10^9);
+                time[targetIndex] = (double) (endTime-startTime) / (10^9);
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
                 targetIndex--;
@@ -270,12 +279,15 @@ public class InteroperabilityPerformanceTest {
 
         // Printing results
         System.out.println("---Delete categories from a project---");
-        for (int k = 0; k < targetSize.length; k++) {
-            System.out.println("------SIZE " + targetSize[k] + "------");
-            System.out.println("Time for size " + targetSize[k] + ": " + time[k] + " seconds");
-            System.out.println("CPU usage for size " + targetSize[k] + ": " + cpuUsage[k] + "%");
-            System.out.println("Available free memory for size " + targetSize[k] + ": " + freeMemory[k] + " MB");
+        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        for (int i = 0; i < targetSize.length; i++) {
+            System.out.printf("%-10d %-20f %-20f %-20d%n",
+                    targetSize[i],
+                    time[i],
+                    cpuUsage[i],
+                    freeMemory[i]);
         }
+        System.out.println("--------------------------------------");
     }
 
     @Test
@@ -283,7 +295,7 @@ public class InteroperabilityPerformanceTest {
         int max = targetSize[targetSize.length-1];
         String categoryId;
         String[] todoId = new String[max];
-        long[] time = new long[targetSize.length];
+        double[] time = new double[targetSize.length];
         double[] cpuUsage = new double[targetSize.length];
         long[] freeMemory = new long[targetSize.length];
 
@@ -315,7 +327,7 @@ public class InteroperabilityPerformanceTest {
             if (j == targetSize[targetIndex]) {
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize() / (1024^2);
-                time[targetIndex] = (endTime-startTime) / (10^9);
+                time[targetIndex] = (double) (endTime-startTime) / (10^9);
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
                 targetIndex++;
@@ -324,12 +336,15 @@ public class InteroperabilityPerformanceTest {
 
         // Printing results
         System.out.println("---Add todos to a category---");
-        for (int k = 0; k < targetSize.length; k++) {
-            System.out.println("------SIZE " + targetSize[k] + "------");
-            System.out.println("Time for size " + targetSize[k] + ": " + time[k] + " seconds");
-            System.out.println("CPU usage for size " + targetSize[k] + ": " + cpuUsage[k] + "%");
-            System.out.println("Available free memory for size " + targetSize[k] + ": " + freeMemory[k] + " MB");
+        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        for (int i = 0; i < targetSize.length; i++) {
+            System.out.printf("%-10d %-20f %-20f %-20d%n",
+                    targetSize[i],
+                    time[i],
+                    cpuUsage[i],
+                    freeMemory[i]);
         }
+        System.out.println("-----------------------------");
     }
 
     @Test
@@ -337,7 +352,7 @@ public class InteroperabilityPerformanceTest {
         int max = targetSize[targetSize.length-1];
         String categoryId;
         String[] todoId = new String[max];
-        long[] time = new long[targetSize.length];
+        double[] time = new double[targetSize.length];
         double[] cpuUsage = new double[targetSize.length];
         long[] freeMemory = new long[targetSize.length];
 
@@ -374,7 +389,7 @@ public class InteroperabilityPerformanceTest {
             if (j == targetSize[targetIndex]) {
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize() / (1024^2);
-                time[targetIndex] = (endTime-startTime) / (10^9);
+                time[targetIndex] = (double) (endTime-startTime) / (10^9);
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
                 targetIndex--;
@@ -383,12 +398,15 @@ public class InteroperabilityPerformanceTest {
 
         // Printing results
         System.out.println("---Delete todos from a category---");
-        for (int k = 0; k < targetSize.length; k++) {
-            System.out.println("------SIZE " + targetSize[k] + "------");
-            System.out.println("Time for size " + targetSize[k] + ": " + time[k] + " seconds");
-            System.out.println("CPU usage for size " + targetSize[k] + ": " + cpuUsage[k] + "%");
-            System.out.println("Available free memory for size " + targetSize[k] + ": " + freeMemory[k] + " MB");
+        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        for (int i = 0; i < targetSize.length; i++) {
+            System.out.printf("%-10d %-20f %-20f %-20d%n",
+                    targetSize[i],
+                    time[i],
+                    cpuUsage[i],
+                    freeMemory[i]);
         }
+        System.out.println("----------------------------------");
     }
 
     @Test
@@ -396,7 +414,7 @@ public class InteroperabilityPerformanceTest {
         int max = targetSize[targetSize.length-1];
         String categoryId;
         String[] projectId = new String[max];
-        long[] time = new long[targetSize.length];
+        double[] time = new double[targetSize.length];
         double[] cpuUsage = new double[targetSize.length];
         long[] freeMemory = new long[targetSize.length];
 
@@ -428,7 +446,7 @@ public class InteroperabilityPerformanceTest {
             if (j == targetSize[targetIndex]) {
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize() / (1024^2);
-                time[targetIndex] = (endTime-startTime) / (10^9);
+                time[targetIndex] = (double) (endTime-startTime) / (10^9);
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
                 targetIndex++;
@@ -437,12 +455,15 @@ public class InteroperabilityPerformanceTest {
 
         // Printing results
         System.out.println("---Add projects to a category---");
-        for (int k = 0; k < targetSize.length; k++) {
-            System.out.println("------SIZE " + targetSize[k] + "------");
-            System.out.println("Time for size " + targetSize[k] + ": " + time[k] + " seconds");
-            System.out.println("CPU usage for size " + targetSize[k] + ": " + cpuUsage[k] + "%");
-            System.out.println("Available free memory for size " + targetSize[k] + ": " + freeMemory[k] + " MB");
+        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        for (int i = 0; i < targetSize.length; i++) {
+            System.out.printf("%-10d %-20f %-20f %-20d%n",
+                    targetSize[i],
+                    time[i],
+                    cpuUsage[i],
+                    freeMemory[i]);
         }
+        System.out.println("--------------------------------");
     }
 
     @Test
@@ -450,7 +471,7 @@ public class InteroperabilityPerformanceTest {
         int max = targetSize[targetSize.length-1];
         String categoryId;
         String[] projectId = new String[max];
-        long[] time = new long[targetSize.length];
+        double[] time = new double[targetSize.length];
         double[] cpuUsage = new double[targetSize.length];
         long[] freeMemory = new long[targetSize.length];
 
@@ -487,7 +508,7 @@ public class InteroperabilityPerformanceTest {
             if (j == targetSize[targetIndex]) {
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize() / (1024^2);
-                time[targetIndex] = (endTime-startTime) / (10^9);
+                time[targetIndex] = (double) (endTime-startTime) / (10^9);
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
                 targetIndex--;
@@ -496,11 +517,14 @@ public class InteroperabilityPerformanceTest {
 
         // Printing results
         System.out.println("---Delete projects from a category---");
-        for (int k = 0; k < targetSize.length; k++) {
-            System.out.println("------SIZE " + targetSize[k] + "------");
-            System.out.println("Time for size " + targetSize[k] + ": " + time[k] + " seconds");
-            System.out.println("CPU usage for size " + targetSize[k] + ": " + cpuUsage[k] + "%");
-            System.out.println("Available free memory for size " + targetSize[k] + ": " + freeMemory[k] + " MB");
+        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        for (int i = 0; i < targetSize.length; i++) {
+            System.out.printf("%-10d %-20f %-20f %-20d%n",
+                    targetSize[i],
+                    time[i],
+                    cpuUsage[i],
+                    freeMemory[i]);
         }
+        System.out.println("-------------------------------------");
     }
 }
