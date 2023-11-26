@@ -141,6 +141,8 @@ public class CategoriesPerformanceTest {
                 cpuUsageStore[targetIndex] = cpuUsage;
                 freeMemoryStore[targetIndex] = memory;
                 targetIndex++;
+                response = RestAssured.given().header("Content-Type", json).body("{\"title\":\"" + i + "\",\"description\":\"\"}").post("http://localhost:4567/categories");
+                newCategoryId = response.jsonPath().get("id");
             }
         }
         System.out.println("---------Change Categories Statistics---------");
