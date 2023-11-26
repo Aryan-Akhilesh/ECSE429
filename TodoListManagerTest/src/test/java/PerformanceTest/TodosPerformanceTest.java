@@ -85,7 +85,7 @@ public class TodosPerformanceTest {
                     cpuUsage[i],
                     freeMemory[i]);
         }
-        System.out.println("----------------------------------------");
+        System.out.println("--------------------------------------");
     }
 
     @Test
@@ -129,7 +129,7 @@ public class TodosPerformanceTest {
                     cpuUsage[i],
                     freeMemory[i]);
         }
-        System.out.println("----------------------------------------");
+        System.out.println("-----------------------------------------");
     }
 
     @Test
@@ -170,7 +170,7 @@ public class TodosPerformanceTest {
                     cpuUsage[i],
                     freeMemory[i]);
         }
-        System.out.println("----------------------------------------");
+        System.out.println("-----------------------------------------");
     }
 
 }
