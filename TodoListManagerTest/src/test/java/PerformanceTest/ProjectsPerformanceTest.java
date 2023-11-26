@@ -164,7 +164,6 @@ public class ProjectsPerformanceTest {
         double[] timeStore = new double[target.length];
         double[] cpuUsageStore = new double[target.length];
         long[] freeMemoryStore = new long[target.length];
-        String[] idList = new String[tot];
 
         int index = 0;
 
@@ -180,17 +179,14 @@ public class ProjectsPerformanceTest {
             body.put("description", newDescription);
             Response r1 = RestAssured.given().contentType(ContentType.JSON).body(body.toString()).post(pUrl);
             String id = r1.jsonPath().get("id");
-            idList[i] = id;
-        }
-        for(int i=0;i<tot;i++){
-            long start = System.nanoTime();
-            RestAssured.given().delete(pUrl+"/"+ idList[tot-1-i]);
-            long end = System.nanoTime();
-            long time = end-start;
-            double time_in_second = (double) time / 1_000_000_000;
-            double cpuUsage = osBean.getCpuLoad() * 100;
-            long memory = osBean.getFreeMemorySize()/ (1024L * 1024L);
             if(i == target[index]-1){
+                long start = System.nanoTime();
+                RestAssured.given().delete(pUrl+"/"+ id);
+                long end = System.nanoTime();
+                long time = end-start;
+                double time_in_second = (double) time / 1_000_000_000;
+                double cpuUsage = osBean.getCpuLoad() * 100;
+                long memory = osBean.getFreeMemorySize()/ (1024L * 1024L);
                 timeStore[index] = time_in_second;
                 cpuUsageStore[index] = cpuUsage;
                 freeMemoryStore[index] = memory;
