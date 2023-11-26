@@ -82,7 +82,7 @@ public class CategoriesPerformanceTest {
                     cpuUsageStore[i],
                     freeMemoryStore[i]);
         }
-        System.out.println("----------------------------------------");
+        System.out.println("-------------------------------------------");
     }
 
     @Test
@@ -117,7 +117,7 @@ public class CategoriesPerformanceTest {
                     cpuUsageStore[i],
                     freeMemoryStore[i]);
         }
-        System.out.println("----------------------------------------");
+        System.out.println("----------------------------------------------");
     }
 
     @Test
@@ -152,6 +152,6 @@ public class CategoriesPerformanceTest {
                     cpuUsageStore[i],
                     freeMemoryStore[i]);
         }
-        System.out.println("----------------------------------------");
+        System.out.println("----------------------------------------------");
     }
 }
