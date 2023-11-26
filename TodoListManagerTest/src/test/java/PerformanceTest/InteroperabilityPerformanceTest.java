@@ -89,7 +89,7 @@ public class InteroperabilityPerformanceTest {
             if (j == targetSize[targetIndex]) {
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize() / (1024*1024);
-                time[targetIndex] = (double) (double) (endTime-startTime) / (1000000000);
+                time[targetIndex] = (endTime-startTime) / (1000000000f);
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
                 targetIndex++;
@@ -151,7 +151,7 @@ public class InteroperabilityPerformanceTest {
             if (j == targetSize[targetIndex]) {
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize() / (1024*1024);
-                time[targetIndex] = (double) (endTime-startTime) / (1000000000);
+                time[targetIndex] = (endTime-startTime) / (1000000000f);
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
                 targetIndex--;
@@ -208,7 +208,7 @@ public class InteroperabilityPerformanceTest {
             if (j == targetSize[targetIndex]) {
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize() / (1024*1024);
-                time[targetIndex] = (double) (endTime-startTime) / (1000000000);
+                time[targetIndex] = (endTime-startTime) / (1000000000f);
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
                 targetIndex++;
@@ -270,7 +270,7 @@ public class InteroperabilityPerformanceTest {
             if (j == targetSize[targetIndex]) {
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize() / (1024*1024);
-                time[targetIndex] = (double) (endTime-startTime) / (1000000000);
+                time[targetIndex] = (endTime-startTime) / (1000000000f);
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
                 targetIndex--;
@@ -327,7 +327,7 @@ public class InteroperabilityPerformanceTest {
             if (j == targetSize[targetIndex]) {
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize() / (1024*1024);
-                time[targetIndex] = (double) (endTime-startTime) / (1000000000);
+                time[targetIndex] = (endTime-startTime) / (1000000000f);
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
                 targetIndex++;
@@ -389,7 +389,7 @@ public class InteroperabilityPerformanceTest {
             if (j == targetSize[targetIndex]) {
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize() / (1024*1024);
-                time[targetIndex] = (double) (endTime-startTime) / (1000000000);
+                time[targetIndex] = (endTime-startTime) / (1000000000f);
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
                 targetIndex--;
@@ -446,7 +446,7 @@ public class InteroperabilityPerformanceTest {
             if (j == targetSize[targetIndex]) {
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize() / (1024*1024);
-                time[targetIndex] = (double) (endTime-startTime) / (1000000000);
+                time[targetIndex] = (endTime-startTime) / (1000000000f);
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
                 targetIndex++;
@@ -508,7 +508,7 @@ public class InteroperabilityPerformanceTest {
             if (j == targetSize[targetIndex]) {
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize() / (1024*1024);
-                time[targetIndex] = (double) (endTime-startTime) / (1000000000);
+                time[targetIndex] = (endTime-startTime) / (1000000000f);
                 cpuUsage[targetIndex] = cpuLoad;
                 freeMemory[targetIndex] = memory;
                 targetIndex--;
