@@ -11,7 +11,7 @@ public class ProjectsPerformanceTest {
     private static final String pUrl = "http://localhost:4567/projects";
     private static ProcessBuilder pb;
 
-    private final int[] target = {1,5,10,50,100,200,500,1000};
+    private final int[] target = {1,10,50,100,200,500,1000};
     private final int tot = target[target.length-1];
 
     OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
