@@ -11,7 +11,6 @@ import java.io.IOException;
 
 @TestMethodOrder(MethodOrderer.Random.class)
 public class CategoriesTests{
-    // comment category
     private static ProcessBuilder pb;
 
     private final String json = "application/json";
