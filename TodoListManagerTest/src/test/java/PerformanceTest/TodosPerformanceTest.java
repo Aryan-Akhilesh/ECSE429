@@ -76,12 +76,16 @@ public class TodosPerformanceTest {
                 targetIndex++;
             }
         }
-        System.out.println("---Add TODOS---");
-        for (int k = 0; k < populationSize.length; k++) {
-            System.out.println("Time for size " + populationSize[k] + ": " + time[k] + " Seconds");
-            System.out.println("CPU usage for size " + populationSize[k] + ": " + cpuUsage[k] + "%");
-            System.out.println("Available free memory for size " + populationSize[k] + ": " + freeMemory[k] + " MB");
+        System.out.println("---------Add Todos Statistics---------");
+        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        for (int i = 0; i < populationSize.length; i++) {
+            System.out.printf("%-10d %-20f %-20f %-20d%n",
+                    populationSize[i],
+                    time[i],
+                    cpuUsage[i],
+                    freeMemory[i]);
         }
+        System.out.println("----------------------------------------");
     }
 
     @Test
@@ -116,12 +120,16 @@ public class TodosPerformanceTest {
                 targetIndex++;
             }
         }
-        System.out.println("---Update TODOS---");
-        for (int k = 0; k < populationSize.length; k++) {
-            System.out.println("Time for size " + populationSize[k] + ": " + time[k] + " Seconds");
-            System.out.println("CPU usage for size " + populationSize[k] + ": " + cpuUsage[k] + "%");
-            System.out.println("Available free memory for size " + populationSize[k] + ": " + freeMemory[k] + " MB");
+        System.out.println("---------Update Todos Statistics---------");
+        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        for (int i = 0; i < populationSize.length; i++) {
+            System.out.printf("%-10d %-20f %-20f %-20d%n",
+                    populationSize[i],
+                    time[i],
+                    cpuUsage[i],
+                    freeMemory[i]);
         }
+        System.out.println("----------------------------------------");
     }
 
     @Test
@@ -153,12 +161,16 @@ public class TodosPerformanceTest {
                 targetIndex++;
             }
         }
-        System.out.println("---Delete TODOS---");
-        for (int k = 0; k < populationSize.length; k++) {
-            System.out.println("Time for size " + populationSize[k] + ": " + time[k] + " Seconds");
-            System.out.println("CPU usage for size " + populationSize[k] + ": " + cpuUsage[k] + "%");
-            System.out.println("Available free memory for size " + populationSize[k] + ": " + freeMemory[k] + " MB");
+        System.out.println("---------Delete Todos Statistics---------");
+        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        for (int i = 0; i < populationSize.length; i++) {
+            System.out.printf("%-10d %-20f %-20f %-20d%n",
+                    populationSize[i],
+                    time[i],
+                    cpuUsage[i],
+                    freeMemory[i]);
         }
+        System.out.println("----------------------------------------");
     }
 
 }
