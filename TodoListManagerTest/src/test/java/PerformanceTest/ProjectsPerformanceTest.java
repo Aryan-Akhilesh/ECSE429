@@ -53,6 +53,8 @@ public class ProjectsPerformanceTest {
      */
     @Test
     public void createProjectsPost() {
+        long startSampleTime = System.nanoTime();
+        double[] sampleTimeStore = new double[target.length];
         double[] timeStore = new double[target.length];
         double[] cpuUsageStore = new double[target.length];
         long[] freeMemoryStore = new long[target.length];
@@ -70,6 +72,9 @@ public class ProjectsPerformanceTest {
             long start = System.nanoTime();
             RestAssured.given().contentType(ContentType.JSON).body(body.toString()).post(pUrl);
             long end = System.nanoTime();
+            long sampleTimeElapsed = end - startSampleTime;
+            double sampleTimeElapsedInSeconds = (double) sampleTimeElapsed / 1_000_000_000;
+            sampleTimeStore[index] = sampleTimeElapsedInSeconds;
             long time = end - start;
             double time_in_second = (double) time / 1_000_000_000;
             double cpuUsage = osBean.getCpuLoad() * 100;
@@ -82,13 +87,14 @@ public class ProjectsPerformanceTest {
             }
         }
         System.out.println("---------Add Project Statistics---------");
-        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        System.out.printf("%-10s %-20s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)", "Sample Time (s)");
         for (int i = 0; i < target.length; i++) {
-            System.out.printf("%-10d %-20f %-20f %-20d%n",
+            System.out.printf("%-10d %-20f %-20f %-20d %-20f%n",
                     target[i],
                     timeStore[i],
                     cpuUsageStore[i],
-                    freeMemoryStore[i]);
+                    freeMemoryStore[i],
+                    sampleTimeStore[i]);
         }
         System.out.println("----------------------------------------");
     }
@@ -99,6 +105,8 @@ public class ProjectsPerformanceTest {
      */
     @Test
     public void amendProjectsPut(){
+        long startSampleTime = System.nanoTime();
+        double[] sampleTimeStore = new double[target.length];
         double[] timeStore = new double[target.length];
         double[] cpuUsageStore = new double[target.length];
         long[] freeMemoryStore = new long[target.length];
@@ -128,10 +136,12 @@ public class ProjectsPerformanceTest {
             amendBody.put("active",modifiedActive);
             amendBody.put("description",modifiedDescription);
 
-
             long start = System.nanoTime();
             RestAssured.given().contentType(ContentType.JSON).body(amendBody.toString()).put(pUrl+"/"+id);
             long end = System.nanoTime();
+            long sampleTimeElapsed = end - startSampleTime;
+            double sampleTimeElapsedInSeconds = (double) sampleTimeElapsed / 1_000_000_000;
+            sampleTimeStore[index] = sampleTimeElapsedInSeconds;
             long time = end-start;
             double time_in_second = (double) time / 1_000_000_000;
             double cpuUsage = osBean.getCpuLoad() * 100;
@@ -144,13 +154,14 @@ public class ProjectsPerformanceTest {
             }
         }
         System.out.println("---------Amend Project Statistics---------");
-        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        System.out.printf("%-10s %-20s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)", "Sample Time (s)");
         for (int i = 0; i < target.length; i++) {
-            System.out.printf("%-10d %-20f %-20f %-20d%n",
+            System.out.printf("%-10d %-20f %-20f %-20d %-20f%n",
                     target[i],
                     timeStore[i],
                     cpuUsageStore[i],
-                    freeMemoryStore[i]);
+                    freeMemoryStore[i],
+                    sampleTimeStore[i]);
         }
         System.out.println("----------------------------------------");
     }
@@ -161,6 +172,8 @@ public class ProjectsPerformanceTest {
      */
     @Test
     public void deleteProjects(){
+        long startSampleTime = System.nanoTime();
+        double[] sampleTimeStore = new double[target.length];
         double[] timeStore = new double[target.length];
         double[] cpuUsageStore = new double[target.length];
         long[] freeMemoryStore = new long[target.length];
@@ -183,6 +196,9 @@ public class ProjectsPerformanceTest {
                 long start = System.nanoTime();
                 RestAssured.given().delete(pUrl+"/"+ id);
                 long end = System.nanoTime();
+                long sampleTimeElapsed = end - startSampleTime;
+                double sampleTimeElapsedInSeconds = (double) sampleTimeElapsed / 1_000_000_000;
+                sampleTimeStore[index] = sampleTimeElapsedInSeconds;
                 long time = end-start;
                 double time_in_second = (double) time / 1_000_000_000;
                 double cpuUsage = osBean.getCpuLoad() * 100;
@@ -194,13 +210,14 @@ public class ProjectsPerformanceTest {
             }
         }
         System.out.println("---------Delete Project Statistics---------");
-        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        System.out.printf("%-10s %-20s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)", "Sample Time (s)");
         for (int i = 0; i < target.length; i++) {
-            System.out.printf("%-10d %-20f %-20f %-20d%n",
+            System.out.printf("%-10d %-20f %-20f %-20d %-20f%n",
                     target[i],
                     timeStore[i],
                     cpuUsageStore[i],
-                    freeMemoryStore[i]);
+                    freeMemoryStore[i],
+                    sampleTimeStore[i]);
         }
         System.out.println("----------------------------------------");
     }

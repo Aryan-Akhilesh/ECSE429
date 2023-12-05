@@ -50,6 +50,8 @@ public class TodosPerformanceTest {
 
     @Test
     public void CreateTodosJSONPost(){
+        long startSampleTime = System.nanoTime();
+        double[] sampleTimeStore = new double[populationSize.length];
         int max = populationSize[populationSize.length - 1];
         double[] time = new double[populationSize.length];
         double[] cpuUsage = new double[populationSize.length];
@@ -68,6 +70,9 @@ public class TodosPerformanceTest {
             long endTime = System.nanoTime();
             newTodoId = response.jsonPath().get("id");
             if(i == populationSize[targetIndex]){
+                long sampleTimeElapsed = endTime - startSampleTime;
+                double sampleTimeElapsedInSeconds = (double) sampleTimeElapsed / 1_000_000_000;
+                sampleTimeStore[targetIndex] = sampleTimeElapsedInSeconds;
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize()/(1024L * 1024L);
                 time[targetIndex] = (double) (endTime-startTime)/1_000_000_000;
@@ -77,19 +82,22 @@ public class TodosPerformanceTest {
             }
         }
         System.out.println("---------Add Todos Statistics---------");
-        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        System.out.printf("%-10s %-20s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)", "Sample Time (s)");
         for (int i = 0; i < populationSize.length; i++) {
-            System.out.printf("%-10d %-20f %-20f %-20d%n",
+            System.out.printf("%-10d %-20f %-20f %-20d %-20f%n",
                     populationSize[i],
                     time[i],
                     cpuUsage[i],
-                    freeMemory[i]);
+                    freeMemory[i],
+                    sampleTimeStore[i]);
         }
         System.out.println("--------------------------------------");
     }
 
     @Test
     public void UpdateTodosJSONPut(){
+        long startSampleTime = System.nanoTime();
+        double[] sampleTimeStore = new double[populationSize.length];
         int max = populationSize[populationSize.length - 1];
         double[] time = new double[populationSize.length];
         double[] cpuUsage = new double[populationSize.length];
@@ -112,6 +120,9 @@ public class TodosPerformanceTest {
                 long startTime = System.nanoTime();
                 RestAssured.given().contentType(ContentType.JSON).body(body.toString()).put(pUrl+"/"+newTodoId);
                 long endTime = System.nanoTime();
+                long sampleTimeElapsed = endTime - startSampleTime;
+                double sampleTimeElapsedInSeconds = (double) sampleTimeElapsed / 1_000_000_000;
+                sampleTimeStore[targetIndex] = sampleTimeElapsedInSeconds;
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize()/(1024L * 1024L);
                 time[targetIndex] = (double) (endTime-startTime)/1_000_000_000;
@@ -121,19 +132,22 @@ public class TodosPerformanceTest {
             }
         }
         System.out.println("---------Update Todos Statistics---------");
-        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        System.out.printf("%-10s %-20s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)", "Sample Time (s)");
         for (int i = 0; i < populationSize.length; i++) {
-            System.out.printf("%-10d %-20f %-20f %-20d%n",
+            System.out.printf("%-10d %-20f %-20f %-20d %-20f%n",
                     populationSize[i],
                     time[i],
                     cpuUsage[i],
-                    freeMemory[i]);
+                    freeMemory[i],
+                    sampleTimeStore[i]);
         }
         System.out.println("-----------------------------------------");
     }
 
     @Test
     public void DeleteTodos(){
+        long startSampleTime = System.nanoTime();
+        double[] sampleTimeStore = new double[populationSize.length];
         int max = populationSize[populationSize.length - 1];
         double[] time = new double[populationSize.length];
         double[] cpuUsage = new double[populationSize.length];
@@ -153,6 +167,9 @@ public class TodosPerformanceTest {
                 long startTime = System.nanoTime();
                 RestAssured.given().delete(pUrl+"/"+newTodoId);
                 long endTime = System.nanoTime();
+                long sampleTimeElapsed = endTime - startSampleTime;
+                double sampleTimeElapsedInSeconds = (double) sampleTimeElapsed / 1_000_000_000;
+                sampleTimeStore[targetIndex] = sampleTimeElapsedInSeconds;
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize()/(1024L * 1024L);
                 time[targetIndex] = (double) (endTime-startTime)/1_000_000_000;
@@ -162,13 +179,14 @@ public class TodosPerformanceTest {
             }
         }
         System.out.println("---------Delete Todos Statistics---------");
-        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        System.out.printf("%-10s %-20s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)", "Sample Time (s)");
         for (int i = 0; i < populationSize.length; i++) {
-            System.out.printf("%-10d %-20f %-20f %-20d%n",
+            System.out.printf("%-10d %-20f %-20f %-20d %-20f%n",
                     populationSize[i],
                     time[i],
                     cpuUsage[i],
-                    freeMemory[i]);
+                    freeMemory[i],
+                    sampleTimeStore[i]);
         }
         System.out.println("-----------------------------------------");
     }
