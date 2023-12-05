@@ -52,6 +52,8 @@ public class CategoriesPerformanceTest {
 
     @Test
     public void addCategoryPerformance() {
+        long startSampleTime = System.nanoTime();
+        double[] sampleTimeStore = new double[targetSize.length];
         double[] timeStore = new double[targetSize.length];
         double[] cpuUsageStore = new double[targetSize.length];
         long[] freeMemoryStore = new long[targetSize.length];
@@ -61,6 +63,9 @@ public class CategoriesPerformanceTest {
                 long start = System.nanoTime();
                 RestAssured.given().header("Content-Type", json).body("{\"title\":\"" + i + "\",\"description\":\"\"}").post("http://localhost:4567/categories");
                 long finish = System.nanoTime();
+                long sampleTimeElapsed = finish - startSampleTime;
+                double sampleTimeElapsedInSeconds = (double) sampleTimeElapsed / 1_000_000_000;
+                sampleTimeStore[targetIndex] = sampleTimeElapsedInSeconds;
                 long timeElapsed = finish - start;
                 double elapsedTimeInSecond = (double) timeElapsed / 1_000_000_000;
                 double cpuUsage = osBean.getCpuLoad() * 100;
@@ -74,19 +79,22 @@ public class CategoriesPerformanceTest {
             }
         }
         System.out.println("---------Add Categories Statistics---------");
-        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        System.out.printf("%-10s %-20s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)", "Sample Time (s)");
         for (int i = 0; i < targetSize.length; i++) {
-            System.out.printf("%-10d %-20f %-20f %-20d%n",
+            System.out.printf("%-10d %-20f %-20f %-20d %-20f%n",
                     targetSize[i],
                     timeStore[i],
                     cpuUsageStore[i],
-                    freeMemoryStore[i]);
+                    freeMemoryStore[i],
+                    sampleTimeStore[i]);
         }
         System.out.println("-------------------------------------------");
     }
 
     @Test
     public void deleteCategoryPerformance() {
+        long startSampleTime = System.nanoTime();
+        double[] sampleTimeStore = new double[targetSize.length];
         double[] timeStore = new double[targetSize.length];
         double[] cpuUsageStore = new double[targetSize.length];
         long[] freeMemoryStore = new long[targetSize.length];
@@ -98,6 +106,9 @@ public class CategoriesPerformanceTest {
                 long start = System.nanoTime();
                 RestAssured.given().delete("http://localhost:4567/categories/" + newCategoryId);
                 long finish = System.nanoTime();
+                long sampleTimeElapsed = finish - startSampleTime;
+                double sampleTimeElapsedInSeconds = (double) sampleTimeElapsed / 1_000_000_000;
+                sampleTimeStore[targetIndex] = sampleTimeElapsedInSeconds;
                 long timeElapsed = finish - start;
                 double elapsedTimeInSecond = (double) timeElapsed / 1_000_000_000;
                 double cpuUsage = osBean.getCpuLoad() * 100;
@@ -109,19 +120,22 @@ public class CategoriesPerformanceTest {
             }
         }
         System.out.println("---------Delete Categories Statistics---------");
-        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        System.out.printf("%-10s %-20s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)", "Sample Time (s)");
         for (int i = 0; i < targetSize.length; i++) {
-            System.out.printf("%-10d %-20f %-20f %-20d%n",
+            System.out.printf("%-10d %-20f %-20f %-20d %-20f%n",
                     targetSize[i],
                     timeStore[i],
                     cpuUsageStore[i],
-                    freeMemoryStore[i]);
+                    freeMemoryStore[i],
+                    sampleTimeStore[i]);
         }
         System.out.println("----------------------------------------------");
     }
 
     @Test
     public void changeCategoryPerformance() {
+        long startSampleTime = System.nanoTime();
+        double[] sampleTimeStore = new double[targetSize.length];
         double[] timeStore = new double[targetSize.length];
         double[] cpuUsageStore = new double[targetSize.length];
         long[] freeMemoryStore = new long[targetSize.length];
@@ -133,6 +147,9 @@ public class CategoriesPerformanceTest {
                 long start = System.nanoTime();
                 RestAssured.given().header("Content-Type", json).body("{\"title\": \"new category\"}").put("http://localhost:4567/categories/" + newCategoryId);
                 long finish = System.nanoTime();
+                long sampleTimeElapsed = finish - startSampleTime;
+                double sampleTimeElapsedInSeconds = (double) sampleTimeElapsed / 1_000_000_000;
+                sampleTimeStore[targetIndex] = sampleTimeElapsedInSeconds;
                 long timeElapsed = finish - start;
                 double elapsedTimeInSecond = (double) timeElapsed / 1_000_000_000;
                 double cpuUsage = osBean.getCpuLoad() * 100;
@@ -146,13 +163,14 @@ public class CategoriesPerformanceTest {
             }
         }
         System.out.println("---------Change Categories Statistics---------");
-        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        System.out.printf("%-10s %-20s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)", "Sample Time (s)");
         for (int i = 0; i < targetSize.length; i++) {
-            System.out.printf("%-10d %-20f %-20f %-20d%n",
+            System.out.printf("%-10d %-20f %-20f %-20d %-20f%n",
                     targetSize[i],
                     timeStore[i],
                     cpuUsageStore[i],
-                    freeMemoryStore[i]);
+                    freeMemoryStore[i],
+                    sampleTimeStore[i]);
         }
         System.out.println("----------------------------------------------");
     }
