@@ -18,7 +18,7 @@ public class InteroperabilityPerformanceTest {
 
     private final int[] targetSize = {1,10,50,100,200,500,1000};
 
-    private final OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();;
+    private final OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 
     @BeforeAll
     static void setupProcess() {
@@ -54,6 +54,8 @@ public class InteroperabilityPerformanceTest {
 
     @Test
     public void AddCategoriesToTodo() {
+        long startSampleTime = System.nanoTime();
+        double[] sampleTimeStore = new double[targetSize.length];
         int max = targetSize[targetSize.length-1];
         String todoId;
         String[] categoryId = new String[max];
@@ -87,6 +89,9 @@ public class InteroperabilityPerformanceTest {
                     .post(url);
             long endTime = System.nanoTime();
             if (j == targetSize[targetIndex]) {
+                long sampleTimeElapsed = endTime - startSampleTime;
+                double sampleTimeElapsedInSeconds = (double) sampleTimeElapsed / 1_000_000_000;
+                sampleTimeStore[targetIndex] = sampleTimeElapsedInSeconds;
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize() / (1024*1024);
                 time[targetIndex] = (endTime-startTime) / (1000000000f);
@@ -98,19 +103,22 @@ public class InteroperabilityPerformanceTest {
 
         // Printing results
         System.out.println("---Add categories to a todo---");
-        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        System.out.printf("%-10s %-20s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)", "Sample Time (s)");
         for (int i = 0; i < targetSize.length; i++) {
-            System.out.printf("%-10d %-20f %-20f %-20d%n",
+            System.out.printf("%-10d %-20f %-20f %-20d %-20f%n",
                     targetSize[i],
                     time[i],
                     cpuUsage[i],
-                    freeMemory[i]);
+                    freeMemory[i],
+                    sampleTimeStore[i]);
         }
         System.out.println("------------------------------");
     }
 
     @Test
     public void DeleteCategoriesFromTodo() {
+        long startSampleTime = System.nanoTime();
+        double[] sampleTimeStore = new double[targetSize.length];
         int max = targetSize[targetSize.length-1];
         String todoId;
         String[] categoryId = new String[max];
@@ -149,6 +157,9 @@ public class InteroperabilityPerformanceTest {
             RestAssured.given().delete(url + "/" + categoryId[j-1]);
             long endTime = System.nanoTime();
             if (j == targetSize[targetIndex]) {
+                long sampleTimeElapsed = endTime - startSampleTime;
+                double sampleTimeElapsedInSeconds = (double) sampleTimeElapsed / 1_000_000_000;
+                sampleTimeStore[targetIndex] = sampleTimeElapsedInSeconds;
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize() / (1024*1024);
                 time[targetIndex] = (endTime-startTime) / (1000000000f);
@@ -160,19 +171,22 @@ public class InteroperabilityPerformanceTest {
 
         // Printing results
         System.out.println("---Delete categories from a todo---");
-        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        System.out.printf("%-10s %-20s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)", "Sample Time (s)");
         for (int i = 0; i < targetSize.length; i++) {
-            System.out.printf("%-10d %-20f %-20f %-20d%n",
+            System.out.printf("%-10d %-20f %-20f %-20d %-20f%n",
                     targetSize[i],
                     time[i],
                     cpuUsage[i],
-                    freeMemory[i]);
+                    freeMemory[i],
+                    sampleTimeStore[i]);
         }
         System.out.println("-----------------------------------");
     }
 
     @Test
     public void AddCategoriesToProject() {
+        long startSampleTime = System.nanoTime();
+        double[] sampleTimeStore = new double[targetSize.length];
         int max = targetSize[targetSize.length-1];
         String projectId;
         String[] categoryId = new String[max];
@@ -206,6 +220,9 @@ public class InteroperabilityPerformanceTest {
                     .post(url);
             long endTime = System.nanoTime();
             if (j == targetSize[targetIndex]) {
+                long sampleTimeElapsed = endTime - startSampleTime;
+                double sampleTimeElapsedInSeconds = (double) sampleTimeElapsed / 1_000_000_000;
+                sampleTimeStore[targetIndex] = sampleTimeElapsedInSeconds;
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize() / (1024*1024);
                 time[targetIndex] = (endTime-startTime) / (1000000000f);
@@ -217,19 +234,22 @@ public class InteroperabilityPerformanceTest {
 
         // Printing results
         System.out.println("---Add categories to a project---");
-        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        System.out.printf("%-10s %-20s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)", "Sample Time (s)");
         for (int i = 0; i < targetSize.length; i++) {
-            System.out.printf("%-10d %-20f %-20f %-20d%n",
+            System.out.printf("%-10d %-20f %-20f %-20d %-20f%n",
                     targetSize[i],
                     time[i],
                     cpuUsage[i],
-                    freeMemory[i]);
+                    freeMemory[i],
+                    sampleTimeStore[i]);
         }
         System.out.println("---------------------------------");
     }
 
     @Test
     public void DeleteCategoriesFromProject() {
+        long startSampleTime = System.nanoTime();
+        double[] sampleTimeStore = new double[targetSize.length];
         int max = targetSize[targetSize.length-1];
         String projectId;
         String[] categoryId = new String[max];
@@ -268,6 +288,9 @@ public class InteroperabilityPerformanceTest {
             RestAssured.given().delete(url + "/" + categoryId[j-1]);
             long endTime = System.nanoTime();
             if (j == targetSize[targetIndex]) {
+                long sampleTimeElapsed = endTime - startSampleTime;
+                double sampleTimeElapsedInSeconds = (double) sampleTimeElapsed / 1_000_000_000;
+                sampleTimeStore[targetIndex] = sampleTimeElapsedInSeconds;
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize() / (1024*1024);
                 time[targetIndex] = (endTime-startTime) / (1000000000f);
@@ -279,19 +302,22 @@ public class InteroperabilityPerformanceTest {
 
         // Printing results
         System.out.println("---Delete categories from a project---");
-        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        System.out.printf("%-10s %-20s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)", "Sample Time (s)");
         for (int i = 0; i < targetSize.length; i++) {
-            System.out.printf("%-10d %-20f %-20f %-20d%n",
+            System.out.printf("%-10d %-20f %-20f %-20d %-20f%n",
                     targetSize[i],
                     time[i],
                     cpuUsage[i],
-                    freeMemory[i]);
+                    freeMemory[i],
+                    sampleTimeStore[i]);
         }
         System.out.println("--------------------------------------");
     }
 
     @Test
     public void AddTodosToCategory() {
+        long startSampleTime = System.nanoTime();
+        double[] sampleTimeStore = new double[targetSize.length];
         int max = targetSize[targetSize.length-1];
         String categoryId;
         String[] todoId = new String[max];
@@ -325,6 +351,9 @@ public class InteroperabilityPerformanceTest {
                     .post(url);
             long endTime = System.nanoTime();
             if (j == targetSize[targetIndex]) {
+                long sampleTimeElapsed = endTime - startSampleTime;
+                double sampleTimeElapsedInSeconds = (double) sampleTimeElapsed / 1_000_000_000;
+                sampleTimeStore[targetIndex] = sampleTimeElapsedInSeconds;
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize() / (1024*1024);
                 time[targetIndex] = (endTime-startTime) / (1000000000f);
@@ -336,19 +365,22 @@ public class InteroperabilityPerformanceTest {
 
         // Printing results
         System.out.println("---Add todos to a category---");
-        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        System.out.printf("%-10s %-20s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)", "Sample Time (s)");
         for (int i = 0; i < targetSize.length; i++) {
-            System.out.printf("%-10d %-20f %-20f %-20d%n",
+            System.out.printf("%-10d %-20f %-20f %-20d %-20f%n",
                     targetSize[i],
                     time[i],
                     cpuUsage[i],
-                    freeMemory[i]);
+                    freeMemory[i],
+                    sampleTimeStore[i]);
         }
         System.out.println("-----------------------------");
     }
 
     @Test
     public void DeleteTodosFromCategory() {
+        long startSampleTime = System.nanoTime();
+        double[] sampleTimeStore = new double[targetSize.length];
         int max = targetSize[targetSize.length-1];
         String categoryId;
         String[] todoId = new String[max];
@@ -387,6 +419,9 @@ public class InteroperabilityPerformanceTest {
             RestAssured.given().delete(url + "/" + todoId[j-1]);
             long endTime = System.nanoTime();
             if (j == targetSize[targetIndex]) {
+                long sampleTimeElapsed = endTime - startSampleTime;
+                double sampleTimeElapsedInSeconds = (double) sampleTimeElapsed / 1_000_000_000;
+                sampleTimeStore[targetIndex] = sampleTimeElapsedInSeconds;
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize() / (1024*1024);
                 time[targetIndex] = (endTime-startTime) / (1000000000f);
@@ -398,19 +433,22 @@ public class InteroperabilityPerformanceTest {
 
         // Printing results
         System.out.println("---Delete todos from a category---");
-        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        System.out.printf("%-10s %-20s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)", "Sample Time (s)");
         for (int i = 0; i < targetSize.length; i++) {
-            System.out.printf("%-10d %-20f %-20f %-20d%n",
+            System.out.printf("%-10d %-20f %-20f %-20d %-20f%n",
                     targetSize[i],
                     time[i],
                     cpuUsage[i],
-                    freeMemory[i]);
+                    freeMemory[i],
+                    sampleTimeStore[i]);
         }
         System.out.println("----------------------------------");
     }
 
     @Test
     public void AddProjectsToCategory() {
+        long startSampleTime = System.nanoTime();
+        double[] sampleTimeStore = new double[targetSize.length];
         int max = targetSize[targetSize.length-1];
         String categoryId;
         String[] projectId = new String[max];
@@ -444,6 +482,9 @@ public class InteroperabilityPerformanceTest {
                     .post(url);
             long endTime = System.nanoTime();
             if (j == targetSize[targetIndex]) {
+                long sampleTimeElapsed = endTime - startSampleTime;
+                double sampleTimeElapsedInSeconds = (double) sampleTimeElapsed / 1_000_000_000;
+                sampleTimeStore[targetIndex] = sampleTimeElapsedInSeconds;
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize() / (1024*1024);
                 time[targetIndex] = (endTime-startTime) / (1000000000f);
@@ -455,19 +496,22 @@ public class InteroperabilityPerformanceTest {
 
         // Printing results
         System.out.println("---Add projects to a category---");
-        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        System.out.printf("%-10s %-20s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)", "Sample Time (s)");
         for (int i = 0; i < targetSize.length; i++) {
-            System.out.printf("%-10d %-20f %-20f %-20d%n",
+            System.out.printf("%-10d %-20f %-20f %-20d %-20f%n",
                     targetSize[i],
                     time[i],
                     cpuUsage[i],
-                    freeMemory[i]);
+                    freeMemory[i],
+                    sampleTimeStore[i]);
         }
         System.out.println("--------------------------------");
     }
 
     @Test
     public void DeleteProjectsFromCategory() {
+        long startSampleTime = System.nanoTime();
+        double[] sampleTimeStore = new double[targetSize.length];
         int max = targetSize[targetSize.length-1];
         String categoryId;
         String[] projectId = new String[max];
@@ -506,6 +550,9 @@ public class InteroperabilityPerformanceTest {
             RestAssured.given().delete(url + "/" + projectId[j-1]);
             long endTime = System.nanoTime();
             if (j == targetSize[targetIndex]) {
+                long sampleTimeElapsed = endTime - startSampleTime;
+                double sampleTimeElapsedInSeconds = (double) sampleTimeElapsed / 1_000_000_000;
+                sampleTimeStore[targetIndex] = sampleTimeElapsedInSeconds;
                 double cpuLoad = osBean.getCpuLoad() * 100;
                 long memory = osBean.getFreeMemorySize() / (1024*1024);
                 time[targetIndex] = (endTime-startTime) / (1000000000f);
@@ -517,13 +564,14 @@ public class InteroperabilityPerformanceTest {
 
         // Printing results
         System.out.println("---Delete projects from a category---");
-        System.out.printf("%-10s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)");
+        System.out.printf("%-10s %-20s %-20s %-20s %-20s%n", "SIZE", "TIME (s)", "CPU USAGE (%)", "MEMORY (MB)", "Sample Time (s)");
         for (int i = 0; i < targetSize.length; i++) {
-            System.out.printf("%-10d %-20f %-20f %-20d%n",
+            System.out.printf("%-10d %-20f %-20f %-20d %-20f%n",
                     targetSize[i],
                     time[i],
                     cpuUsage[i],
-                    freeMemory[i]);
+                    freeMemory[i],
+                    sampleTimeStore[i]);
         }
         System.out.println("-------------------------------------");
     }
